@@ -1,0 +1,138 @@
+#feed {
+    float: left;
+}
+
+#panel-right {
+    float: right;
+    margin-left: 800px;
+    position: fixed;
+}
+
+#panel-right table {
+    width: 300px;
+    background: #fff;
+    box-shadow: 1px 1px 8px #999;
+    margin-top: 20px;
+}
+
+#panel-right table tbody {
+    padding: 10px;
+}
+
+#panel-right table th {
+    text-align: center;
+    height: 40px;
+    background: #343a40;
+    color: #fff;
+}
+
+#panel-right table td {
+    text-align: center;
+    height: 40px;
+}
+
+.post {
+    box-shadow: 1px 1px 8px #999;
+    margin: 20px auto;
+    width: 700px;
+    background: rgb(53, 110, 209);
+    border-radius: 10px;
+}
+
+.post-header {
+    height: 40px;
+    padding: 10px;
+    color: #fff;
+}
+
+.post-header .post-author {
+    float: left;
+}
+
+.post-header .post-date {
+    float: right;
+    font-size: 10px;
+}
+
+.post-content {
+    padding: 10px;
+    min-height: 200px;
+    background: #fff;
+    font-size: 15px;
+}
+
+.post-content .post-img-wrapper {
+    margin: 30px 0;
+}
+
+.post-content .post-img-wrapper img {
+    height: 400px;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.post-content .post-img-wrapper span {
+    font-size: 15px;
+    color: #999;
+    font-style: italic;
+}
+
+.post-content .post-attaches-wrapper {
+    height: 70px;
+    padding: 10px;
+    background: #eee;
+    margin: 10px;
+    width: 500px;
+}
+
+.post-content .post-attaches-wrapper>img {
+    height: 50px;
+    width: 50px;
+    float: left;
+}
+
+.post-content .post-attaches-wrapper p {
+   margin: 0;
+}
+.post-content .post-attaches-wrapper p:last-of-type {
+    font-size: 12px;
+    color: #999;
+ }
+.post-content .post-attaches-wrapper a img {
+    height: 50px;
+    float: right;
+}
+.post-content .post-attaches-wrapper div{
+    width: 60%;
+    margin-left: 15px;
+    margin-top: 5px;
+    float: left;
+}
+
+
+.post-footer {
+    color: #fff;
+    height: 35px;
+}
+
+.post-footer .like-button img {
+    height: 20px;
+    width: 20px;
+    float: left;
+    padding: 7.5px 0px 5px 7.5px;
+    cursor: pointer;
+    float: left;
+    box-sizing: content-box;
+}
+
+.post-footer .like-button {
+    height: 35px;
+    float: left;
+}
+
+.post-like-count {
+    margin-left: 5px;
+    padding: 5px;
+    float: left;
+}

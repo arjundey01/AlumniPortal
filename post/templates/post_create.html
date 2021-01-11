@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block scripts %}
+  <script src="/static/editorjs-ImageTool.js"></script>
+  <script src="/static/editorjs-AttachesTool.js"></script>
+{% endblock %}
+{% block content %}
+<div id="post-form-area" style="width: 600px; margin: auto;">
+    <h1>Make a Post:</h1>
+    <form method="POST" action="{% url 'post:create_post' %}" id="post-form">
+        {% csrf_token %}
+        {{postform.media}}
+        {{postform.as_p}}
+        <input type="file" name="img" style="display: none;">
+    </form>
+    <button id="post-form-submit"
+        style="font-size: 18px; color:white; background: rgb(67, 79, 214); border: none; padding: 5px; width: 120px;">Post</button>
+</div>
+<template>
+    <div class="cdx-block image-tool image-tool--filled">
+        <div class="image-tool__image">
+            <div class="image-tool__image-preloader"></div>
+            <img class="image-tool__image-picture">
+        </div>
+        <div class="cdx-input image-tool__caption" contenteditable="true" data-placeholder="Caption"></div>
+        <div class="cdx-button"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M3.15 13.628A7.749 7.749 0 0 0 10 17.75a7.74 7.74 0 0 0 6.305-3.242l-2.387-2.127-2.765 2.244-4.389-4.496-3.614 3.5zm-.787-2.303l4.446-4.371 4.52 4.63 2.534-2.057 3.533 2.797c.23-.734.354-1.514.354-2.324a7.75 7.75 0 1 0-15.387 1.325zM10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10z">
+                </path>
+            </svg> Select an Image</div>
+    </div>
+</template>
+
+<script type="text/javascript">
+    //TO PREVENT EDITORJs FROM UPLOADING FILES BEFORE ACTUAL POST
+    let imgCount=0;
+    $(window).on('load', function () {
+        //to set the preview image
+        $('[data-editorjs-wrapper=""]').bind('DOMSubtreeModified', function(){
+            if($('.image-tool__image-preloader').length>imgCount){
+                var bgimg=$('.image-tool__image-preloader')[imgCount].style.backgroundImage;
+                if(bgimg!=''){
+                    bgimg=bgimg.substring(5,bgimg.length-2);
+                    if($('.image-tool__image-picture').length!=0){
+                        if($('.image-tool__image-picture')[imgCount].getAttribute('src').startsWith('/media/')){
+                            $('.image-tool__image-picture')[imgCount].setAttribute('src',bgimg);
+                            imgCount++;
+                        }
+                    }
+                }
+                
+            }
+        })
+
+        //overiding the form submit to upload the files first
+        $('#post-form-submit').click(function(){
+            let ctr=0,index=0;
+            let editorData=JSON.parse($('#id_content').val());
+            attaches.forEach(function(ele){
+                console.log(ele);
+                let editorData=JSON.parse($('#id_content').val());
+                let fileBlocks=editorData.blocks.filter(b=>b.type=='Attaches');
+                let fileUrl=fileBlocks[index].data.file.url.split('/');
+                fd = new FormData();
+                fd.append("file", ele,fileUrl[2]);
+                fd.append("size",ele.size);
+                $.ajax({
+                    type: "POST",
+                    url:'/post/fileUpload/',
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                    success: function(data){
+                        ctr++;
+                        if(ctr==attaches.size+images.size){
+                            console.log('done');
+                            $('#post-form').submit();
+                        }
+                    }
+                })
+                index++;
+            })
+            index=0;
+            images.forEach(function(ele){
+                console.log(ele);
+                let imgBlocks=editorData.blocks.filter(b=>b.type=='Image');
+                let imgUrl=imgBlocks[index].data.file.url.split('/');
+                fd = new FormData();
+                fd.append("image", ele,imgUrl[2]);
+                $.ajax({
+                    type: "POST",
+                    url:'/post/imageUpload/',
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                    success: function(data){
+                        ctr++;
+                        if(ctr==attaches.size+images.size){
+                            console.log('done');
+                            $('#post-form').submit();
+                        }
+                    }
+                })
+                index++;
+            })
+        });
+
+        let attaches=new Set();
+        let images=new Set();
+        let dummyFile=new Blob(['dummyFile'],{type : 'text/html'});
+        //extract file from editorjs whenever it does a mock upload
+        //editorjs appends a temp input to body whenever it attempts to upload
+        $('body').bind('DOMSubtreeModified', function(){
+            if($('body>input[type=file][accept="*"]').length>0){
+                $('body>input[type=file][accept="*"]').change(function(e){
+                    console.log(e.target.files);
+                    attaches.add(e.target.files[0]);
+                    console.log('yooo');
+                })
+            }
+            if($('body>input[type=file][accept="image/*"]').length>0){
+                $('body>input[type=file][accept="image/*"]').change(function(e){
+                    console.log(e.target.files);
+                    images.add(e.target.files[0]);
+                    console.log('yooo');
+                })
+            }
+        })
+
+    })
+
+</script>
+{% endblock %}

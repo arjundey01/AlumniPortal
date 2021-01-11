@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<!-- <button class="btn btn-outline-info" type="submit">Update</button> -->
+
+<button id='update' onclick="asd(1)">Update</button>
+<button id='cancel' onclick="asd(2)" style="display: none;">Cancel Update</button>
+
+  <div class="content-section" id="content">
+    <div class="media" >
+      <img class="rounded-circle account-img" src="{{ user.profile.image.url }}"> 
+      <div class="media-body">
+        <h2 class="account-heading">{{ user.username }}</h2>
+        <p class="text-secondary">{{ user.email }}</p>
+        <p class="text-secondary">{{ user.company }}</p>
+      </div>
+      <div class="bg-light p-4 d-flex justify-content-end text-center">
+          <ul class="list-inline mb-0">
+              <li class="list-inline-item">
+                  <h5 class="font-weight-bold mb-0 d-block">{{ user.account.posts.count }}</h5><small class="text-muted"> <i class="fas fa-image mr-1"></i>Posts</small>
+              </li>
+              <li class="list-inline-item">
+                  <h5 class="font-weight-bold mb-0 d-block">{{ user.account.followers.count }}</h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Followers</small>
+              </li>
+              <li class="list-inline-item">
+                  <h5 class="font-weight-bold mb-0 d-block">{{ user.account.following.count}}</h5></h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Following</small>
+              </li>
+          </ul>
+      </div>
+    </div>
+    <div class="px-4 py-3">
+      <h5 class="mb-0">About</h5>
+      <div class="p-4 rounded shadow-sm bg-light">
+         {{ user.account.about }}
+          
+      </div>
+  </div>
+  
+  <div id="update_form" style="display: block;">
+    {% if request.user == user %}
+    <form method="POST" enctype="multipart/form-data" action=""  >         
+      {%csrf_token%}                     
+      <fieldset class="form-group">
+           <legend class="border-bootom mb-4">Profile Info</legend>  
+           {{ u_form }}           
+          {{ p_form }}       
+      </fieldset>
+      <div class="form-group">
+           <button class="btn btn-outline-info" type="submit">Update</button> 
+      </div>                  
+    </form>
+  
+    {% endif %}
+  </div>
+
+<script>
+  function asd(a)
+{
+    if(a==1)
+    {
+      document.getElementById("update_form").style.display="block";
+      document.getElementById("content").style.display="none";
+      document.getElementById("update").style.display="none";
+      document.getElementById("cancel").style.display="block";
+    }
+        
+    else
+    {
+      document.getElementById("update_form").style.display="none";
+      document.getElementById("content").style.display="block";
+      document.getElementById("update").style.display="block";
+      document.getElementById("cancel").style.display="none";
+    }
+        
+}
+</script>
+
+{% endblock content %}    

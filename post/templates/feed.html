@@ -1,0 +1,68 @@
+{% extends "base.html" %} 
+{% block stylesheets %}
+<link rel="stylesheet" href="/static/stylesheets/style-post.css"> 
+{% endblock %} 
+{% block scripts%}
+<script src="/static/scripts/post.js"></script>
+{% endblock %} 
+
+{% block content %}
+
+<section id="feed">
+
+</section>
+<section id="panel-right">
+    <table>
+        <tbody>
+            <tr>
+                <th>Following</th>
+            </tr>
+            {% for acc in user.account.following.all %}
+            <tr>
+                <td>{{acc.name}}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td>None</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <table>
+        <tbody>
+            <tr>
+                <th>Followers</th>
+            </tr>
+            {% for acc in user.account.followers.all %}
+            <tr>
+                <td>{{acc.name}}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td>None</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</section>
+
+<template>
+    <div class='post'>
+        <div class="post-header">
+            <div class="post-author"></div>
+            <div class="post-date"></div>
+        </div>
+        <div class="post-content"></div>
+        <div class="post-footer">
+            <div class="like-button" data-post-id="">
+                    <img src="/static/like-liked.svg" alt="like-heart" class="like-img">
+            </div>
+            <div class="post-like-count"></div>
+        </div>
+    </div>
+</template>
+<script type="text/javascript">
+    
+</script>
+{% endblock %}
