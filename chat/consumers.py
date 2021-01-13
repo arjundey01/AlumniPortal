@@ -9,7 +9,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name=self.scope['url_route']['kwargs']['room_name']
         self.room_group_name='chat_%s'%self.room_name
-        self.chat= await self.get_chat()
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -61,21 +60,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_chat(self,data):
-        chat_data=json.loads(self.chat.data)
+        chat=Chats.objects.get(pk=self.room_name)
+        chat_data=json.loads(chat.data)
         data['time']=datetime.now()
-        data['id']=chat_data[-1]['id']+1
+        data['id']=chat_data[-1]['id']+1 if len(chat_data) else 0
         chat_data.append(data)
-        self.chat.data=json.dumps(chat_data,cls=DjangoJSONEncoder)
+        chat.data=json.dumps(chat_data,cls=DjangoJSONEncoder)
         print(json.loads(json.dumps(data,cls=DjangoJSONEncoder)))
-        self.chat.save()
+        chat.save()
     
-    @database_sync_to_async
-    def get_chat(self):
-        return Chats.objects.get(pk=self.room_name)
 
     @database_sync_to_async
     def update_seen(self):
-        seen=json.loads(self.chat.last_seen_msg)
-        seen[self.scope['user'].username]=len(json.loads(self.chat.data))
-        self.chat.last_seen_msg=json.dumps(seen)
-        self.chat.save()
+        chat=Chats.objects.get(pk=self.room_name)
+        seen=json.loads(chat.last_seen_msg)
+        seen[self.scope['user'].username]=len(json.loads(chat.data))
+        chat.last_seen_msg=json.dumps(seen)
+        chat.save()

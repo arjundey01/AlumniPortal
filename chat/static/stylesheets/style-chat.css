@@ -1,3 +1,6 @@
+p{
+    margin:0;;
+}
 .chatbox{
     padding: 10px;
 }
@@ -9,7 +12,6 @@
 }
 
 .chatbox-header div{
-    margin-top: 7px;
     display: block;
     float: left;
 
@@ -20,6 +22,7 @@
 }
 
 .chatbox-header span{
+    display: block;
     font-size: 13px;
     color: #999;
 }
@@ -102,6 +105,10 @@ main{
     font-weight: 300;
     margin-top: 10px;
     position: relative;
+}
+
+.msg-wrapper .msg p{
+    margin-bottom: 5px;
 }
 
 .msg-wrapper-self .msg{

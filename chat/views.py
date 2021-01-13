@@ -35,14 +35,15 @@ def chatroom(request,room_name):
         return HttpResponse('notloggedin',status=500)
 
 def start_chat(request):
-    if request.method=="GET":
+    if request.method=="POST":
         if request.user.is_authenticated:
             try:
-                member=User.objects.get(username=request.GET['member']).account
+                member=User.objects.get(username=request.POST['member']).account
             except User.DoesNotExist:
                 return HttpResponse("DNE",status=500)
             user=request.user.account
             chat=None
+            print(member.name)
             for user_chat in user.chats.all():
                 if member in user_chat.members.all():
                     chat=user_chat
@@ -67,16 +68,16 @@ def start_chat(request):
 
 def get_online(request):
     account=request.user.account
-    account.last_active=datetime.utcnow();
-    account.save();
+    account.last_active=datetime.utcnow()
+    account.save()
     active=[]
-    for friend in account.friends.all():
+    for friend in list(account.followers.all()) + list(account.following.all()):
         if friend.last_active:
             diff=datetime.utcnow()-friend.last_active.replace(tzinfo=None)
             if diff.days<1 and diff.seconds<=15:
                 user={}
-                user['name']=friend.account_name
-                user['username']=friend.username
+                user['name']=friend.name
+                user['username']=friend.user.username
                 user['profile_img_url']=friend.profile_img_url
                 active.append(user)
     return HttpResponse(json.dumps(active))

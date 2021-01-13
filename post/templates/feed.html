@@ -44,10 +44,23 @@
             {% endfor %}
         </tbody>
     </table>
+    <section id="online-panel" class="content">
+        <span class="online-panel-header">Online</span>
+        <template id="tmp-online-user">
+          <div class="online-user">
+            <a href="">
+              <img src="/static/img/default-avatar.svg">
+              <span></span>
+            </a>
+            <img src="/static/img/message.svg" data-self="{{user.username}}" data-other="" data-csrf="{{csrf_token}}">
+          </div>
+        </template>
+      </section>
+
 
 </section>
 
-<template>
+<template id="post-template">
     <div class='post'>
         <div class="post-header">
             <div class="post-author"></div>

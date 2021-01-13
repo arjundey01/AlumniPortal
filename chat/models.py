@@ -6,4 +6,6 @@ class Chats(models.Model):
     data=models.TextField(null=True)
     members=models.ManyToManyField(Account,related_name='chats')
     last_seen_msg=models.TextField(null=True)
-
+    def save(self, *args, **kwargs):
+        print('saving Chat...',self.data)
+        super().save(*args, **kwargs) 

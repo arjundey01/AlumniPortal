@@ -45,7 +45,7 @@ var load_posts = function(index) {
         success: function(data) {
             Array.prototype.forEach.call(data, (post) => {
                 console.log(JSON.parse(post.content));
-                var temp = document.getElementsByTagName("template")[0];
+                var temp = document.getElementById("post-template");
                 var p = temp.content.cloneNode(true);
                 p.querySelector('.post-author').innerHTML = post.author;
                 p.querySelector('.post-date').innerHTML = post.datetime;

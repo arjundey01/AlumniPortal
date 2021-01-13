@@ -1,0 +1,10 @@
+django
+channels
+channels_redis
+djangorestframework
+django-editorjs
+pyaml
+requests
+msal
+requests-oauthlib
+Pillow
