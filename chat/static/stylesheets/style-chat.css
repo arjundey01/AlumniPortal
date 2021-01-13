@@ -1,0 +1,161 @@
+.chatbox{
+    padding: 10px;
+}
+.chatbox-header{
+    height: 60px;
+    padding: 5px;
+    background: #eee;
+    border-radius: 5px 5px 0 0;
+}
+
+.chatbox-header div{
+    margin-top: 7px;
+    display: block;
+    float: left;
+
+}
+.chatbox-header p{
+    font-size: 20px;
+    width: 100%;
+}
+
+.chatbox-header span{
+    font-size: 13px;
+    color: #999;
+}
+
+.chatbox-header img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    float: left;
+    margin: 0 20px;
+}
+
+.chatbox-dummy-msg div{
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+}
+.chatbox-dummy-msg img{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px 0;
+}
+
+.chatbox-dummy-msg p{
+    text-align: center;
+    font-size: 20px;
+    line-height: 30px;
+}
+.chatbox-messages{
+    height: 450px;
+    background: #fff;
+    overflow-y: scroll;
+}
+
+.chatbox-footer{
+    background: #fff;
+    padding: 10px;
+    border-radius: 0 0 5px 5px;
+}
+
+main{
+    background: linear-gradient(#212529, rgb(87 87 87 / 80%));
+    padding: 10px;
+}
+
+.chatbox-wrapper{
+    margin: 10px auto;
+}
+
+.chatbox .btn{
+    box-sizing: border-box;
+    height: 100%;
+    background: rgb(46, 70, 186);
+    color: #fff;
+}
+
+.container, .row, *[class^="col-"], .well{
+    box-sizing: border-box;
+}
+
+.msg-wrapper{
+    min-height: 30px;
+    padding: 10px 10px 0 10px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.msg-wrapper .msg{
+    max-width: 220px;
+    min-width: 30px;
+    padding: 5px 15px 15px;
+    line-height: 20px;
+    border-radius: 15px;
+    font-size: 15px;
+    font-weight: 300;
+    margin-top: 10px;
+    position: relative;
+}
+
+.msg-wrapper-self .msg{
+    float: right;
+    background: rgb(46, 70, 186);
+    color: #fff;
+}
+.msg-wrapper-other .msg{
+    float: left;
+    background: #eee;
+    color: #111;
+}
+
+.msg-profile-img-wrapper img{
+    object-fit: cover;
+    display: block;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin: 5px;
+}
+
+.msg-wrapper-self .msg-profile-img-wrapper img{
+    float: right;
+}
+
+.msg-wrapper-other .msg-profile-img-wrapper img{
+    float: left;
+}
+
+.msg-typing-img{
+    width: 80px;
+    height: 100%;
+    object-fit: cover;
+    margin: auto;
+}
+.msg-wrapper .msg-info{
+    position: absolute;
+    right: 10px;
+    bottom: 3px;
+}
+.msg-wrapper .msg-info span{
+    font-size: 9px;
+    float: right;
+    line-height: 10px;
+
+
+}
+.msg-wrapper .msg-info img{
+    width: 10px;
+    float: right;
+    margin-left: 5px;
+}
+
+.msg-wrapper-other .msg-info img{
+    display: none;
+}

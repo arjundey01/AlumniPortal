@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load extra_tags%}
+{% block style %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/stylesheets/style-chat.css">
+{% endblock %} 
+{% block content %}
+    
+        <div class="container chatbox-wrapper">
+        <div class="row">
+            <section class="chatbox col-lg-8 offset-lg-2 offset-md-2 col-md-8 col-sm-12 col-xs-12">
+                <div class="chatbox-header well">
+                    <img src="{{room_icon}}" alt="">
+                    <div>
+                        <p>{{title}}</p>
+                        <span>{{subtitle}}</span>
+                    </div>
+                </div>
+                <div class="chatbox-messages well">
+                    <div class="chatbox-dummy-msg" style="height: 100%;">
+                        <div>
+                            <img src="{{room_icon}}" alt="">
+                        </div>
+                        <p>{{title}}</p>
+                        <p style="font-size: 14px; color: #999;">Start a conversation</p>
+                    </div>
+                    {% for message in data %}
+
+                    <div class="msg-wrapper {%if message.username == user.username%}msg-wrapper-self{%else%}msg-wrapper-other{%endif%}">
+                        <div class="msg-profile-img-wrapper"><img src="{{dp_urls|key:message.username}}"></div>
+                        <div class="msg">
+                            <p class="msg-text">{{message.text}}</p>
+                            <div class="msg-info">
+                                <img src="/static/img/read.svg" alt="" 
+                                {% if message.username == user.username and message.id >= seen|key:other%}style="display:none;"{% endif %}>
+                                <span>18:30</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                </div>
+
+                <div class="chatbox-footer well">
+                    <div class="input-group input-group-md">
+                        <input type="text" class="form-control" id="chatbox-input"placeholder="Write something here...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" id="chatbox-send">Send</button>
+                        </span>
+                    </div>
+                </div>
+            </section>
+        </div>
+        </div>  
+    
+    {{room_name|json_script:"room-name"}}
+    {{user.username|json_script:"username"}}
+    {{other|json_script:"other-member"}}
+    {{dp_urls|json_script:"dp-urls"}}
+    <template id="tmp-msg">
+        <div class="msg-wrapper">
+            <div class="msg-profile-img-wrapper"><img src={{user.account.profile_img_url}}></div>
+            <div class="msg">
+                <p class="msg-text"></p>
+                <div class="msg-info">
+                    <img src="/static/img/read.svg" alt="">
+                    <span>18:30</span>
+                </div>
+            </div>
+            
+        </div>
+    </template>
+    <template id="tmp-msg-typing">
+        <div class="msg-wrapper msg-wrapper-other">
+            <div class="msg-profile-img-wrapper"><img src={{user.account.profile_img_url}}></div>
+            <div class="msg" style="padding: 0; height: 35px;">
+                <img src="/static/img/loading.gif" class="msg-typing-img">
+            </div>
+        </div>
+    </template>
+
+    <script>
+        const username=JSON.parse(document.getElementById('username').textContent);
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const dp_urls = JSON.parse(document.getElementById('dp-urls').textContent);
+        
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            console.log(e);
+            const data = JSON.parse(e.data);
+            if(data.type=="message"){
+                let messages=$(".chatbox-messages")[0];
+                let temp = document.getElementById("tmp-msg");
+                let p = temp.content.cloneNode(true);
+                p.querySelector(".msg-text").innerHTML=data.text;
+                p.querySelector(".msg-profile-img-wrapper img").src=dp_urls[data.username];
+                p.querySelector(".msg-info img").style.display="none";
+                if(data.username==username)
+                    p.querySelector(".msg-wrapper").classList.add("msg-wrapper-self");
+                else{
+                    p.querySelector(".msg-wrapper").classList.add("msg-wrapper-other");
+                    if(document.visibilityState=="visible")chatSocket.send(JSON.stringify({
+                        'type':'seen'
+                    }));
+                }
+                messages.appendChild(p);
+                messages.scrollTop+=$('.msg-wrapper',messages).last()[0].clientHeight;
+            }else{
+                $('.msg-wrapper-self .msg-info img').each((ind,ele)=>{
+                    ele.style.display="block";
+                });
+            }
+            
+        };
+
+        document.addEventListener("visibilitychange", function() {
+            if(document.visibilityState=="visible")chatSocket.send(JSON.stringify({
+                'type':'seen'
+            }));
+        })
+        chatSocket.onopen= function(e){
+            chatSocket.send(JSON.stringify({
+                        'type':'seen'
+                    }));
+        }
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chatbox-input').focus();
+        document.querySelector('#chatbox-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chatbox-send').click();
+            }
+        };
+
+        document.querySelector('#chatbox-send').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chatbox-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'type':'message',
+                'username':username,
+                'text':message
+            }));
+            messageInputDom.value = '';
+        };
+
+        $(document).ready(function(){
+            let messages=$(".chatbox-messages")[0];
+            messages.scrollTop=messages.scrollHeight;
+        })
+    </script>
+
+{% endblock %}

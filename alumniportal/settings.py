@@ -37,10 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'users',
     'post',
     'rest_framework',
     'django_editorjs',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +74,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'alumniportal.wsgi.application'
-
+#Channels
+ASGI_APPLICATION = "alumniportal.asgi.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
