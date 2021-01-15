@@ -7,7 +7,7 @@ from datetime import datetime
 def profile_image_path(instance, filename):
     ext = filename.split('.')[-1]
     if instance.user.username:
-        return 'images\\profile_imgs\\'+'{}_{}.{}'.format(instance.username,re.sub(r'[^\w]', '', "%s"%(datetime.now().time())) ,ext)
+        return 'images\\profile_imgs\\'+'{}_{}.{}'.format(instance.user.username,re.sub(r'[^\w]', '', "%s"%(datetime.now().time())) ,ext)
 
 class Account(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE)

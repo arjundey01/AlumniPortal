@@ -4,6 +4,8 @@ $(document).ready(()=>{
         getLastActive(other,10);
     }
     getOnline(15);
+    $('.chat-button').click(startChat);
+    $('.follow-button').click(follow);
 });
 
 var updateOnlinePanel=function(data){
@@ -88,4 +90,21 @@ var startChat=function(ele){
         })   
     }
 }
-$('.chat-button').click(startChat);
+
+var follow=function(ele){
+    let username= $(this).attr("data-username");
+    $.ajax({ 
+        type:"GET", 
+        url: '/follow/', 
+        data: {"username":username}, 
+        success: function(data){
+            $(`.follow-button[data-username="${username}"]`).removeClass('fa-plus');
+            $(`.follow-button[data-username="${username}"]`).addClass('fa-check');
+            $(`.follow-button[data-username="${username}"]`).removeClass('follow-button');
+        },
+        error: function(e,exc) 
+        {
+            console.error(exc);
+        }
+    })   
+}

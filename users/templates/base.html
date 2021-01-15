@@ -35,6 +35,9 @@
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item" data-turbolinks="false">
+                        <a class="nav-link{% if request.resolver_match.view_name == 'account' %} active{% endif %}" href="{% url 'account' user.username %}">Account</a>
+                    </li>
+                    <li class="nav-item" data-turbolinks="false">
                         <a class="nav-link{% if request.resolver_match.view_name == 'post:feed' %} active{% endif %}" href="{% url 'post:feed' %}">Feed</a>
                     </li>
                     <li class="nav-item" data-turbolinks="false">

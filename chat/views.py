@@ -41,6 +41,8 @@ def start_chat(request):
                 member=User.objects.get(username=request.POST['member']).account
             except User.DoesNotExist:
                 return HttpResponse("DNE",status=500)
+            if member.user == request.user:
+                return HttpResponse("self",status=500)
             user=request.user.account
             chat=None
             print(member.name)

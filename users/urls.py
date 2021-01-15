@@ -14,9 +14,11 @@ urlpatterns = [
   #path('test',views.test),
   #path('test-signup/<name>/<email>',views.test_signup),
   path('test-signin/<name>',views.test_signin),
-  path('follow/<name>',views.follow),
-  path('unfollow/<name>',views.unfollow),
+  path('follow/',views.follow),
+  path('unfollow/',views.unfollow),
   path('followers',views.followers),
   path('following',views.following),
-  path('account',views.account),
+  #path('account',views.account),
+  path('account/<username>', views.profile , name='account'),
+  path('update-account', views.update_account, name='update-account')
 ]

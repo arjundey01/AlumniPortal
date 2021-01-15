@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.http.response import Http404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from .forms import SignupForm
@@ -7,6 +8,9 @@ from .graph_helper import get_user
 from .models import Account
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .forms import UserUpdateForm
 import json
 
 
@@ -99,32 +103,33 @@ def test_signin(request, name):
     return HttpResponseRedirect(reverse('home'))
 
 
-def follow(request, name):
+def follow(request):
     if request.user.is_authenticated:
         user = request.user.account
+        username=request.GET.get("username")
         try:
-            tofollow = Account.objects.get(name=name)
+            tofollow = User.objects.get(username=username).account
             user.following.add(tofollow)
             user.save()
-            res = user.following.all()
-            return HttpResponse(res[0].name)
+            return HttpResponse('success',status=200)
         except User.DoesNotExist:
-            return HttpResponse('doesnotexist')
-    return HttpResponse('notloggedin')
+            return HttpResponse('doesnotexist',status=404)
+    return HttpResponse('notloggedin',status=500)
 
 
-def unfollow(request, name):
+def unfollow(request):
     if request.user.is_authenticated:
         user = request.user.account
+        username=request.GET.get("username")
         try:
-            toUnfollow = Account.objects.get(name=name)
+            toUnfollow = User.objects.get(username=username).account
             user.following.remove(toUnfollow)
             user.save()
             res = user.following.all()
-            return HttpResponse('Done')
+            return HttpResponse('success',status=200)
         except User.DoesNotExist:
-            return HttpResponse('doesnotexist')
-    return HttpResponse('notloggedin')
+            return HttpResponse('doesnotexist',status=500)
+    return HttpResponse('notloggedin',status=500)
 
 
 def followers(request):
@@ -144,3 +149,25 @@ def account(request):
     context={}
     context['user']=User.objects.get(username="arjundey@iitg.ac.in")
     return render(request,'profile.html',context)
+
+
+def profile(request, username):
+    user=get_object_or_404(User, username=username).account
+    u_form=UserUpdateForm(instance=request.user)
+    context ={
+        'u_form': u_form,
+        'curr_user': user
+    } 
+    return render(request, 'profile.html', context)
+
+@login_required(login_url='/signin/')
+def update_account(request):
+    if request.method == 'POST':
+        u_form=UserUpdateForm(request.POST, instance=request.user)
+        if u_form.is_valid() :
+            u_form.save()
+            messages.success(request, 'Your Account has been Updated!')
+        else:
+            messages.error(request,"Some Error Occured!")
+        return redirect('/account/'+request.user.username+'#tab-update')
+    return Http404

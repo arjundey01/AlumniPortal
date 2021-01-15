@@ -1,0 +1,64 @@
+.profile-img{
+    width: 200px;
+    height: 200px;
+    margin: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-info{
+    margin:30px;
+}
+
+.profile-stats{
+    margin-top: 20px;
+}
+
+.profile-about{
+    font-size: 14px;
+    text-align: justify;
+}
+
+.profile-actions{
+    margin:20px auto;
+    width: fit-content;
+}
+.profile-actions i{
+    margin: 10px;
+    width: 36px;
+    height: 36px;
+}
+.follow-button{
+    cursor: pointer;
+}
+
+#update-form small{
+    font-size: 10px;
+    color: #bbb;
+}
+
+#update-form fieldset input{
+    width: 100%;
+}
+
+#update-form{
+    margin-top: 20px;
+}
+
+#update-form label{
+    margin-bottom: 0;
+}
+
+.success-msg{
+    background: rgb(220, 255, 219);
+    color: rgb(76, 147, 70);
+    text-align: center;
+    padding: 5px 0;
+}
+
+.error-msg{
+    background: rgb(255, 222, 219);
+    color: rgb(147, 70, 70);
+    text-align: center;
+    padding: 5px 0;
+}

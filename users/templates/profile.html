@@ -1,79 +1,109 @@
 {% extends "base.html" %}
+{% block style %}
+  <link rel="stylesheet" href="/static/stylesheets/style-profile.css">
+{% endblock %}
 {% block content %}
 
 
 <!-- <button class="btn btn-outline-info" type="submit">Update</button> -->
 
-<button id='update' onclick="asd(1)">Update</button>
-<button id='cancel' onclick="asd(2)" style="display: none;">Cancel Update</button>
+
 
   <div class="content-section" id="content">
+
+    {% if messages %}
+        {% for message in messages %}
+        <p{% if message.tags %} class="{{ message.tags }}-msg"{% endif %}>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
     <div class="media" >
-      <img class="rounded-circle account-img" src="{{ user.profile.image.url }}"> 
-      <div class="media-body">
-        <h2 class="account-heading">{{ user.username }}</h2>
-        <p class="text-secondary">{{ user.email }}</p>
-        <p class="text-secondary">{{ user.company }}</p>
+      <img class="profile-img" src="{{ curr_user.profile_img_url }}"> 
+      <div class="media-body profile-info">
+        <h2 class="account-heading">{{ curr_user.name }}</h2>
+        <p class="text-secondary">{{ curr_user.email }}</p>
+        <p class="text-secondary">{{ curr_user.company }}</p>
+        <p class="profile-about">Cras id erat at nisl dapibus gravida eu et lacus. Nullam quis felis at nibh dapibus dapibus. Donec imperdiet mollis sem, rhoncus dapibus leo finibus sed. Vestibulum facilisis porta tristique.</p>
       </div>
-      <div class="bg-light p-4 d-flex justify-content-end text-center">
-          <ul class="list-inline mb-0">
+      <div>
+        <div class="container">
+          <div class="bg-light p-4 d-flex justify-content-end text-center profile-stats card">
+            <ul class="list-inline mb-0">
               <li class="list-inline-item">
-                  <h5 class="font-weight-bold mb-0 d-block">{{ user.account.posts.count }}</h5><small class="text-muted"> <i class="fas fa-image mr-1"></i>Posts</small>
+                <h5 class="font-weight-bold mb-0 d-block">{{ curr_user.posts.count }}</h5><small class="text-muted"> <i class="fas fa-image mr-1"></i>Posts</small>
               </li>
               <li class="list-inline-item">
-                  <h5 class="font-weight-bold mb-0 d-block">{{ user.account.followers.count }}</h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Followers</small>
+                <h5 class="font-weight-bold mb-0 d-block">{{ curr_user.followers.count }}</h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Followers</small>
               </li>
               <li class="list-inline-item">
-                  <h5 class="font-weight-bold mb-0 d-block">{{ user.account.following.count}}</h5></h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Following</small>
+                <h5 class="font-weight-bold mb-0 d-block">{{ curr_user.following.count}}</h5></h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Following</small>
               </li>
-          </ul>
+            </ul>
+          </div>
+        </div>
+
+        <div class="profile-actions">  
+          {% if user != curr_user.user%}
+            {% if curr_user in user.account.following.all %}
+            <i class="fas fa-check fa-2x"></i>
+            {% else %}
+            <i class="fas fa-plus fa-2x follow-button" data-username="{{curr_user.user.username}}"></i>
+            {% endif %}
+          <i class="fas fa-comment fa-2x chat-button" data-self="{{user.username}}" data-other="{{curr_user.user.username}}" data-csrf="{{csrf_token}}" style="cursor: pointer;"></i>
+          {% endif %}
+        </div>
       </div>
     </div>
-    <div class="px-4 py-3">
-      <h5 class="mb-0">About</h5>
-      <div class="p-4 rounded shadow-sm bg-light">
-         {{ user.account.about }}
-          
+  
+    <ul class="nav nav-tabs profile-tabs">
+      <li class="nav-item">
+        <a data-toggle="tab" class="nav-link active" href="#tab-experience">Experience</a>
+      </li>
+      <li class="nav-item">
+        <a data-toggle="tab" class="nav-link" href="#tab-projects">Projects</a>
+      </li>
+      <li class="nav-item">
+        <a data-toggle="tab" class="nav-link" href="#tab-projects">Education</a>
+      </li>
+      <li class="nav-item">
+        <a data-toggle="tab" class="nav-link" href="#tab-contact">Contact</a>
+      </li>
+      {% if user == curr_user.user %}
+      <li class="nav-item">
+        <a data-toggle="tab" class="nav-link" href="#tab-update">Update</a>
+      </li>
+      {% endif %}
+    </ul>
+    <div class="tab-content">
+      <div id="tab-experience" class="tab-pane fade show active"></div>
+      <div id="tab-projects" class="tab-pane fade"></div>
+      <div id="tab-education" class="tab-pane fade"></div>
+      <div id="tab-contact" class="tab-pane fade"></div>
+      {% if user == curr_user.user %}
+      <div id="tab-update" class="tab-pane fade">
+        <div id="update-form">  
+          <form method="POST" enctype="multipart/form-data" action="{% url 'update-account'%}"  >         
+            {%csrf_token%}                     
+            <fieldset class="form-group">
+              <legend class="border-bootom mb-4">Profile Info</legend> 
+              {{ u_form.as_myformat }}      
+            </fieldset>
+            <div class="form-group">
+              <button class="btn btn-outline-info" type="submit">Update</button> 
+            </div>                  
+          </form>
+        </div>
       </div>
-  </div>
-  
-  <div id="update_form" style="display: block;">
-    {% if request.user == user %}
-    <form method="POST" enctype="multipart/form-data" action=""  >         
-      {%csrf_token%}                     
-      <fieldset class="form-group">
-           <legend class="border-bootom mb-4">Profile Info</legend>  
-           {{ u_form }}           
-          {{ p_form }}       
-      </fieldset>
-      <div class="form-group">
-           <button class="btn btn-outline-info" type="submit">Update</button> 
-      </div>                  
-    </form>
-  
-    {% endif %}
-  </div>
-
-<script>
-  function asd(a)
-{
-    if(a==1)
-    {
-      document.getElementById("update_form").style.display="block";
-      document.getElementById("content").style.display="none";
-      document.getElementById("update").style.display="none";
-      document.getElementById("cancel").style.display="block";
-    }
-        
-    else
-    {
-      document.getElementById("update_form").style.display="none";
-      document.getElementById("content").style.display="block";
-      document.getElementById("update").style.display="block";
-      document.getElementById("cancel").style.display="none";
-    }
-        
-}
-</script>
+      {% endif %}
+    </div>
+    <script>
+      $(document).ready(()=>{
+        if(location.hash!=""){
+              var lt=location.hash.substring(1);
+              console.log(lt);
+              $(".nav-link[href='#"+lt+"']").click();
+          }
+      })
+    </script>
 
 {% endblock content %}    
