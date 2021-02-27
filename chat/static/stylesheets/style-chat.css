@@ -166,3 +166,55 @@ main{
 .msg-wrapper-other .msg-info img{
     display: none;
 }
+
+.convos{
+    background: #fff;
+    border-radius: 5px;
+    margin: 10px 0;
+    overflow-y: scroll;
+}
+
+
+.convos .conv img{
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin: 10px;
+    border-radius: 50%;
+    float: left;
+}
+
+.convos .conv div{
+    margin-top: 10px;
+    float: left;
+    color: #000;
+    max-width: calc(100% - 70px);
+}
+.convos .conv span{
+    font-size: 14px;
+    text-overflow: ellipsis;
+    display: block;
+    color: #bbb;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+.convos .conv {
+    height: 70px;
+    border-bottom: 2px solid #eee;
+}
+
+main{
+    max-width: 100% !important;
+}
+
+.chatbox-wrapper{
+    margin: 0px 10%;
+}
+
+@media only screen and (max-width: 768px){
+    .chatbox-wrapper{
+        margin: 0;
+    }
+}

@@ -1,5 +1,6 @@
 var curr_index = 1;
 var donotload = false;
+var username;
 
 function parseHTML(data) {
     let str = ``;
@@ -69,6 +70,7 @@ var load_posts = function(index) {
 
 $(document).ready(function() {
     load_posts(0);
+    username = document.getElementById('data-username').textContent;
 });
 
 function initLikes() {

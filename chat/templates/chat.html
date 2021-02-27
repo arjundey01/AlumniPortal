@@ -5,10 +5,30 @@
     <link rel="stylesheet" href="/static/stylesheets/style-chat.css">
 {% endblock %} 
 {% block content %}
-    
-        <div class="container chatbox-wrapper">
+        
+    <div class="chatbox-wrapper">
         <div class="row">
-            <section class="chatbox col-lg-8 offset-lg-2 offset-md-2 col-md-8 col-sm-12 col-xs-12">
+            <section class="convos col-lg-3 col-md-3">
+                {% for chat in convs %}
+                <a href="{% url 'chatroom' chat.group_name%}">
+                    <div class="well conv">
+                        <img src="{{chat|chat_other_img:user}}">
+                        <div>
+                            <p>{{chat|chat_other_name:user}}</p>
+                            <span>
+                                {% if chat.last_msg.username != user.username %}
+                                    {{chat|chat_other_name:user}}
+                                {% else %}
+                                    You
+                                {% endif %}
+                                : {{chat.last_msg.text}}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </section>
+            <section class="chatbox col-lg-9 col-md-9 col-sm-12 col-xs-12">
                 <div class="chatbox-header well">
                     <img src="{{room_icon}}" alt="">
                     <div>
@@ -51,7 +71,7 @@
                 </div>
             </section>
         </div>
-        </div>  
+    </div>  
     
     {{room_name|json_script:"room-name"}}
     {{user.username|json_script:"username"}}
@@ -158,5 +178,6 @@
             messages.scrollTop=messages.scrollHeight;
         })
     </script>
+
 
 {% endblock %}

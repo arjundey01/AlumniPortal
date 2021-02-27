@@ -5,6 +5,7 @@ from .models import Chats
 import json
 from datetime import datetime
 from django.core.serializers.json import DjangoJSONEncoder
+
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name=self.scope['url_route']['kwargs']['room_name']
@@ -28,6 +29,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             resp={}
             resp['username']=self.scope['user'].username
             resp['text']=data['text']
+            resp['time']=datetime.now()
             message=json.dumps(resp)
             await self.save_chat(resp)
             await self.channel_layer.group_send(
@@ -62,7 +64,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def save_chat(self,data):
         chat=Chats.objects.get(pk=self.room_name)
         chat_data=json.loads(chat.data)
-        data['time']=datetime.now()
         data['id']=chat_data[-1]['id']+1 if len(chat_data) else 0
         chat_data.append(data)
         chat.data=json.dumps(chat_data,cls=DjangoJSONEncoder)

@@ -1,8 +1,4 @@
 {% extends "base.html" %}
-{% block scripts %}
-  <script src="/static/editorjs-ImageTool.js"></script>
-  <script src="/static/editorjs-AttachesTool.js"></script>
-{% endblock %}
 {% block content %}
 <div id="post-form-area" style="width: 600px; margin: auto;">
     <h1>Make a Post:</h1>
@@ -61,7 +57,7 @@
                 let fileBlocks=editorData.blocks.filter(b=>b.type=='Attaches');
                 let fileUrl=fileBlocks[index].data.file.url.split('/');
                 fd = new FormData();
-                fd.append("file", ele,fileUrl[2]);
+                fd.append("file", ele,fileUrl[ fileUrl.length -1 ]);
                 fd.append("size",ele.size);
                 $.ajax({
                     type: "POST",
@@ -85,7 +81,7 @@
                 let imgBlocks=editorData.blocks.filter(b=>b.type=='Image');
                 let imgUrl=imgBlocks[index].data.file.url.split('/');
                 fd = new FormData();
-                fd.append("image", ele,imgUrl[2]);
+                fd.append("image", ele,imgUrl[ imgUrl.length -1 ]);
                 $.ajax({
                     type: "POST",
                     url:'/post/imageUpload/',

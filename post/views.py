@@ -19,7 +19,7 @@ def create_post(request):
             post=postform.save(commit=False)
             post.author=request.user.account
             post.save()
-            return HttpResponse('Success')
+            return redirect('post:feed')
         else:
             return HttpResponse('form-inv')
     else:
@@ -61,37 +61,41 @@ def delete_post(request,pk):
             return HttpResponse('doesNotExist',status=500)
     else:
         return HttpResponse('notLoggedIn',status=500)
+
 import json
+from urllib.parse import unquote
 def upload_image_view(request):
     f=request.FILES['image']
     fs=FileSystemStorage()
     filename=str(f)
-    file=fs.save(filename,f)
-    fileurl=fs.url(file)
-    return JsonResponse({'success':1,'file':{'url':fileurl}})
+    fileurl='posts/'+ request.user.username + '/'
+    filepath=fs.save(fileurl + filename,f)
+    fileurl=unquote(fs.url(filepath))
+    return JsonResponse({'success':1,'file':{'url':fileurl,'path':filepath}})
 
 def feign_image_upload(request):
     resp=upload_image_view(request)
     fs=FileSystemStorage()
-    filename=json.loads(resp.content)['file']['url'].split('/')[-1]
+    filename=json.loads(resp.content)['file']['path']
+    print(filename)
     fs.delete(filename)
     return resp
 
 def upload_file_view(request):
-    print("yuuuuu")
     f=request.FILES['file']
     size=int(request.POST['size'])
     fs=FileSystemStorage()
     filename=str(f)
-    file=fs.save(filename,f)
-    fileurl=fs.url(file)
-    return JsonResponse({'success':1,'file':{'url':fileurl,"size":size,"name":str(f),"extension":"ext"}})
+    fileurl='posts/'+ request.user.username + '/'
+    filepath=fs.save(fileurl + filename,f)
+    fileurl=unquote(fs.url(filepath))
+    return JsonResponse({'success':1,'file':{'url':fileurl,"size":size,"name":str(f),"extension":"ext", "path": filepath}})
     # return redirect('alumni_response:mypage')
 
 def feign_file_upload(request):
     resp=upload_file_view(request)
     fs=FileSystemStorage()
-    filename=json.loads(resp.content)['file']['url'].split('/')[-1]
+    filename=json.loads(resp.content)['file']['path']
     fs.delete(filename)
     return resp
 # class PostDetailView(DetailView):

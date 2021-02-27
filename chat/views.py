@@ -12,6 +12,17 @@ def correct_tz(dt):
     dt=dt.replace(tzinfo=timezone(timedelta(hours=-6,minutes=30)))
     return dt
 
+def chats(request):
+    if request.user.is_authenticated:
+        convs=[]
+        for chat in request.user.account.chats.all():
+            if chat.last_msg:
+                convs.append(chat)
+        convs.sort(key = lambda x:x.age)
+        return redirect('chatroom',room_name=convs[0].group_name)
+    else:
+        return HttpResponse('notloggedin',status=500)
+
 def chatroom(request,room_name):
     if request.user.is_authenticated:
         try:
@@ -26,6 +37,14 @@ def chatroom(request,room_name):
             context['other']=other.user.username
             context['dp_urls']={}
             context['seen']=json.loads(chat.last_seen_msg)
+
+            convs=[]
+            for conv in request.user.account.chats.all():
+                if conv.last_msg:
+                    convs.append(conv)
+
+            convs.sort(key = lambda x:x.age)
+            context['convs']=convs
             for member in chat.members.all():
                 context['dp_urls'][member.user.username]=member.profile_img_url
         except Chats.DoesNotExist:
@@ -58,6 +77,7 @@ def start_chat(request):
                 chat.members.add(user)
                 chat.members.add(member)
                 chat.data='[]'
+                chat.last_seen_msg=json.dumps({user.user.username:-1, member.user.username:-1})
                 chat.save()
                 print(chat.group_name)
             return HttpResponse('/chat/t/'+chat.group_name,status=200)
@@ -93,7 +113,7 @@ def get_last_active(request):
             diff=datetime.utcnow()-user.last_active.replace(tzinfo=None)
             la=correct_tz(user.last_active)
             print(la)
-            resp=la.astimezone(timezone.utc).strftime("%b. %d,%Y %I:%M %p")
+            resp=la.astimezone(timezone.utc).strftime("%b. %d, %Y %I:%M %p")
             if diff.days<1 and diff.seconds<=30:
                 resp='Online'
         return HttpResponse(resp,status=200)

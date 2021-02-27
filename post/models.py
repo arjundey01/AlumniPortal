@@ -1,7 +1,8 @@
 from users.models import Account
 from django.db import models
-from django_editorjs import EditorJsField
+from .editorjsmod import EditorJsFieldMod
 import datetime
+
 # Create your models here.
 # class Post(models.Model):
 #     author=models.ForeignKey(User,on_delete=models.CASCADE,related_name='posts',null=True)
@@ -22,11 +23,13 @@ import datetime
 #     post=models.ForeignKey(Post,on_delete=models.CASCADE,related_name='likes')
     # author=models.CharField(max_length=50)
 
+
+
 class Post(models.Model):
     author=models.ForeignKey(Account,on_delete=models.CASCADE,related_name='posts',null=True)
     datetime=models.DateTimeField(auto_now_add=True)
     likes=models.ManyToManyField(Account,related_name='liked_posts')
-    content=EditorJsField(
+    content=EditorJsFieldMod(
         editorjs_config={
             "tools":{
                 "Image":{
