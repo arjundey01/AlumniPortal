@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 {% block style %}
-  <link rel="stylesheet" href="/static/stylesheets/style-profile.css">
+ 
 {% endblock %}
 {% block content %}
-
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/stylesheets/style-profile.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 <!-- <button class="btn btn-outline-info" type="submit">Update</button> -->
 
+
+<div>
+  {% include 'update_forms.html' %}
+</div>
 
 
   <div class="content-section" id="content">
@@ -24,6 +30,9 @@
         <p class="text-secondary">{{ curr_user.email }}</p>
         <p class="text-secondary">{{ curr_user.company }}</p>
         <p class="profile-about">Cras id erat at nisl dapibus gravida eu et lacus. Nullam quis felis at nibh dapibus dapibus. Donec imperdiet mollis sem, rhoncus dapibus leo finibus sed. Vestibulum facilisis porta tristique.</p>
+        {% if user == curr_user.user %}
+        <p style="text-align:left;"><button class="camera"><i class="fa fa-camera"></i></button></p>
+        {% endif %}
       </div>
       <div>
         <div class="container">
@@ -60,10 +69,10 @@
         <a data-toggle="tab" class="nav-link active" href="#tab-experience">Experience</a>
       </li>
       <li class="nav-item">
-        <a data-toggle="tab" class="nav-link" href="#tab-projects">Projects</a>
+        <a data-toggle="tab" class="nav-link" href="#tab-project">Projects</a>
       </li>
       <li class="nav-item">
-        <a data-toggle="tab" class="nav-link" href="#tab-projects">Education</a>
+        <a data-toggle="tab" class="nav-link" href="#tab-education">Education</a>
       </li>
       <li class="nav-item">
         <a data-toggle="tab" class="nav-link" href="#tab-contact">Contact</a>
@@ -75,14 +84,168 @@
       {% endif %}
     </ul>
     <div class="tab-content">
-      <div id="tab-experience" class="tab-pane fade show active"></div>
-      <div id="tab-projects" class="tab-pane fade"></div>
-      <div id="tab-education" class="tab-pane fade"></div>
-      <div id="tab-contact" class="tab-pane fade">
-        
+      
+      
+      <div id="tab-experience" class="tab-pane fade show active">
+
+        <h3>Experiences
+          {% if user == curr_user.user %}
+          <button id="new_experience" class="btn btn-outline-secondary btn-sm" value="show">
+            <span>&#43;</span>
+          </button>
+          {% endif %}
+        </h3>
+
+        <ul>
+          {% for experience in experiences %}
+          <li>
+           <p class="user-experience"> {{experience.experience}}</p> 
+            {% if user == curr_user.user %}
+            <button class="btn btn-danger btn-sm del-item-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
+              <i style="font-size:12px" class="fa fa-trash-o"></i>
+            </button>
+            <button class="edit btn btn-secondary btn-sm" data-update-id="{{ experience.id }}">
+              <i style="font-size:12px" class="fa fa-pencil"></i>
+            </button>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+
+        <form method="POST" action="{% url 'add-experience'%}" class="experience_form" style="display: none;">
+          {%csrf_token%}
+          {{ e_form.as_myformat }}
+          {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
+        </form>
+  
       </div>
+
+
+      <div id="tab-project" class="tab-pane fade">
+
+        <h3>Projects
+          {% if user == curr_user.user %}
+          <button id="new_project" class="btn btn-outline-secondary btn-sm" value="show">
+            <span>&#43;</span>
+          </button>
+          {% endif %}
+        </h3>
+
+        <ul>
+          {% for project in projects %}
+          <li>
+           <p class="user-project"> {{project.project}}</p>
+            {% if user == curr_user.user %}
+            <button class="btn btn-danger btn-sm del-item-btn" data-type="project" data-delete-id="{{ project.id }}">
+              <i style="font-size:12px" class="fa fa-trash-o"></i>
+            </button>
+            <button class="pedit btn btn-secondary btn-sm" data-update-id="{{ project.id }}">
+              <i style="font-size:12px" class="fa fa-pencil"></i>
+            </button>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul> 
+
+         <form method="POST" action="{% url 'add-project'%}" class="project_form" style="display: none;">
+          {%csrf_token%}
+           {{ p_form.as_myformat }} 
+           {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
+        </form>
+
+      </div>
+
+
+      <div id="tab-education" class="tab-pane fade">
+        
+        <h3>Education
+          {% if user == curr_user.user %}
+          <button id="new_education" class="btn btn-outline-secondary btn-sm" value="show">
+            <span>&#43;</span>
+          </button>
+          {% endif %}
+        </h3>
+        
+        <ul>
+          {% for education in educations %}
+          <li>
+            <p class="user-edu">{{education.education}}</p>
+            
+            {% if user == curr_user.user %}
+            <button class="btn btn-danger btn-sm del-item-btn" data-type="education" data-delete-id="{{ education.id }}">
+              <i style="font-size:12px" class="fa fa-trash-o"></i>
+            </button>
+            <button class="eduedit btn btn-secondary btn-sm"  data-update-id="{{ education.id }}">
+              <i style="font-size:12px" class="fa fa-pencil"></i>
+            </button>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul> 
+
+
+         <form method="POST" action="{% url 'add-education'%}" class="education_form" style="display: none;">
+          {%csrf_token%}
+           {{ edu_form.as_myformat }} 
+           {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
+        </form>
+
+      </div>
+
+
+      <div id="tab-contact" class="tab-pane fade">
+
+        <h3>Contact</h3>
+        <div id="contact"> 
+
+          {% if user == curr_user.user %}
+
+          <form method="POST" enctype="multipart/form-data" action="{% url 'update-contact' %}"  >         
+            {%csrf_token%}                     
+            <fieldset class="form-group">
+              {{ ct_form.as_myformat }}      
+            </fieldset>
+            <div class="form-group">
+              <button class="btn btn-outline-info" type="submit">Update</button> 
+            </div>                  
+          </form>
+
+          {% else %}
+          
+            {% if curr_user.gmail == null %}
+            Gmail: Not Provided
+            {% else %}
+            Gmail: {{ curr_user.gmail }}
+            {% endif %}
+            <br>
+            {% if curr_user.outlook == null %}
+            Outlook: Not Provided
+            {% else %}
+            Outlook: {{ curr_user.outlook }}
+            {% endif %}
+            <br>
+            {% if curr_user.mobile == null %}
+            Mobile: Not Provided
+            {% else %}
+            Mobile: {{ curr_user.mobile }}
+            {% endif %}
+            <br>
+            {% if curr_user.linkedin == null %}
+            Linkedin: Not Provided
+            {% else %}
+            Linkedin: {{ curr_user.linkedin }}
+            {% endif %}
+
+          {% endif %}
+
+        </div>
+
+      </div>
+
+
       {% if user == curr_user.user %}
       <div id="tab-update" class="tab-pane fade">
+
         <div id="update-form">  
           <form method="POST" enctype="multipart/form-data" action="{% url 'update-account'%}"  >         
             {%csrf_token%}                     
@@ -95,9 +258,12 @@
             </div>                  
           </form>
         </div>
+
       </div>
       {% endif %}
     </div>
+
+
     <script>
       $(document).ready(()=>{
         if(location.hash!=""){
@@ -106,6 +272,102 @@
               $(".nav-link[href='#"+lt+"']").click();
           }
       })
+      
+      $(".update-close").click(function(){
+        {
+          $(".overlay").css("display", "none");
+        }
+      })        
+      
+      $(".edit").click(function(ele){
+        {
+          // var id = $(this).attr("data-update-id")
+          $(".overlay").css('display', 'block');
+          $(".update_p_form").css('display', 'none');
+          $(".update_edu_form").css('display', 'none');
+          $(".update_form").css('display', 'block');
+          $(".update_form").attr('action', 'update/experience/'+ $(this).attr("data-update-id")+'/');
+          console.log($(".user-experience", $(this).parent()).text());
+          $(".update_form input[type=text]").val($(".user-experience", $(this).parent()).text());
+        }
+    })
+
+    $(".pedit").click(function(ele){
+        {
+          // var id = $(this).attr("data-update-id")
+          $(".overlay").css('display', 'block');
+          $(".update_form").css('display', 'none');
+          $(".update_edu_form").css('display', 'none');
+          $(".update_p_form").css('display', 'block');
+          $(".update_p_form").attr('action', 'update/project/'+ $(this).attr("data-update-id")+'/');
+          console.log($(".user-project", $(this).parent()).text());
+          $(".update_p_form input[type=text]").val($(".user-project", $(this).parent()).text());
+        }
+    })
+
+    $(".eduedit").click(function(ele){
+        {
+          // var id = $(this).attr("data-update-id")
+          $(".overlay").css('display', 'block');
+          $(".update_form").css('display', 'none');
+          $(".update_p_form").css('display', 'none');
+          $(".update_edu_form").css('display', 'block');
+          $(".update_edu_form").attr('action', 'update/education/'+ $(this).attr("data-update-id")+'/');
+          console.log($(".user-edu", $(this).parent()).text());
+          $(".update_edu_form input[type=text]").val($(".user-edu", $(this).parent()).text());
+        }
+    })
+
+    $("#new_experience").click(function(){
+ 		if($(this).attr("val") == "show")
+        {
+          $(".experience_form").css('display', 'block');
+          $("#new_experience").html('<span>&#8722;</span>');
+          $(this).attr("val","hide");
+        }
+		else
+       {
+       $(".experience_form").css('display', 'none');
+          $("#new_experience").html('<span>&#43;</span>');
+           $(this).attr("val","show");
+       }
+    })
+
+
+    $("#new_project").click(function(){
+      if($(this).attr("val") == "show")
+        {
+          $(".project_form").css('display', 'block');
+          $("#new_project").html('<span>&#8722;</span>');
+          $(this).attr("val","hide");
+        }
+      else
+       {
+       $(".project_form").css('display', 'none');
+          $("#new_project").html('<span>&#43;</span>');
+           $(this).attr("val","show");
+       }
+    })
+    $("#new_education").click(function(){
+      if($(this).attr("val") == "show")
+        {
+          $(".education_form").css('display', 'block');
+          $("#new_education").html('<span>&#8722;</span>');
+          $(this).attr("val","hide");
+        }
+        else
+       {
+       $(".education_form").css('display', 'none');
+          $("#new_education").html('<span>&#43;</span>');
+           $(this).attr("val","show");
+       }
+    })
+  
+    $(".del-item-btn").click(function(){
+      let id = $(this).attr('data-delete-id');
+      let type = $(this).attr('data-type');
+      location.href = 'delete/' + type + '/' + id;
+    })
     </script>
 
 {% endblock content %}    

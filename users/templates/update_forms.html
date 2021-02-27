@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="/static/stylesheets/style-profile.css">
+
+
+<div style="height: 100%; margin: 0;">
+
+    <div class="overlay jumbotron" style="position: fixed;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 400px;
+    height: 80%;
+    display: none;
+    z-index: 100;
+    ">
+
+
+        <button type="button" class="close modal-close ml-auto update-close" data-dismiss="modal" aria-label="Close"><span style="color:white;" aria-hidden="true">×</span></button>
+  
+    <form method="POST" class="update_form" >
+          {%csrf_token%}
+          {{ e_form.as_myformat }}
+          
+          {% if user == curr_user.user %}
+          <button class="btn btn-outline-info submit_update" type="submit">Submit</button> 
+          {% endif %}
+        </form>
+
+        <form method="POST" class="update_p_form" >
+            {%csrf_token%}
+            {{ p_form.as_myformat }}
+            
+            {% if user == curr_user.user %}
+            <button class="btn btn-outline-info submit_update" type="submit">Submit</button> 
+            {% endif %}
+          </form>
+
+          <form method="POST" class="update_edu_form" >
+            {%csrf_token%}
+            {{ edu_form.as_myformat }}
+            
+            {% if user == curr_user.user %}
+            <button class="btn btn-outline-info submit_update" type="submit">Submit</button> 
+            {% endif %}
+          </form>
+        
+    </div>
+</div>

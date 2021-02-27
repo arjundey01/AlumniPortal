@@ -22,3 +22,22 @@ class Account(models.Model):
             return self.profile_img.url
         else:
             return "/static/img/default-avatar.svg"
+
+class Experience(models.Model):
+    user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="experiences")
+    experience=models.CharField(max_length=100)
+
+class Project(models.Model):
+    user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="projects")
+    project=models.CharField(max_length=100)
+
+class Education(models.Model):
+    user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="educations")
+    education=models.CharField(max_length=100)
+    
+class Contact(models.Model):
+     user=models.OneToOneField(Account, on_delete=models.CASCADE, related_name="contact")
+     gmail=models.EmailField(blank=True, null=True)
+     outlook=models.EmailField(blank=True, null=True)
+     linkedin=models.URLField(blank=True, null=True)
+     mobile=models.IntegerField(blank=True, null=True)

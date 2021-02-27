@@ -20,5 +20,16 @@ urlpatterns = [
   path('following',views.following),
   #path('account',views.account),
   path('account/<username>', views.profile , name='account'),
-  path('update-account', views.update_account, name='update-account')
+
+  path('account/add/experience/', views.experience, name='add-experience'),
+  path('account/add/project/', views.project, name='add-project'),
+  path('account/add/education/', views.education, name='add-education'),
+
+  path('account/update/profile', views.update_account, name='update-account'),
+  path('account/update/contact/', views.update_contact, name='update-contact'),
+  path('account/update/experience/<pk>/', views.update_ex, name='update-experience'),
+  path('account/update/project/<pk>/', views.update_p, name='update-project'),
+  path('account/update/edu/<pk>/', views.update_edu, name='update-education'),
+
+  path('account/delete/<type>/<pk>', views.delete_item, name='delete-item')
 ]

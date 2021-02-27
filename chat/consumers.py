@@ -29,7 +29,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             resp={}
             resp['username']=self.scope['user'].username
             resp['text']=data['text']
-            resp['time']=datetime.now()
+            resp['time']=datetime.now().isoformat()
             message=json.dumps(resp)
             await self.save_chat(resp)
             await self.channel_layer.group_send(

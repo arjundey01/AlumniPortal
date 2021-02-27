@@ -62,3 +62,27 @@
     text-align: center;
     padding: 5px 0;
 }
+
+.tab-pane li p{
+    width: 80%;
+    float: left;
+}
+
+.tab-pane li button{
+    float: right;
+    margin: 0 5px;
+}
+
+.tab-pane li{
+    margin: 10px 0;
+    min-height: 30px;
+}
+
+.tab-pane{
+    margin-top: 20px;
+}
+
+.tab-pane h3 button{
+    padding: 0px;
+    width: 20px;
+}

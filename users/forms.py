@@ -1,3 +1,4 @@
+from .models import Contact, Education, Experience, Project
 from django import forms
 from django.forms import widgets
 from django.contrib.auth.models import User
@@ -9,12 +10,7 @@ class SignupForm(forms.Form):
     phone=forms.CharField(max_length=13)
     location=forms.CharField(max_length=25)
 
-class UserUpdateForm(forms.ModelForm):        #for updating info of the user on the profile page
-    email=forms.EmailField()
-    class Meta:
-         model = User                            
-         fields = ['username','email']
-
+class FormattedModelForm(forms.ModelForm):
     def as_myformat(self):
         return self._html_output(
             normal_row='''<div class="form-group">
@@ -35,3 +31,29 @@ class UserUpdateForm(forms.ModelForm):        #for updating info of the user on 
             help_text_html='<small class="gray offset-3 col-sm-9">%s</small>',
             errors_on_separate_row=False,
         )
+
+class UserUpdateForm(FormattedModelForm):        #for updating info of the user on the profile page
+    email=forms.EmailField()
+    class Meta:
+         model = User                            
+         fields = ['username','email']
+
+class ExperienceForm(FormattedModelForm):
+    class Meta:
+        model=Experience
+        fields=['experience']
+
+class ProjectForm(FormattedModelForm):
+    class Meta:
+        model=Project
+        fields=['project']
+    
+class EducationForm(FormattedModelForm):
+    class Meta:
+        model=Education
+        fields=['education']
+
+class ContactUpdateForm(FormattedModelForm):        #for updating info of the user on the profile page
+    class Meta:
+         model = Contact                           
+         fields = ['gmail','mobile','outlook','linkedin']
