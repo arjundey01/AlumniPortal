@@ -57,6 +57,11 @@ var load_posts = function(index) {
                 p.querySelector('.like-button').setAttribute('data-post-id', post.id);
                 p.querySelector('.like-button img').setAttribute('id', 'like' + post.id.toString());
                 p.querySelector('.post-like-count').setAttribute('id', 'likecount' + post.id.toString());
+                p.querySelector('.comment-button').addEventListener('click', function(){
+                    showcomment(this);
+                    load_comment(this);
+                } );
+                p.querySelector('.comment-button').setAttribute('data-post-id', post.id);
                 document.getElementById('feed').appendChild(p);
                 donotload = false;
             })
@@ -68,9 +73,47 @@ var load_posts = function(index) {
     })
 }
 
+var showcomment=function(ele){
+    var id= ele.getAttribute("data-post-id");
+    $(".comment-form-submit").attr('data-post-id', id);
+    $(".comment-box ").css("display", "block");
+    // $(".comment-form").attr('action',  "comment/" + id+"/");
+}
+
 $(document).ready(function() {
     load_posts(0);
     username = document.getElementById('data-username').textContent;
+    $(".hehe").click(function(){
+        $(".comment-box").css("display", "none");
+        $("#comment-feed").html("");
+    })
+    
+
+    $('.comment-form-submit').on('click', function(event){
+        event.preventDefault();
+        console.log("hehe")
+        var id= $(this).attr("data-post-id")
+        var formdata= new FormData(document.getElementById('comment-form'));
+        let ele = this;
+        $.ajax({
+            type:'POST',
+            url: '/post/comment/' + id+'/',
+            data: formdata,
+            enctype: 'formdata', 
+            processData: false,
+            contentType: false,
+            
+            success: function(){
+                $("#comment-feed").html("");
+                load_comment(ele);
+                $("#comment-form textarea").val("");
+            },
+            error: function(){
+    
+            },
+        })
+    });
+    
 });
 
 function initLikes() {
@@ -113,3 +156,27 @@ $(window).scroll(function() {
         donotload = true;
     }
 });
+
+
+var load_comment = function(ele) {
+    var id= ele.getAttribute("data-post-id");
+    $.ajax({
+        url: '/post/load-comment/' + id,
+        dataType: 'json',
+        success: function(data) {
+            Array.prototype.forEach.call(data, (comment) => {
+                // console.log(JSON.parse(comment.content));
+                var temp = document.getElementById("comment-template");
+                var p = temp.content.cloneNode(true);
+                p.querySelector('.comment-author').innerHTML = comment.author;
+                p.querySelector('.comment-date').innerHTML = comment.create_date;
+                p.querySelector('.comment-content').innerHTML = comment.content;
+                document.getElementById('comment-feed').appendChild(p);
+                donotload = false;
+            })
+        },
+        error: function(data) {
+            console.log(data);
+        }
+    })
+}
