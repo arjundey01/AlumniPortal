@@ -186,4 +186,38 @@ def load_feed(request,index):
         return HttpResponse(json.dumps({'error':'No more posts'}),status=500)
 
 def feed(request):
-    return render(request, 'feed.html')
+    context={}
+    context['commentform']=CommentForm
+    return render(request, 'feed.html', context)
+
+
+
+def comment(request, pk):
+    if request.method=='POST':
+        commentform=CommentForm(request.POST)
+        post=get_object_or_404(Post, pk=pk)
+        if commentform.is_valid():
+            comment=commentform.save(commit=False)
+            comment.post=post
+            comment.author=request.user.account
+            comment.save()
+            return HttpResponse('success')
+            # return HttpResponse(json.dumps(comment), status=200)
+        else:
+            return HttpResponse('form-inv', status=500)
+    else:
+        return HttpResponse('Invalid', status=500)
+
+
+def load_comment(request, id):
+  
+    # comments=Comment.objects.all().filter(pk=id)
+    comments=[]
+    for comment in Post.objects.get(pk=id).comments.all():
+        dic={}
+        dic['author']=comment.author.name
+        dic['create_date']=comment.create_date.strftime("%d/%m/%y")
+        dic['content']=comment.content
+        comments.append(dic)
+    print(comments)
+    return HttpResponse(json.dumps(comments), status=200)

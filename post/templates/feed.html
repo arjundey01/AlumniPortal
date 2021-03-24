@@ -8,6 +8,12 @@
 
 {% block content %}
 
+
+<div >
+    {% include 'comment.html' %}
+</div>
+
+
 <section id="feed">
 
 </section>
@@ -73,9 +79,12 @@
                     <img src="/static/like-liked.svg" alt="like-heart" class="like-img">
             </div>
             <div class="post-like-count"></div>
+            <button class="comment-button" style="align: right;" >comment</button>
         </div>
     </div>
 </template>
+
+
 <script type="text/javascript">
     
 </script>
