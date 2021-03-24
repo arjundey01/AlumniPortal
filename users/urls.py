@@ -31,5 +31,7 @@ urlpatterns = [
   path('account/update/project/<pk>/', views.update_p, name='update-project'),
   path('account/update/edu/<pk>/', views.update_edu, name='update-education'),
 
-  path('account/delete/<type>/<pk>', views.delete_item, name='delete-item')
+  path('account/delete/<type>/<pk>', views.delete_item, name='delete-item'),
+
+  path('test', views.test_template)
 ]

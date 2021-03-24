@@ -1,0 +1,265 @@
+/*BASE LAYOUT*/
+
+.sidebar{
+    background: white;
+    height: 100vh;
+    width: 80vw;
+    position: fixed;
+    top:0;
+    left: -80vw;
+    float: left;
+    transition: 0.5s;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.sidebar-active{
+    left:0;
+}
+
+#header{
+    height: 80px;
+    background: white;
+    position: sticky;
+    top: 0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#right-pane{
+    height: 100vh;
+    width: 39%;
+    position: fixed;
+    right: 0;
+    top: 120;
+    display: none;
+    padding: 10px 5%;
+    background: aliceblue;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
+    padding-bottom: 150px;
+}
+
+#right-pane::-webkit-scrollbar {
+    display: none;
+}
+
+#content{
+    min-height: 1500px;
+    width: 100%;
+    padding: 1rem;
+    background: aliceblue;
+    padding: 10px;
+}
+
+#main{
+    width: 100%;
+}
+
+#sidebar-btn{
+    position: fixed;
+    bottom: 3%;
+    right: 3%;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    z-index: 10000;
+}
+
+
+/* SIDEBAR CONTENT */
+
+#logo{
+    display: flex;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#logo img{
+    height: 70px;
+}
+
+#tabs>li{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#tabs>li>p{
+    font-size: 16px;
+    margin-left: 20px;
+    color: #ccc;
+}
+
+.tab-icon-wrapper{
+    height: 45px;
+    width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tab-indicator{
+    height: 70px;
+    width: 0;
+    margin-right: 30%;
+    background: #4150D7 !important;
+    border-radius: 0 20px 20px 0;
+}
+
+.tab-active>p{
+    color:#4150D7 !important;
+}
+.tab-active path{
+    stroke:#4150D7;
+    fill: white;
+}
+.tab-active>.tab-indicator{
+    width: 7px;
+    margin-right: calc(30% - 7px);
+}
+
+/* HEADER */
+#header form{
+    background: #f4f4f4;
+    height: 50px;
+    width: 45%;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+#header form img{
+    max-height: 30px;
+    max-width: 30px;
+    height: 10vw;
+    width: 10vw;
+    margin: 0 5px;
+    flex-grow: 0 ;
+}
+
+#header form input{
+    flex-grow: 1;
+    background: none;
+    min-width: 0;
+}
+
+#header-options{
+    width: 20%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: 5%;
+}
+
+#header-options>div{
+    height: 50px;
+    width: 50px;
+    padding: 5px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+#header-options img{
+    height: 10vw;
+    width: 10vw;
+    max-width: 40px;
+    max-height: 40px;
+}
+
+#header-options .icon-tag{
+    position: absolute;
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    background: #FC4444;
+    top: 10px;
+    right: 7px;
+
+}
+
+#header-profile{
+    margin-left: 5%;
+    flex-shrink: 0;
+}
+
+#header-profile img{
+    border-radius: 50%;
+    object-fit: cover;
+    padding: 4px;
+    border: 2px solid #4150D7;
+    height: 15vw;
+    width: 15vw;
+    max-width: 70px;
+    max-height: 70px;
+}
+
+
+@media (min-width: 992px){
+    .sidebar{
+        width: 22%;
+        left:0;
+    }
+    
+    #main{
+        width: 78%;
+        margin-left: 22%;
+    }
+
+    #sidebar-btn{
+        display: none;
+    }
+
+    #right-pane{
+        display: block;
+    }
+
+    #content{
+        width: 50%;
+    }
+
+    #header{
+        height: 120px;
+    }
+
+    #header-options{
+        margin-left: 10%;
+    }
+
+    #header form img{
+        margin: 0 20px;
+    }
+}
+
+/* GENERAL CLASSES */
+.text-accent{
+    color:#4150D7;
+}
+
+.bg-accent{ 
+    background-color:#4150D7;
+}
+
+.accordion-expand img{
+    transition: 0.5s ease-in-out;
+    transform: rotate(180deg);
+}
+
+.accordion-answer{
+    transition: 0.5s ease-in-out;
+    overflow-y: hidden;
+    max-height: 500px;
+}
+
+.accordion-entry-collapsed .accordion-answer{
+    max-height: 0;
+}
+.accordion-entry-collapsed .accordion-expand img{
+    transform: rotate(0deg);
+}

@@ -320,3 +320,6 @@ def delete_item(request,type,pk):
 
     return redirect('/account/'+request.user.username+'#tab-'+type)
     
+
+def test_template(request):
+    return render(request,'feed2.html')
