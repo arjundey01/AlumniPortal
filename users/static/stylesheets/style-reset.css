@@ -106,3 +106,8 @@ textarea:focus, input:focus{
 }
 
 button {outline:0;}
+
+
+body *::-webkit-scrollbar {
+    display: none;
+}

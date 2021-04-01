@@ -319,7 +319,8 @@ def delete_item(request,type,pk):
     messages.success(request, 'The entry has been Deleted!')
 
     return redirect('/account/'+request.user.username+'#tab-'+type)
-    
 
+from post.forms import PostForm   
+@login_required(login_url='signin')
 def test_template(request):
-    return render(request,'feed2.html')
+    return render(request,'feed2.html',{'postform': PostForm})

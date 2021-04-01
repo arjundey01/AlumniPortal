@@ -157,13 +157,18 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['author','like_count','datetime','content','id']
     def get_author(self, post):
         if post.author:
-            return (' ').join([ x.capitalize() for x in post.author.name.split()])
+            author={}
+            author['name']=(' ').join([ x.capitalize() for x in post.author.name.split()])
+            author['profile_img']= post.author.profile_img_url
+            author['username']=post.author.user.username
+            return author
         else:
             return 'Anonymous'
     def get_like_count(self,post):
         return len(post.likes.all())
     def get_id(self,post):
         return post.pk
+
 
 
 

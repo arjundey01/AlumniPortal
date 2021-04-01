@@ -10,7 +10,7 @@ def profile_image_path(instance, filename):
         return 'images/profile_imgs/'+'{}_{}.{}'.format(instance.user.username,re.sub(r'[^\w]', '', "%s"%(datetime.now().time())) ,ext)
 
 class Account(models.Model):
-    user=models.OneToOneField(User, on_delete=models.CASCADE)
+    user=models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
     name=models.CharField(max_length=50)
     email=models.EmailField()
     following=models.ManyToManyField('Account',related_name='followers', blank=True)
@@ -22,6 +22,9 @@ class Account(models.Model):
             return self.profile_img.url
         else:
             return "/static/img/default-avatar.svg"
+
+    def __str__(self):
+        return self.name
 
 class Experience(models.Model):
     user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="experiences")

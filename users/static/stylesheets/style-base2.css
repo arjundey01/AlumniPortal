@@ -3,7 +3,7 @@
 .sidebar{
     background: white;
     height: 100vh;
-    width: 80vw;
+    width: 70vw;
     position: fixed;
     top:0;
     left: -80vw;
@@ -33,7 +33,7 @@
     width: 39%;
     position: fixed;
     right: 0;
-    top: 120;
+    top: 120px;
     display: none;
     padding: 10px 5%;
     background: aliceblue;
@@ -50,9 +50,7 @@
 #content{
     min-height: 1500px;
     width: 100%;
-    padding: 1rem;
     background: aliceblue;
-    padding: 10px;
 }
 
 #main{
@@ -84,13 +82,13 @@
     height: 70px;
 }
 
-#tabs>li{
+#tabs>li>a{
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
 
-#tabs>li>p{
+#tabs>li>a>p{
     font-size: 16px;
     margin-left: 20px;
     color: #ccc;
@@ -112,7 +110,7 @@
     border-radius: 0 20px 20px 0;
 }
 
-.tab-active>p{
+.tab-active>a>p{
     color:#4150D7 !important;
 }
 .tab-active path{
@@ -158,7 +156,7 @@
     margin-left: 5%;
 }
 
-#header-options>div{
+#header-options>a{
     height: 50px;
     width: 50px;
     padding: 5px;
@@ -192,12 +190,39 @@
 #header-profile img{
     border-radius: 50%;
     object-fit: cover;
-    padding: 4px;
+    padding: 2px;
     border: 2px solid #4150D7;
-    height: 15vw;
-    width: 15vw;
-    max-width: 70px;
-    max-height: 70px;
+    height: 12vw;
+    width: 12vw;
+    max-width: 60px;
+    max-height: 60px;
+}
+
+/* OVERLAY */
+#overlay{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    background: rgba(16,16,16,0.6);
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: none;
+}
+
+#close-overlay{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+    background: #111;
+    padding: 5px;
 }
 
 
@@ -235,6 +260,12 @@
     #header form img{
         margin: 0 20px;
     }
+
+    #header-profile img{
+        max-height: 70px;
+        max-width: 70px;
+        padding: 4px;
+    }
 }
 
 /* GENERAL CLASSES */
@@ -244,6 +275,16 @@
 
 .bg-accent{ 
     background-color:#4150D7;
+}
+
+.svg-accent path{
+    stroke:#4150D7;
+    fill: white;
+}
+
+.svg-accent-inv path{
+    stroke: white;
+    fill: #4150D7;
 }
 
 .accordion-expand img{

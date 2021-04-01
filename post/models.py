@@ -56,8 +56,14 @@ class Post(models.Model):
         #in every 3 day group, the priority is decided by likes 
         return age//3 + 1/(likes_count or 1)
 
+    def __str__(self):
+        return self.author.name + "_" + str(self.id) 
+
 class Comment(models.Model):
     post=models.ForeignKey(Post,on_delete=models.CASCADE,related_name='comments',null=True)
     author=models.ForeignKey(Account,on_delete=models.CASCADE,related_name='comments',null=True)
     content=models.CharField(max_length=500, null=True)
     create_date=models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.author.name + "_" + str(self.post.id) + '_' + str(self.id) 
