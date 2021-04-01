@@ -13,6 +13,10 @@
 </div>
 <div id="feed">
 
+    <div id="no-post" class="flex rounded bg-white justify-center items-center h-100 p-10 flex-col shadow-lg my-10 hidden">
+        <p class="text-lg text-gray-500">No Posts Yet</p>
+        <p class="text-sm text-gray-400 mt-4"><b>Tip:</b> Follow people or groups</p>
+    </div>
 </div>
 
 <template id="post-template">
@@ -20,7 +24,7 @@
         <div class="post-header w-full px-3 md:py-3 overflow-auto flex justify-between">
             <a class="post-author flex items-center justify-start">
                 <div class="rounded-full h-14 w-14 overflow-hidden flex items-center justify-center flex-shrink-0">
-                    <img class="post-author-img" src="" alt="">
+                    <img class="post-author-img object-cover h-14 w-14" src="" alt="">
                 </div>
                 <div class="mx-4">
                     <p class="post-author-name text-md md:text-xl mt-1">John Doe</p>
@@ -121,10 +125,10 @@
         <div class="flex justify-between items-center py-5 border-b-2 border-gray-200 border-solid">
             <div class="flex items-center justify-start">
                 <div class="rounded-full h-14 w-14 overflow-hidden flex items-center justify-center flex-shrink-0">
-                    <img src="media/images/profile_imgs/arjundeyiitg.ac.in_144756544363.jpg" alt="">
+                    <img src="{{user.account.profile_img_url}}" class= "h-14 w-14 object-cover" alt="">
                 </div>
                 <div class="mx-4">
-                    <p class="mt-1">Arjun Dey</p>
+                    <p class="mt-1">{{user.account.name}}</p>
                     <p class="text-sm text-gray-400 mt-1">Associate Project Manager | Google</p>
                 </div>
             </div>
@@ -135,10 +139,10 @@
         <div class="flex justify-between items-center py-5 border-b-2 border-gray-200 border-solid">
             <div class="flex items-center justify-start">
                 <div class="rounded-full h-14 w-14 overflow-hidden flex items-center justify-center flex-shrink-0">
-                    <img src="media/images/profile_imgs/arjundeyiitg.ac.in_144756544363.jpg" alt="">
+                    <img src="{{user.account.profile_img_url}}" class= "h-14 w-14 object-cover" alt="">
                 </div>
                 <div class="mx-4">
-                    <p class="mt-1">Arjun Dey</p>
+                    <p class="mt-1">{{user.account.name}}</p>
                     <p class="text-sm text-gray-400 mt-1">Associate Project Manager | Google</p>
                 </div>
             </div>
@@ -149,10 +153,10 @@
         <div class="flex justify-between items-center py-5 border-b-2 border-gray-200 border-solid">
             <div class="flex items-center justify-start">
                 <div class="rounded-full h-14 w-14 overflow-hidden flex items-center justify-center flex-shrink-0">
-                    <img src="media/images/profile_imgs/arjundeyiitg.ac.in_144756544363.jpg" alt="">
+                    <img src="{{user.account.profile_img_url}}" class= "h-14 w-14 object-cover" alt="">
                 </div>
                 <div class="mx-4">
-                    <p class="mt-1">Arjun Dey</p>
+                    <p class="mt-1">{{user.account.name}}</p>
                     <p class="text-sm text-gray-400 mt-1">Associate Project Manager | Google</p>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 var curr_index = 1;
 var donotload = false;
+var firstload = true;
 var username;
 
 function parseHTML(data) {
@@ -72,11 +73,16 @@ var load_posts = function(index) {
                 p.querySelector('.comment-button').setAttribute('data-post-id', post.id);
                 document.getElementById('feed').appendChild(p);
                 donotload = false;
+                firstload=false;
                 initLikes($(`.like-button[data-post-id=${post.id}]`)[0]);
             })
         },
         error: function(data) {
-            console.log(data.responseJSON.error);
+            if(data.responseJSON.error === 'No more posts' && firstload){
+                $('#no-post').css('display','flex');
+            }else{
+                console.log(data.responseJSON.error);
+            }
         }
     })
 }
