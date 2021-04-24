@@ -9,6 +9,7 @@
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/stylesheets/style-base2.css"> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
 </head>
 <body>
 
@@ -42,7 +43,7 @@
                 </a>
             </li>
             <li class="{% if request.resolver_match.view_name == 'faq' %}tab-active{% endif %}">
-                <a href="">
+                <a href="/faq/">
                     <div class="tab-indicator"></div>
                     <div class='tab-icon-wrapper'>
                         <svg width="28" height="28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
@@ -74,11 +75,11 @@
             </form>
             <div id="header-options">
                 <a href="">
-                    <img src="static/img/bell.svg" alt="">
+                    <img src="/static/img/bell.svg" alt="">
                     <div class="icon-tag"></div>
                 </a>
                 <a href="{% url 'chats' %}">
-                    <img src="static/img/chat.svg" alt="">
+                    <img src="/static/img/chat.svg" alt="">
                     <div class="icon-tag"></div>
                 </a>
             </div>
@@ -108,22 +109,7 @@
     </div>
 </body>
 
-<script>
-    $('#sidebar-btn').click(function(e){
-        let state = $(this).attr('data-toggle');
-        if(state === 'on'){
-            $('.sidebar').removeClass('sidebar-active');
-            $(this).attr('data-toggle','off');
-        }else{
-            $('.sidebar').addClass('sidebar-active');
-            $(this).attr('data-toggle','on');
-        }
-    });
-
-    $('#close-overlay').click(function(e){
-        $('#overlay').css('display','none')
-    });
-</script>
+<script src='/static/scripts/base.js'></script>
 
 {% block scripts %}
 {% endblock %}

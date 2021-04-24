@@ -117,7 +117,7 @@
     stroke:#4150D7;
     fill: white;
 }
-.tab-active>.tab-indicator{
+.tab-active .tab-indicator{
     width: 7px;
     margin-right: calc(30% - 7px);
 }
@@ -295,12 +295,17 @@
 .accordion-answer{
     transition: 0.5s ease-in-out;
     overflow-y: hidden;
-    max-height: 500px;
+}
+
+.accordion-entry-collapsed .accordion-expand img{
+    transform: rotate(0deg);
 }
 
 .accordion-entry-collapsed .accordion-answer{
-    max-height: 0;
+    height: 0;
 }
-.accordion-entry-collapsed .accordion-expand img{
-    transform: rotate(0deg);
+
+div[placeholder]:empty::before {
+    content: attr(placeholder);
+    color: #ccc;
 }

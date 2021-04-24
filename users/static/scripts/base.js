@@ -6,6 +6,61 @@ $(document).ready(()=>{
     getOnline(15);
     $('.chat-button').click(startChat);
     $('.follow-button').click(follow);
+
+    $('.accordion-question').click(function(e){
+        
+        let entry = $(this).parent();
+        if(entry.hasClass('accordion-entry-collapsed')){
+            expand(entry);
+            $('.accordion-entry', entry.parent()).each(function(ind,ele){
+                console.log($(ele),entry);
+                if(!$(ele).is(entry)){
+                    collapse($(ele));
+                }
+            })
+        }else{
+            collapse(entry);
+        }
+    
+        function expand(ele){
+            let ans = ele.find('.accordion-answer')[0];
+            let p=ans.querySelector('p');
+            let contentHeight = (p.clientHeight + 2*parseInt($(p).css('margin').replace('px', ''))) + 'px';
+            ele.removeClass('accordion-entry-collapsed');
+            ans.style.height=contentHeight;
+            setTimeout(()=>{ans.style.height='auto';},500);
+        }
+        function collapse(ele){
+            let ans = ele.find('.accordion-answer')[0];
+            let p=ans.querySelector('p');
+            let contentHeight = (p.clientHeight + 2*parseInt($(p).css('margin').replace('px', ''))) + 'px';
+            ans.style.height=contentHeight;
+            setTimeout(()=>{ans.style.height=0;},10);
+            ele.addClass('accordion-entry-collapsed')
+        }
+    });
+
+
+    $('#sidebar-btn').click(function(e){
+        let state = $(this).attr('data-toggle');
+        if(state === 'on'){
+            $('.sidebar').removeClass('sidebar-active');
+            $(this).attr('data-toggle','off');
+        }else{
+            $('.sidebar').addClass('sidebar-active');
+            $(this).attr('data-toggle','on');
+        }
+    });
+
+    $('#close-overlay').click(function(e){
+        $('#overlay').css('display','none')
+    });
+
+    $("[contenteditable]").focusout(function(){      
+        if (!$(this).text().trim().length) {
+            $(this).empty();
+        }
+    });
 });
 
 var updateOnlinePanel=function(data){
@@ -108,3 +163,4 @@ var follow=function(ele){
         }
     })   
 }
+

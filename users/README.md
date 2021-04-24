@@ -9,7 +9,7 @@
 
 #### Creating a virtual environment:
 - Create a python virtual environment inside the project directory using the command `python3 -m venv env`.
-- To activate the environment, run `source env/bin/activate` in **Linux** and `\env\Scripts\activate.bat` in **Windows**.
+- To activate the environment, run `source env/bin/activate` in **Linux** and `env\Scripts\activate.bat` in **Windows**.
 - To exit the virtual environment, run `deactivate`.
 
 #### Installing dependencies:
@@ -37,6 +37,8 @@ _Note: This step is optional. Required only for the chat app for running a redis
 - Activate the virtual environment.
 - Run `python3 manage.py runserver 0.0.0.0:8000`.
 - The site will be available at http://localhost:8000/.
+
+__NOTE:__ Use `python` instead of `python3` on windows.
 
 ## UI Design:
 - [Figma - SWC Alumni Portal](https://www.figma.com/file/YvVwese9d4ACystZHHYa0E/SWC-alumni-portal?node-id=68%3A301)

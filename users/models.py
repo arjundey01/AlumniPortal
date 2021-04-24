@@ -11,11 +11,14 @@ def profile_image_path(instance, filename):
 
 class Account(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
-    name=models.CharField(max_length=50)
+    name=models.CharField(max_length=100)
     email=models.EmailField()
     following=models.ManyToManyField('Account',related_name='followers', blank=True)
     profile_img=models.ImageField(upload_to=profile_image_path,null=True)
     last_active=models.DateTimeField(null=True,default=datetime.now)
+    organization=models.ManyToManyField('Organization',related_name='employees')
+    designation = models.ManyToManyField('Designation',related_name='employees')
+    is_alumni = models.BooleanField(default=False)
     @property
     def profile_img_url(self):
         if self.profile_img:
@@ -39,8 +42,14 @@ class Education(models.Model):
     education=models.CharField(max_length=100)
     
 class Contact(models.Model):
-     user=models.OneToOneField(Account, on_delete=models.CASCADE, related_name="contact")
-     gmail=models.EmailField(blank=True, null=True)
-     outlook=models.EmailField(blank=True, null=True)
-     linkedin=models.URLField(blank=True, null=True)
-     mobile=models.IntegerField(blank=True, null=True)
+    user=models.OneToOneField(Account, on_delete=models.CASCADE, related_name="contact")
+    gmail=models.EmailField(blank=True, null=True)
+    outlook=models.EmailField(blank=True, null=True)
+    linkedin=models.URLField(blank=True, null=True)
+    mobile=models.IntegerField(blank=True, null=True)
+
+class Organization(models.Model):
+    name=models.CharField(max_length=150)
+
+class Designation(models.Model):
+    title=models.CharField(max_length=150)

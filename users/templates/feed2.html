@@ -80,7 +80,7 @@
     </div>
     <div class="mt-10">
         <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-5 accordion-entry-collapsed">
-            <div class="accordion-question flex justify-between items-center p-2">
+            <div class="accordion-question flex justify-between items-center p-2 cursor-pointer">
                 <p>How often do you work past 5PM and on weekends?</p>
                 <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
             </div>
@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-5 accordion-entry-collapsed">
-            <div class="accordion-question flex justify-between items-center p-2">
+            <div class="accordion-question flex justify-between items-center p-2 cursor-pointer">
                 <p>How often do you work past 5PM and on weekends?</p>
                 <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
             </div>
@@ -98,7 +98,7 @@
             </div>
         </div>
         <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-5 accordion-entry-collapsed">
-            <div class="accordion-question flex justify-between items-center p-2">
+            <div class="accordion-question flex justify-between items-center p-2 cursor-pointer">
                 <p>How often do you work past 5PM and on weekends?</p>
                 <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
             </div>
@@ -107,7 +107,7 @@
             </div>
         </div>
         <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-5 accordion-entry-collapsed">
-            <div class="accordion-question flex justify-between items-center p-2">
+            <div class="accordion-question flex justify-between items-center p-2 cursor-pointer">
                 <p>How often do you work past 5PM and on weekends?</p>
                 <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
             </div>
@@ -119,53 +119,8 @@
     </div>
 </div>
 
-<div class="suggestions rounded w-full bg-white py-7 px-10 shadow-lg my-10">
-    <p class="text-lg font-semibold">Suggestions</p>
-    <div>
-        <div class="flex justify-between items-center py-5 border-b-2 border-gray-200 border-solid">
-            <div class="flex items-center justify-start">
-                <div class="rounded-full h-14 w-14 overflow-hidden flex items-center justify-center flex-shrink-0">
-                    <img src="{{user.account.profile_img_url}}" class= "h-14 w-14 object-cover" alt="">
-                </div>
-                <div class="mx-4">
-                    <p class="mt-1">{{user.account.name}}</p>
-                    <p class="text-sm text-gray-400 mt-1">Associate Project Manager | Google</p>
-                </div>
-            </div>
-            <div>
-                <button class="bg-accent py-1 px-4 text-white text-md rounded">Follow<b>&#8314</b></button>
-            </div>
-        </div>
-        <div class="flex justify-between items-center py-5 border-b-2 border-gray-200 border-solid">
-            <div class="flex items-center justify-start">
-                <div class="rounded-full h-14 w-14 overflow-hidden flex items-center justify-center flex-shrink-0">
-                    <img src="{{user.account.profile_img_url}}" class= "h-14 w-14 object-cover" alt="">
-                </div>
-                <div class="mx-4">
-                    <p class="mt-1">{{user.account.name}}</p>
-                    <p class="text-sm text-gray-400 mt-1">Associate Project Manager | Google</p>
-                </div>
-            </div>
-            <div>
-                <button class="bg-accent py-1 px-4 text-white text-md rounded">Follow<b>&#8314</b></button>
-            </div>
-        </div>
-        <div class="flex justify-between items-center py-5 border-b-2 border-gray-200 border-solid">
-            <div class="flex items-center justify-start">
-                <div class="rounded-full h-14 w-14 overflow-hidden flex items-center justify-center flex-shrink-0">
-                    <img src="{{user.account.profile_img_url}}" class= "h-14 w-14 object-cover" alt="">
-                </div>
-                <div class="mx-4">
-                    <p class="mt-1">{{user.account.name}}</p>
-                    <p class="text-sm text-gray-400 mt-1">Associate Project Manager | Google</p>
-                </div>
-            </div>
-            <div>
-                <button class="bg-accent py-1 px-4 text-white text-md rounded">Follow<b>&#8314</b></button>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'suggestions.html'%}
+
 {% endblock %}
 
 {% block overlay %}
@@ -174,25 +129,5 @@
 
 {% block scripts %}
 <script type="text" id="data-username">{{user.username}}</script>
-<script>
-
-    $('.accordion-expand').click(function(e){
-        
-        let entry = $(this).parent().parent();
-        let ans = entry.find('.accordion-answer')[0];
-
-        if(entry.hasClass('accordion-entry-collapsed')){
-            entry.removeClass('accordion-entry-collapsed');
-            $('.accordion-answer', entry.parent()).each(function(ind,ele){
-                if(ele!=ans){
-                    $(ele).parent().addClass('accordion-entry-collapsed');
-                }
-            })
-        }else{
-            entry.addClass('accordion-entry-collapsed');
-        }
-    });
-</script>
-
 <script src="/static/scripts/post2.js"></script>
 {% endblock %}
