@@ -7,107 +7,105 @@
     <title>Alumni Portal</title>
     <link rel="stylesheet" href="/static/stylesheets/style-reset.css"> 
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/stylesheets/style-base2.css"> 
+    <link rel="stylesheet" href="/static/stylesheets/style-base.css"> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
 </head>
 <body>
 
-    <div class="sidebar">
-        <div id="logo">
-            <img src="/static/img/alumni-portal-logo.svg" alt="">
-            <p class="text-xl text-black mt-2">Alumni Portal</p>
-            <p class="text-gray-500">IIT Guwahati</p>
+    <div class="sidebar bg-white h-full fixed top-0 duration-500 overflow-hidden">
+        <div id="logo" class="flex flex-col items-center justify-center mt-3 mb-5">
+            <img src="/static/img/alumni-portal-logo.svg" alt="" class="h-14">
+            <p class="text-xl text-black mt-1">Alumni Portal</p>
+            <p class="text-gray-500 text-sm">IIT Guwahati</p>
         </div>
         <ul id="tabs">
-            <li class="{% if request.resolver_match.view_name == 'home' %}tab-active{% endif %}">
-                <a href="/">
-                    <div class="tab-indicator"></div>
-                    <div class="tab-icon-wrapper" >
-                        <svg width="28" height="28" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6.19616 15.9447V13.5031C6.19615 12.8821 6.6925 12.3775 7.30748 12.3733H9.56015C10.1781 12.3733 10.679 12.8792 10.679 13.5031V13.5031V15.9523C10.6788 16.4795 11.0956 16.9105 11.6176 16.9228H13.1194C14.6165 16.9228 15.8301 15.6973 15.8301 14.1856V14.1856V7.24002C15.8221 6.6453 15.5456 6.08682 15.0792 5.72353L9.9431 1.5456C9.04332 0.818135 7.76424 0.818135 6.86445 1.5456L1.75089 5.73111C1.28275 6.09293 1.00577 6.65234 1 7.2476V14.1856C1 15.6973 2.21363 16.9228 3.71071 16.9228H5.21249C5.74746 16.9228 6.18114 16.4849 6.18114 15.9447V15.9447" stroke="#CCCCCC" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            <li class="{% if request.resolver_match.view_name == 'home' %}tab-active{% endif %} mt-2">
+                <a href="/" class="flex items-center justify-start">
+                    <div class="tab-indicator h-16 w-0 mr-9 bg-accent rounded-tr-lg rounded-br-lg"></div>
+                    <div class="tab-icon-wrapper flex items-center justify-center w-12 h-12" >
+                        <svg width="24" height="24" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6.19616 15.9447V13.5031C6.19615 12.8821 6.6925 12.3775 7.30748 12.3733H9.56015C10.1781 12.3733 10.679 12.8792 10.679 13.5031V13.5031V15.9523C10.6788 16.4795 11.0956 16.9105 11.6176 16.9228H13.1194C14.6165 16.9228 15.8301 15.6973 15.8301 14.1856V14.1856V7.24002C15.8221 6.6453 15.5456 6.08682 15.0792 5.72353L9.9431 1.5456C9.04332 0.818135 7.76424 0.818135 6.86445 1.5456L1.75089 5.73111C1.28275 6.09293 1.00577 6.65234 1 7.2476V14.1856C1 15.6973 2.21363 16.9228 3.71071 16.9228H5.21249C5.74746 16.9228 6.18114 16.4849 6.18114 15.9447V15.9447" stroke="#888888" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <p>Home</p>
+                    <p class="text-xl text-gray-400 ml-5">Home</p>
                 </a>
             </li>
-            <li class="{% if request.resolver_match.view_name == 'events' %}tab-active{% endif %}">
-                <a href="">
-                    <div class="tab-indicator"></div>
-                    <div class='tab-icon-wrapper'>
-                        <svg width="40" height="40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M 5 2 L 5 4 L 4 4 C 2.895 4 2 4.895 2 6 L 2 17 C 2 18.105 2.895 19 4 19 L 11.34375 19 C 11.12175 18.374 11 17.702 11 17 L 4 17 L 4 8 L 16 8 L 16 11.09375 C 16.326 11.03875 16.659 11 17 11 C 17.341 11 17.674 11.03875 18 11.09375 L 18 6 C 18 4.895 17.105 4 16 4 L 15 4 L 15 2 L 13 2 L 13 4 L 7 4 L 7 2 L 5 2 z M 10 9.25 L 9.15625 11.21875 L 7 11.40625 L 8.625 12.84375 L 8.15625 14.9375 L 10 13.8125 L 11.84375 14.9375 L 11.375 12.84375 L 13 11.40625 L 10.84375 11.21875 L 10 9.25 z M 17 12 C 14.239 12 12 14.239 12 17 C 12 19.761 14.239 22 17 22 C 19.761 22 22 19.761 22 17 C 22 14.239 19.761 12 17 12 z M 19.125 14.0625 L 20.53125 15.46875 L 16 20 L 13 17 L 14.40625 15.59375 L 16 17.1875 L 19.125 14.0625 z" stroke="#CCCCCC" fill="#CCCCCC" stroke-width="0"/>
+            <li class="{% if request.resolver_match.view_name == 'events' %}tab-active{% endif %} mt-2">
+                <a href="" class="flex items-center justify-start">
+                    <div class="tab-indicator h-16 w-0 mr-9 bg-accent rounded-tr-lg rounded-br-lg"></div>
+                    <div class='tab-icon-wrapper flex items-center justify-center w-12 h-12'>
+                        <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M 5 2 L 5 4 L 4 4 C 2.895 4 2 4.895 2 6 L 2 17 C 2 18.105 2.895 19 4 19 L 11.34375 19 C 11.12175 18.374 11 17.702 11 17 L 4 17 L 4 8 L 16 8 L 16 11.09375 C 16.326 11.03875 16.659 11 17 11 C 17.341 11 17.674 11.03875 18 11.09375 L 18 6 C 18 4.895 17.105 4 16 4 L 15 4 L 15 2 L 13 2 L 13 4 L 7 4 L 7 2 L 5 2 z M 10 9.25 L 9.15625 11.21875 L 7 11.40625 L 8.625 12.84375 L 8.15625 14.9375 L 10 13.8125 L 11.84375 14.9375 L 11.375 12.84375 L 13 11.40625 L 10.84375 11.21875 L 10 9.25 z M 17 12 C 14.239 12 12 14.239 12 17 C 12 19.761 14.239 22 17 22 C 19.761 22 22 19.761 22 17 C 22 14.239 19.761 12 17 12 z M 19.125 14.0625 L 20.53125 15.46875 L 16 20 L 13 17 L 14.40625 15.59375 L 16 17.1875 L 19.125 14.0625 z" stroke="#888888" fill="#888888" stroke-width="0"/>
                         </svg>
                     </div>
-                    <p>Events</p>
+                    <p class="text-xl text-gray-400 ml-5">Events</p>
                 </a>
             </li>
-            <li class="{% if request.resolver_match.view_name == 'faq' %}tab-active{% endif %}">
-                <a href="/faq/">
-                    <div class="tab-indicator"></div>
-                    <div class='tab-icon-wrapper'>
-                        <svg width="32" height="32" viewBox="-1 -1 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8 11.3333V8M8 4.66667H7.99167M0.5 8C0.5 3.85786 3.85786 0.5 8 0.5C12.1421 0.5 15.5 3.85786 15.5 8C15.5 12.1421 12.1421 15.5 8 15.5C3.85786 15.5 0.5 12.1421 0.5 8Z" stroke="#CCCCCC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <li class="{% if request.resolver_match.view_name == 'faq' %}tab-active{% endif %} mt-2">
+                <a href="/faq/" class="flex items-center justify-start">
+                    <div class="tab-indicator h-16 w-0 mr-9 bg-accent rounded-tr-lg rounded-br-lg"></div>
+                    <div class='tab-icon-wrapper flex items-center justify-center w-12 h-12'>
+                        <svg width="28" height="28" viewBox="-1 -1 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 11.3333V8M8 4.66667H7.99167M0.5 8C0.5 3.85786 3.85786 0.5 8 0.5C12.1421 0.5 15.5 3.85786 15.5 8C15.5 12.1421 12.1421 15.5 8 15.5C3.85786 15.5 0.5 12.1421 0.5 8Z" stroke="#888888" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>    
                     </div>
-                    <p>FAQ</p>
+                    <p class="text-xl text-gray-400 ml-5">FAQ</p>
                 </a>
             </li>
-            <li class="{% if request.resolver_match.view_name == 'groups' %}tab-active{% endif %}">
-                <a href="">
-                    <div class="tab-indicator"></div>
-                    <div class='tab-icon-wrapper'>
-                        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="-2 -2 28 28">
-                            <path d="M 8 1 C 6.3431458 1 5 2.3431458 5 4 C 5 5.6568542 6.3431458 7 8 7 C 9.6568542 7 11 5.6568542 11 4 C 11 2.3431458 9.6568542 1 8 1 z M 16 1 C 14.343146 1 13 2.3431458 13 4 C 13 5.6568542 14.343146 7 16 7 C 17.656854 7 19 5.6568542 19 4 C 19 2.3431458 17.656854 1 16 1 z M 4 7 C 2.3431458 7 1 8.3431458 1 10 C 1 11.656854 2.3431458 13 4 13 C 5.6568542 13 7 11.656854 7 10 C 7 8.3431458 5.6568542 7 4 7 z M 20 7 C 18.343146 7 17 8.3431458 17 10 C 17 11.656854 18.343146 13 20 13 C 21.656854 13 23 11.656854 23 10 C 23 8.3431458 21.656854 7 20 7 z M 12 12 C 10.343146 12 9 13.343146 9 15 C 9 16.656854 10.343146 18 12 18 C 13.656854 18 15 16.656854 15 15 C 15 13.343146 13.656854 12 12 12 z M 2.09375 13.5 C 0.89375 14.2 2.9605947e-16 15.5 0 17 L 0 18.1875 C 0 18.1875 1 19 4 19 C 7 19 8 18.1875 8 18.1875 L 8 17 C 8 15.5 7.10625 14.2 5.90625 13.5 C 5.30625 13.8 4.7 14 4 14 C 3.3 14 2.69375 13.8 2.09375 13.5 z M 18.09375 13.5 C 16.89375 14.2 16 15.5 16 17 L 16 18.1875 C 16 18.1875 17 19 20 19 C 23 19 24 18.1875 24 18.1875 L 24 17 C 24 15.5 23.10625 14.2 21.90625 13.5 C 21.30625 13.8 20.7 14 20 14 C 19.3 14 18.69375 13.8 18.09375 13.5 z M 10.09375 18.5 C 8.89375 19.2 8 20.5 8 22 L 8 23.1875 C 8 23.1875 9 24 12 24 C 15 24 16 23.1875 16 23.1875 L 16 22 C 16 20.5 15.10625 19.2 13.90625 18.5 C 13.30625 18.8 12.7 19 12 19 C 11.3 19 10.69375 18.8 10.09375 18.5 z" fill="#CCCCCC" stroke-width="1.5"/>
-                        </svg> -->
-                        <svg width="32" height="28" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.1667 14.6654H17.3334V12.9987C17.3334 11.618 16.2141 10.4987 14.8334 10.4987C14.0371 10.4987 13.3277 10.871 12.8699 11.4511M13.1667 14.6654H4.83341M13.1667 14.6654V12.9987C13.1667 12.4518 13.0614 11.9296 12.8699 11.4511M4.83341 14.6654H0.666748V12.9987C0.666748 11.618 1.78604 10.4987 3.16675 10.4987C3.96309 10.4987 4.67246 10.871 5.13029 11.4511M4.83341 14.6654V12.9987C4.83341 12.4518 4.93877 11.9296 5.13029 11.4511M5.13029 11.4511C5.74467 9.91622 7.24576 8.83203 9.00008 8.83203C10.7544 8.83203 12.2555 9.91622 12.8699 11.4511M11.5001 3.83203C11.5001 5.21274 10.3808 6.33203 9.00008 6.33203C7.61937 6.33203 6.50008 5.21274 6.50008 3.83203C6.50008 2.45132 7.61937 1.33203 9.00008 1.33203C10.3808 1.33203 11.5001 2.45132 11.5001 3.83203ZM16.5001 6.33203C16.5001 7.25251 15.7539 7.9987 14.8334 7.9987C13.9129 7.9987 13.1667 7.25251 13.1667 6.33203C13.1667 5.41156 13.9129 4.66536 14.8334 4.66536C15.7539 4.66536 16.5001 5.41156 16.5001 6.33203ZM4.83341 6.33203C4.83341 7.25251 4.08722 7.9987 3.16675 7.9987C2.24627 7.9987 1.50008 7.25251 1.50008 6.33203C1.50008 5.41156 2.24627 4.66536 3.16675 4.66536C4.08722 4.66536 4.83341 5.41156 4.83341 6.33203Z" stroke="#CCCCCC" stroke-linecap="round" stroke-linejoin="round"/>
+            <li class="{% if request.resolver_match.view_name == 'groups' %}tab-active{% endif %} mt-2">
+                <a href="" class="flex items-center justify-start">
+                    <div class="tab-indicator h-16 w-0 mr-9 bg-accent rounded-tr-lg rounded-br-lg"></div>
+                    <div class='tab-icon-wrapper flex items-center justify-center w-12 h-12'>
+                        <svg width="28" height="24" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.1667 14.6654H17.3334V12.9987C17.3334 11.618 16.2141 10.4987 14.8334 10.4987C14.0371 10.4987 13.3277 10.871 12.8699 11.4511M13.1667 14.6654H4.83341M13.1667 14.6654V12.9987C13.1667 12.4518 13.0614 11.9296 12.8699 11.4511M4.83341 14.6654H0.666748V12.9987C0.666748 11.618 1.78604 10.4987 3.16675 10.4987C3.96309 10.4987 4.67246 10.871 5.13029 11.4511M4.83341 14.6654V12.9987C4.83341 12.4518 4.93877 11.9296 5.13029 11.4511M5.13029 11.4511C5.74467 9.91622 7.24576 8.83203 9.00008 8.83203C10.7544 8.83203 12.2555 9.91622 12.8699 11.4511M11.5001 3.83203C11.5001 5.21274 10.3808 6.33203 9.00008 6.33203C7.61937 6.33203 6.50008 5.21274 6.50008 3.83203C6.50008 2.45132 7.61937 1.33203 9.00008 1.33203C10.3808 1.33203 11.5001 2.45132 11.5001 3.83203ZM16.5001 6.33203C16.5001 7.25251 15.7539 7.9987 14.8334 7.9987C13.9129 7.9987 13.1667 7.25251 13.1667 6.33203C13.1667 5.41156 13.9129 4.66536 14.8334 4.66536C15.7539 4.66536 16.5001 5.41156 16.5001 6.33203ZM4.83341 6.33203C4.83341 7.25251 4.08722 7.9987 3.16675 7.9987C2.24627 7.9987 1.50008 7.25251 1.50008 6.33203C1.50008 5.41156 2.24627 4.66536 3.16675 4.66536C4.08722 4.66536 4.83341 5.41156 4.83341 6.33203Z" stroke="#888888" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                             
                     </div>
-                    <p>Groups</p>
+                    <p class="text-xl text-gray-400 ml-5">Groups</p>
                 </a>
             </li>
         </ul>
     </div>
 
     <div id='main'>
-        <div id="header">
-            <form id="search-form" action="">
-                <img src="/static/img/search.svg" alt="">
-                <input type="text" name="" id="search-input" placeholder="Search...">
+        <div id="header" class="sticky top-0 flex items-center justify-start bg-white h-20">
+            <form id="search-form" class="bg-gray-100 h-13 w-1/2 flex items-center ml-8 md:ml-16 p-2.5" action="">
+                <img src="/static/img/search.svg" alt="" class="mx-1 md:mx-5 h-7 w-7">
+                <input type="text" name="" id="search-input" placeholder="Search..." class="flex-1 bg-transparent min-w-0">
             </form>
-            <div id="header-options">
-                <a href="">
-                    <img src="/static/img/bell.svg" alt="">
-                    <div class="icon-tag"></div>
-                </a>
-                <a href="{% url 'chats' %}">
+            <div class="w-5 md:w-1/12"></div>
+            <div id="header-options" class="w-1/6 flex justify-around space-x-2 items-center lg:ml-14 lg:mr-7">
+                <a href="{% url 'chats' %}" class="relative">
                     <img src="/static/img/chat.svg" alt="">
-                    <div class="icon-tag"></div>
+                    <div class="icon-tag absolute rounded-full h-2.5 w-2.5 top-0.5 right-0.5"></div>
+                </a>
+                <a href="" class="relative">
+                    <img src="/static/img/bell.svg" alt="">
+                    <div class="icon-tag absolute rounded-full h-2.5 w-2.5 top-0.5 right-0.5 icon-tag-active"></div>
                 </a>
             </div>
-            <a id="header-profile" href="{% url 'account' user.username %}">
-                <img src="{{user.account.profile_img_url}}" alt="">
+            <a id="header-profile" href="{% url 'account' user.username %}" class="ml-5 sm:ml-8 md:ml-10">
+                <img src="{{user.account.profile_img_url}}" alt="" class="rounded-full object-cover p-0.5">
             </a>
 
         </div>
         <div id="content-wrapper">
-            <div id="content" class="sm:px-0 md:px-5 overflow-auto">
+            <div id="content" class="overflow-auto">
                 {% block content %}{% endblock %}
             </div>
-            <div id="right-pane">
+            <div id="right-pane" class="h-screen fixed right-0 hidden overflow-y-scroll w-2/5">
                 {% block right-pane %}{% endblock %}
             </div>
         </div>  
     </div>
 
-    <div id="sidebar-btn" data-toggle='off' class="flex justify-center items-center bg-black hover:bg-black-400 cursor-pointer">
+    <div id="sidebar-btn" data-toggle='off' class="fixed rounded-full w-12 h-12 flex justify-center items-center bg-black hover:bg-black-400 cursor-pointer">
         <img src="/static/img/burger.svg" alt="">
     </div>
 
-    <div id="overlay">
-        <img src="/static//img/close.svg" alt="" id="close-overlay">
+    <div id="overlay" class="w-screen h-screen items-center justify-center fixed top-0 left-0 hidden">
+        <img src="/static//img/close.svg" alt="" id="close-overlay" class="bg-black fixed top-5 right-5 w-10 h-10 cursor-pointer rounded-full p-1.5">
         {% block overlay %}
         {% endblock %}
     </div>

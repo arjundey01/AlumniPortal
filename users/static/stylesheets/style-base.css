@@ -1,0 +1,159 @@
+/*BASE LAYOUT*/
+
+.sidebar{
+    width: 70vw;
+    left: -80vw;
+    z-index: 100;
+}
+
+.sidebar-active{
+    left:0;
+}
+
+#content-wrapper{
+    background: aliceblue;
+}
+
+#right-pane{
+    top: 90px;
+    padding: 10px 3%;
+    padding-bottom: 150px;
+}
+
+#content{
+    min-height: 1500px;
+    width: 100%;
+    padding-top: 10px;
+}
+
+#main{
+    width: 100%;
+}
+
+#sidebar-btn{
+    bottom: 3%;
+    right: 3%;
+    z-index: 1000;
+}
+
+.tab-active>a>p{
+    color:#4150D7 !important;
+}
+.tab-active path{
+    stroke:#4150D7;
+    fill: white;
+}
+.tab-active .tab-indicator{
+    width: 0.45rem;
+    margin-right: 1.8rem;
+}
+
+#header-options img{
+    height: 9vw;
+    width: 9vw;
+    max-width: 30px;
+    max-height: 30px;
+}
+
+#header-options .icon-tag-active{
+    background: #FC4444;
+}
+
+#header-profile img{
+    border: 2px solid #4150D7;
+    height: 12vw;
+    width: 12vw;
+    max-width: 60px;
+    max-height: 60px;
+}
+
+#overlay{
+    background: rgba(16,16,16,0.6);
+    z-index: 10000;
+}
+
+
+@media (min-width: 1336px){
+    .sidebar{
+        width: 325px;
+        left:0;
+    }
+
+    #main{
+        width: calc(100% - 325px);
+        margin-left: 325px;
+    }
+
+    #sidebar-btn{
+        display: none;
+    }
+
+    #right-pane{
+        width: calc(0.4 * (100% - 325px));
+    }
+}
+
+@media (min-width: 992px){
+
+    #right-pane{
+        display: block;
+    }
+
+    #content{
+        width: 60%;
+        padding-left: 4%;
+        padding-top: 10px;
+    }
+
+    #header{
+        height: 90px;
+    }
+}
+
+
+
+/* GENERAL CLASSES */
+.text-accent{
+    color:#4150D7;
+}
+
+.bg-accent{ 
+    background-color:#4150D7;
+}
+
+.svg-accent path{
+    stroke:#4150D7;
+    fill: white;
+}
+
+.svg-accent-inv path{
+    stroke: white;
+    fill: #4150D7;
+}
+
+.accordion-expand img{
+    transition: 0.5s ease-in-out;
+    transform: rotate(180deg);
+}
+
+.accordion-answer{
+    transition: 0.5s ease-in-out;
+    overflow-y: hidden;
+}
+
+.accordion-entry-collapsed .accordion-expand img{
+    transform: rotate(0deg);
+}
+
+.accordion-entry-collapsed .accordion-answer{
+    height: 0;
+}
+
+div[placeholder]:empty::before {
+    content: attr(placeholder);
+    color: #ccc;
+}
+
+.bg-footer{
+    background-color: #3D3A3A;
+}

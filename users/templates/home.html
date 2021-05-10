@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'stylesheets/style-home.css' %}">
+  <link rel="stylesheet" href="{% static 'stylesheets/style-base.css' %}">
   <title>Home</title>
 </head>
 <body>
@@ -23,7 +23,7 @@
            <a href="#events">Events</a>
         </div>
         <div>
-          <a href="{% url 'signin' %}"><button type="submit" class="bg-purple-450 w-28 text-white rounded-md py-1.5 px-0.5">Log in</button></a>
+          <a href="{% url 'signin' %}"><button type="submit" class="bg-accent w-28 text-white rounded-md py-1.5 px-0.5">Log in</button></a>
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
 
   <div class="flex justify-between mx-14 font-roboto">
     <div class="w-3/6">
-      <H1 class="text-5xl">Welcome to <span class="text-purple-450">Alumni Portal</span>, IIT Guwahati</H1>
+      <H1 class="text-5xl">Welcome to <span class="text-accent">Alumni Portal</span>, IIT Guwahati</H1>
       <br>
       <br>
       <br>
@@ -48,13 +48,13 @@
     <div class="flex mx-8 space-x-5 font-roboto">
       <br>
       <a href="{% url 'signin' %}">
-        <button class="bg-purple-450 w-44 text-white rounded h-full">Log in</button>
+        <button class="bg-accent w-44 text-white rounded h-full">Log in</button>
       </a>
       <button class="bg-transparent rounded hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent w-44">Learn more</button>
     </div>
 
     <div class="h-20"></div>
-    <div class="h-80 w-full bg-purple-450 py-12 px-64">
+    <div class="h-80 w-full bg-accent py-12 px-64">
       <div class="content-center text-white flex flex-col items-center font-roboto">
         <h1 class="text-4xl" id="events">Events</h1>
         <p class="w-3/6 mt-8"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed minima aut nihil deleniti blanditiis? Veritatis ipsam id ducimus nam placeat nemo veniam nulla magnam?</p> 
@@ -64,7 +64,7 @@
     <div class='h-20'></div>
 
     <div>
-      <small class="text-purple-450 opacity-50 mx-14" id="aboutus">ABOUT US</small>
+      <small class="text-accent opacity-50 mx-14" id="aboutus">ABOUT US</small>
       <hr style="width:90%" class="mx-14">
     </div>
 
@@ -88,7 +88,7 @@
 
         <div>
           <div class="flex">
-            <div class="w-9 h-8 bg-purple-400 rounded-md "></div>
+            <div class="w-9 h-8 bg-accent rounded-md "></div>
             <div class="text-2xl opacity-80 ml-4">Questions</div>
           </div>
           <div class="w-full">
