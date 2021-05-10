@@ -1,33 +1,39 @@
-<link rel="stylesheet" href="/static/stylesheets/style-post.css">
+<div id="comment-box" class="bg-white md:rounded p-4 w-full md:w-3/5 lg:w-2/5 h-screen md:h-5/6 lg:max-w-screen-sm flex flex-col justify-center" style="display:none;" >
+    <p class="text-2xl ml-3 mt-3">Comments</p>
+    <div id="comment-box-content" class="mt-4 flex flex-col flex-1 w-full px-5 items-start overflow-scroll">
 
-<div style="height: 100%; margin: 0;">
-    <div class="comment-box jumbotron">
-       <div>
-        <button type="button" class="close modal-close ml-auto hehe" data-dismiss="modal" aria-label="Close"><span style="text-color:white;" aria-hidden="true">×</span></button>
-        <br><br>
-        <div id="comment-feed" class="overflow-scroll" style="height: 200px;">
-
-        </div>
-        <br><br>
-        <form method="POST" id="comment-form" style="width: 350px; margin: auto; height: 100px; position: absolute; bottom: 10px; float: left;">
-            {% csrf_token %}
-            <div class="com" style="width: 300px; height: 100px;">
-                {{commentform.content}}
-                <button class="comment-form-submit" 
-            style="font-size: 18px; color:white; background: rgb(67, 79, 214); border: none; padding: 5px; width: 120px;">Post</button>
-        </div>
-            
-        </form>
-       </div>
     </div>
-</div>
-
-
-<template id="comment-template">
-    <div class='comment'>
-        <div class="comment-header">
-            <small class="comment-author"></small>
-            <div><small class="comment-date"></small></div>
+    <form method="POST" id="comment-form" class="flex items-center w-full mt-3">
+        {% csrf_token %}
+        <div class=" bg-gray-100 p-2 flex-1 flex">
+            <textarea name="content" type="text" id="comment-form-input" class="bg-transparent flex-1" style="min-height: 24px; height: 24px;"></textarea>
         </div>
-        <div class="comment-content"></div>
+        <button id="comment-form-submit" class="py-1 px-6 ml-5 text-white text-lg bg-accent rounded">Post</button>
+    </form>
+</div>
+<template id="comment-template">
+    <div class="comment flex items-start my-4">
+        <div class="rounded-full h-12 w-12 overflow-hidden flex items-center justify-center flex-shrink-0">
+            <img class="comment-author-img object-cover h-12 w-12" src="" alt="">
+        </div>
+        <div class="flex flex-col ml-4">
+            <div class="comment-body bg-gray-100 rounded-lg py-2 px-4 w-auto">
+                <p class="comment-author text-lg">Arjun Dey</p>
+                <p class="comment-content text-gray-500" style="word-break: break-word;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam libero a enim beatae assumenda dolores laudantium quis id consequuntur rem nobis quos, qui aut adipisci, ut cum reiciendis esse quod?</p>
+            </div>
+            <!-- <div class="comment-date self-end text-xs text-gray-500 mt-1"></div> -->
+        </div>
+    </div>
 </template>
+
+<script>
+    var tmp=document.createElement('div');
+    document.body.appendChild(tmp);
+    let textarea = document.querySelector("#comment-form-input");
+    $('#comment-form-input').on("input", function(e){
+        tmp.setAttribute('style',`width:${this.clientWidth}px;`);
+        tmp.innerHTML=this.value;
+        this.style.height = Math.max(24, Math.min(96,tmp.clientHeight)) + "px";
+
+    }); 
+</script>

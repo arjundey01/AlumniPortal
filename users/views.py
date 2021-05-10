@@ -9,29 +9,16 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from post.views import feed
 from .forms import *
 import json
 
 
 def home(request):
-    context = initialize_context(request)
+    if request.user.is_authenticated:
+        return feed(request)
+    return render(request, 'home.html')
 
-    return render(request, 'home.html', context)
-
-
-def initialize_context(request):
-    context = {}
-
-    # Check for any errors in the session
-    error = request.session.pop('flash_error', None)
-
-    if error != None:
-        context['errors'] = []
-        context['errors'].append(error)
-
-    # Check for user in the session
-    #context['user'] = request.session.get('user', {'is_authenticated': False})
-    return context
 
 
 def sign_in(request):
@@ -50,9 +37,7 @@ def callback(request):
     token = get_token_from_code(request.get_full_path(), expected_state)
     # Get the user's profile
     user = get_user(token)
-    is_signup = False
     if not User.objects.filter(username=user['mail']).exists():
-        is_signup = True
         new_user = User.objects.create_user(user['mail'])
         new_user.save()
         account = Account()
@@ -62,10 +47,6 @@ def callback(request):
         account.save()
     login(request, User.objects.get(username=user['mail']))
     store_token(request, token)
-    #store_user(request, user)
-    # if is_signup:
-    #     return redirect('signup-details')
-    #else:
     return HttpResponseRedirect(reverse('home'))
 
 def signup_details(request):
@@ -148,6 +129,12 @@ def account(request):
     context={}
     context['user']=User.objects.get(username="arjundey@iitg.ac.in")
     return render(request,'profile.html',context)
+
+
+
+
+
+#========================================== PROFILE ==================================================
 
 
 def profile(request, username):
@@ -319,8 +306,3 @@ def delete_item(request,type,pk):
     messages.success(request, 'The entry has been Deleted!')
 
     return redirect('/account/'+request.user.username+'#tab-'+type)
-
-from post.forms import PostForm   
-@login_required(login_url='signin')
-def test_template(request):
-    return render(request,'feed2.html',{'postform': PostForm})

@@ -1,18 +1,22 @@
 var curr_index = 1;
 var donotload = false;
+var firstload = true;
 var username;
+var csrf_token = ""
 
 function parseHTML(data) {
     let str = ``;
     data.forEach(ele => {
         switch (ele.type) {
             case "paragraph":
-                str += `<p>${ele.data.text}</p>`;
+                let fontSize = ele.data.text.length >= 120 ? 'sm':'lg';
+                let px = ele.data.text.length >= 120 ? 'px-2' : 'px-4'
+                str += `<p class="text-${fontSize} ${px} text-gray-500 mt-4 w-full text-justify">${ele.data.text}</p>`;
                 break;
             case "Image":
-                str += `<div class="post-img-wrapper">
-                            <img src="${ele.data.file.url}">
-                            <span>${ele.data.caption}</span>
+                str += `<div class="post-img-wrapper mt-6 w-full">
+                            <img src="${ele.data.file.url}" class="w-full">
+                            <span class="text-sm text-gray-400 italic mt-2">${ele.data.caption}</span>
                         </div>`;
                 break;
             case "Attaches":
@@ -23,64 +27,87 @@ function parseHTML(data) {
                     unit='MB';
                 }
                 size=Math.round(size * 100) / 100;
-                str += `<div class="post-attaches-wrapper">		
-                            <img src="/static/${ele.data.file.extension}-icon.svg">
-                            <div>
-                                <p>${ele.data.title}</p>
-                                <p>${size} ${unit}</p>
+                str += `<div class="post-attaches-wrapper mt-6 h-15 w-4/5 p-3 bg-gray-100 rounded flex items-center justify-between">		
+                            <div class="flex items-center">
+                                <img class = "h-10 w-10" src="/static/img/${ele.data.file.extension}-icon.svg">
+                                <div class = "ml-2">
+                                    <p class = "text-md text-gray-500">${ele.data.title}</p>
+                                    <p class = "text-sm text-gray-400">${size} ${unit}</p>
+                                </div>
                             </div>
                             <a href="${ele.data.file.url}">
-                                <img src="/static/dl-icon.svg">
+                                <img class = "h-10 w-10" src="/static/img/dl-icon.svg">
                             </a>
                         </div>`;
                 break;
-
         }
     });
     return str;
 }
 var load_posts = function(index) {
+    let tags = [];
+    $('.feed-tag').each((ind,ele)=>{
+        if(ele.textContent.length)
+            tags.push(ele.textContent);
+    });
     $.ajax({
         url: '/post/load-feed/' + index,
         dataType: 'json',
+        type: 'POST',
+        data: {'tags': JSON.stringify(tags), 'csrfmiddlewaretoken':csrf_token},
         success: function(data) {
             Array.prototype.forEach.call(data, (post) => {
-                console.log(JSON.parse(post.content));
+                console.log(post);
                 var temp = document.getElementById("post-template");
                 var p = temp.content.cloneNode(true);
-                p.querySelector('.post-author').innerHTML = post.author;
+                p.id = 'post-' + post.id;
+                p.querySelector('.post-author').setAttribute('href',`account/${post.author.username}`);
+                p.querySelector('.post-author-name').innerHTML = post.author.name;
+                p.querySelector('.post-author-img').setAttribute('src',post.author.profile_img)
                 p.querySelector('.post-date').innerHTML = post.datetime;
                 p.querySelector('.post-content').innerHTML = parseHTML(JSON.parse(post.content).blocks);
-                p.querySelector('.post-like-count').innerHTML = post.like_count;
-                if (post.is_liked) p.querySelector('.like-button img').setAttribute('src', '/static/like-liked.svg');
-                else p.querySelector('.like-button img').setAttribute('src', '/static/like.svg');
+                p.querySelector('.like-count').innerHTML = post.like_count;
+                p.querySelector('.comment-count').innerHTML = post.comment_count;
+                if (post.is_liked) {
+                    $(p.querySelector('.like-button svg')).addClass('svg-accent');
+                    $(p.querySelector('.like-button p')).addClass('text-accent');
+                }
                 p.querySelector('.like-button').setAttribute('data-post-id', post.id);
-                p.querySelector('.like-button img').setAttribute('id', 'like' + post.id.toString());
-                p.querySelector('.post-like-count').setAttribute('id', 'likecount' + post.id.toString());
+                p.querySelector('.like-button svg').setAttribute('id', 'like' + post.id.toString());
+                p.querySelector('.like-count').setAttribute('id', 'likecount' + post.id.toString());
+                p.querySelector('.comment-count').setAttribute('id', 'commentcount' + post.id.toString());
                 p.querySelector('.comment-button').addEventListener('click', function(){
                     showcomment(this);
-                    load_comment(this);
                 } );
                 p.querySelector('.comment-button').setAttribute('data-post-id', post.id);
                 document.getElementById('feed').appendChild(p);
                 donotload = false;
+                firstload=false;
+                initLikes($(`.like-button[data-post-id=${post.id}]`)[0]);
             })
-            initLikes();
         },
         error: function(data) {
-            console.log(data.responseJSON.error);
+            if(data.responseJSON.error === 'No more posts' && firstload){
+                $('#no-post').css('display','flex');
+            }else{
+                console.log(data.responseJSON.error);
+            }
         }
     })
 }
 
 var showcomment=function(ele){
     var id= ele.getAttribute("data-post-id");
-    $(".comment-form-submit").attr('data-post-id', id);
-    $(".comment-box ").css("display", "block");
+    $("#comment-form-submit").attr('data-post-id', id);
+    $("#overlay").css("display", "flex");
+    $("#comment-box ").css("display", "flex");
+    $("#comment-box-content").html("");
+    load_comment(ele);
     // $(".comment-form").attr('action',  "comment/" + id+"/");
 }
 
 $(document).ready(function() {
+    csrf_token = $('#csrf_token').text();
     load_posts(0);
     username = document.getElementById('data-username').textContent;
     $(".hehe").click(function(){
@@ -89,9 +116,8 @@ $(document).ready(function() {
     })
     
 
-    $('.comment-form-submit').on('click', function(event){
+    $('#comment-form-submit').on('click', function(event){
         event.preventDefault();
-        console.log("hehe")
         var id= $(this).attr("data-post-id")
         var formdata= new FormData(document.getElementById('comment-form'));
         let ele = this;
@@ -104,9 +130,11 @@ $(document).ready(function() {
             contentType: false,
             
             success: function(){
-                $("#comment-feed").html("");
+                $("#comment-box-content").html("");
                 load_comment(ele);
                 $("#comment-form textarea").val("");
+                var val = parseInt($('#commentcount' + id).text());
+                $('#commentcount' + id).text((val + 1) ? (val + 1).toString().replace(/^0+/, '') : 0);
             },
             error: function(){
     
@@ -116,8 +144,8 @@ $(document).ready(function() {
     
 });
 
-function initLikes() {
-    $('.like-button').on('click', function(e) {
+function initLikes(ele) {
+    $(ele).on('click', function(e) {
         var id;
         id = $(this).attr("data-post-id");
         console.log(id);
@@ -130,11 +158,13 @@ function initLikes() {
             success: function(data) {
                 console.log(data);
                 if (data == 'liked') {
-                    $('#like' + id).attr('src', '/static/like-liked.svg');
+                    $('#like' + id).addClass('svg-accent');
+                    $('#like' + id).parent().find('p').addClass('text-accent');
                     var val = parseInt($('#likecount' + id).text());
                     $('#likecount' + id).text((val + 1).toString().replace(/^0+/, ''));
                 } else if(data== 'unliked'){
-                    $('#like' + id).attr('src', '/static/like.svg');
+                    $('#like' + id).removeClass('svg-accent');
+                    $('#like' + id).parent().find('p').removeClass('text-accent');
                     var val = parseInt($('#likecount' + id).text());
                     $('#likecount' + id).text((val - 1) ? (val - 1).toString().replace(/^0+/, '') : 0);
                 } else{
@@ -169,9 +199,10 @@ var load_comment = function(ele) {
                 var temp = document.getElementById("comment-template");
                 var p = temp.content.cloneNode(true);
                 p.querySelector('.comment-author').innerHTML = comment.author;
-                p.querySelector('.comment-date').innerHTML = comment.create_date;
+                // p.querySelector('.comment-date').innerHTML = comment.create_date;
                 p.querySelector('.comment-content').innerHTML = comment.content;
-                document.getElementById('comment-feed').appendChild(p);
+                p.querySelector('.comment-author-img').setAttribute('src',comment.profile_img);
+                document.getElementById('comment-box-content').appendChild(p);
                 donotload = false;
             })
         },
@@ -180,3 +211,13 @@ var load_comment = function(ele) {
         }
     })
 }
+
+$('.create-post').click(function(e){
+    $('#overlay').css('display','flex');
+    $('#post-form-area').css('display','flex');
+})
+
+$('.comment-button').click(function(e){
+    $('#overlay').css('display','flex');
+    $('#comment-box').css('display','flex');
+})

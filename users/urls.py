@@ -33,5 +33,4 @@ urlpatterns = [
 
   path('account/delete/<type>/<pk>', views.delete_item, name='delete-item'),
 
-  path('test/', views.test_template, name='test')
 ]

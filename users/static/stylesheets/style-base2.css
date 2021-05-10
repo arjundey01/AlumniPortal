@@ -30,7 +30,7 @@
 
 #right-pane{
     height: 100vh;
-    width: 39%;
+    width: 44%;
     position: fixed;
     right: 0;
     top: 120px;
@@ -64,7 +64,7 @@
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    z-index: 10000;
+    z-index: 1000;
 }
 
 
@@ -76,6 +76,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    margin-bottom: 35px;
 }
 
 #logo img{
@@ -89,7 +90,7 @@
 }
 
 #tabs>li>a>p{
-    font-size: 16px;
+    font-size: 18px;
     margin-left: 20px;
     color: #ccc;
 }
@@ -126,7 +127,7 @@
 #header form{
     background: #f4f4f4;
     height: 50px;
-    width: 45%;
+    width: 50%;
     margin-left: 20px;
     display: flex;
     align-items: center;
@@ -165,10 +166,10 @@
 }
 
 #header-options img{
-    height: 10vw;
-    width: 10vw;
-    max-width: 40px;
-    max-height: 40px;
+    height: 9vw;
+    width: 9vw;
+    max-width: 36px;
+    max-height: 36px;
 }
 
 #header-options .icon-tag{
@@ -209,7 +210,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 10000;
     display: none;
 }
 
@@ -225,13 +226,11 @@
     padding: 5px;
 }
 
-
-@media (min-width: 992px){
+@media (min-width: 1366px){
     .sidebar{
         width: 22%;
         left:0;
     }
-    
     #main{
         width: 78%;
         margin-left: 22%;
@@ -242,11 +241,19 @@
     }
 
     #right-pane{
+        width: 35%;
+    }
+}
+
+@media (min-width: 992px){
+
+    
+    #right-pane{
         display: block;
     }
 
     #content{
-        width: 50%;
+        width: 56%;
     }
 
     #header{

@@ -1,14 +1,150 @@
-{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'stylesheets/style-home.css' %}">
+  <title>Home</title>
+</head>
+<body>
+    <div class="flex justify-between mx-14 mt-8 items-start">
+      <div>
+        <img class="h-48 w-48" src="{% static 'img/logo.svg' %}" alt="">
+      </div>
 
-{% block content %}
-<div class="jumbotron">
-  <h1>Alumni Portal</h1>
-  <p class="lead">A platform for IITG Alumni and Students to interact!</p>
-  {% if user.is_authenticated %}
-    <h4>Welcome {{ user.account.name }}!</h4>
-    <p>Use the navigation bar at the top of the page to get started.</p>
-  {% else %}
-    <a href="{% url 'signin' %}" class="btn btn-primary btn-large">Click here to sign in</a>
-  {% endif %}
-</div>
-{% endblock %}
+      <div class="flex space-x-10 font-roboto items-center mt-16">
+        <div >
+         <a href="#aboutus">About us</a>
+        </div>
+        <div class="">
+           <a href="#events">Events</a>
+        </div>
+        <div>
+          <a href="{% url 'signin' %}"><button type="submit" class="bg-purple-450 w-28 text-white rounded-md py-1.5 px-0.5">Log in</button></a>
+        </div>
+      </div>
+    </div>
+
+  <div class="h-40"></div>
+
+  <div class="flex justify-between mx-14 font-roboto">
+    <div class="w-3/6">
+      <H1 class="text-5xl">Welcome to <span class="text-purple-450">Alumni Portal</span>, IIT Guwahati</H1>
+      <br>
+      <br>
+      <br>
+      <p class="text-lg">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore amet, asperiores cupiditate aspernatur consequatur ea tempora praesentium quia esse sequi repellendus est vel soluta, accusantium laudantium quis reiciendis. Quasi, omnis.</p>
+      <p class="text-lg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque odit quis vitae qui veniam ipsam dolor, iure dicta dolorem dolores, quidem ipsum est eveniet, similique saepe commodi tenetur eligendi? Accusamus.</p>
+    </div>
+
+    <div class="mr-40 -mt-4">
+      <img src="{% static 'img/study.svg' %}" alt="" >
+    </div>
+  </div>
+
+    <div class="flex mx-8 space-x-5 font-roboto">
+      <br>
+      <a href="{% url 'signin' %}">
+        <button class="bg-purple-450 w-44 text-white rounded h-full">Log in</button>
+      </a>
+      <button class="bg-transparent rounded hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent w-44">Learn more</button>
+    </div>
+
+    <div class="h-20"></div>
+    <div class="h-80 w-full bg-purple-450 py-12 px-64">
+      <div class="content-center text-white flex flex-col items-center font-roboto">
+        <h1 class="text-4xl" id="events">Events</h1>
+        <p class="w-3/6 mt-8"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed minima aut nihil deleniti blanditiis? Veritatis ipsam id ducimus nam placeat nemo veniam nulla magnam?</p> 
+      </div>
+    </div>
+
+    <div class='h-20'></div>
+
+    <div>
+      <small class="text-purple-450 opacity-50 mx-14" id="aboutus">ABOUT US</small>
+      <hr style="width:90%" class="mx-14">
+    </div>
+
+    <div class="font-roboto mx-14 mt-8">
+      <H1 class="text-4xl opacity-80">The values that hold us together,</H1>
+      <H1 class="text-4xl opacity-80">connect with your college</H1>
+    </div>
+
+    <div class="flex justify-between mt-16 mx-14">
+      
+        <div>
+          <div class="flex">
+            <div class="w-9 h-8 bg-pink-200 rounded-md "></div>
+            <div class="text-2xl opacity-80 ml-4">Questions</div>
+          </div>
+          <div class="w-full">
+            <p class="text-sm mt-4 w-72">Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo consectetur dolore</p>
+          </div>
+          
+        </div>
+
+        <div>
+          <div class="flex">
+            <div class="w-9 h-8 bg-purple-400 rounded-md "></div>
+            <div class="text-2xl opacity-80 ml-4">Questions</div>
+          </div>
+          <div class="w-full">
+            <p class="text-sm mt-4 w-72">Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo consectetur dolore</p>
+          </div>
+        </div>
+      
+        <div>
+          <div class="flex">
+            <div class="w-9 h-8 bg-green-300 rounded-md "></div>
+            <div class="text-2xl opacity-80 ml-4">Questions</div>
+          </div>
+          <div class="w-full">
+            <p class="text-sm mt-4 w-72">Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo consectetur dolore</p>
+          </div>
+        </div>
+    </div>
+    
+    <div class="mx-28 mt-52 bg-footer w-5/6 rounded-2xl py-8 relative">
+      <div class="flex justify-between">
+        <div class="font-roboto mx-12 my-8 text-white">
+          <h1 class="opacity-80 text-3xl w-3/4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum adipisci asper </h1>
+          <p class="opacity-50 text-2xl mt-6 w-1/2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum adipisci asper</p>
+        </div>
+        <div class="items-center font-roboto mr-40 flex">
+            <button type="submit" class="bg-white opacity-80 px-10 py-3 rounded-lg text-2xl">Get Started</button>
+        </div>        
+      </div>
+      <svg width="266" height="201" viewBox="0 0 177 134" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute top-0 right-0">
+        <path d="M88.5 133.568C33.2334 125.544 0 0 0 0H177V93.0746C177 93.0746 125.238 138.902 88.5 133.568Z" fill="white" fill-opacity="0.3"/>
+      </svg>  
+    </div>
+    </div>
+
+    <div class="mt-44 bg-footer h-72 flex items-end justify-between pb-10 px-20">
+      <div class="flex flex-col items-center">
+        <img class="h-24 w-24" src="{% static 'img/alumni-portal-logo.svg' %}" alt="">
+        <p class="text-white opacity-80 text-2xl mt-4">Alumni Portal</p>
+        <p class="text-white opacity-50 text-lg">IIT Guwahati</p>
+      </div >
+      
+      <div class="flex items-center justify-between w-96">
+        <svg width="60" height="60" viewBox="0 0 35 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.16257 0H15.9061L8.79687 12.2355L10.8622 16.1841L20.3355 0H27.826L35 12.4L27.7436 25H18.9861L26.229 12.5234L24.0395 8.84902L14.5384 25H7.17172L0 12.2344L7.16257 0Z" fill="white" fill-opacity="0.7"/>
+        </svg>
+        <p class="text-white opacity-50 text-xl"> Maintained by SWC</p>
+        <p class="text-white opacity-50 text-xl"> |</p>
+        <p class="text-white opacity-50 text-xl"> 2021</p>
+      </div>
+
+      <div class="flex justify-between w-60">
+        <div class="w-12 h-11 bg-white opacity-30 rounded-md"></div>
+        <div class="w-12 h-11 bg-white opacity-30 rounded-md"></div>
+        <div class="w-12 h-11 bg-white opacity-30 rounded-md"></div>
+      </div>
+        
+    </div>
+</body>
+</html>

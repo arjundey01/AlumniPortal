@@ -3,7 +3,7 @@ $(document).ready(()=>{
         other=document.querySelector('#other-member').textContent;
         getLastActive(other,10);
     }
-    getOnline(15);
+    //getOnline(15);
     $('.chat-button').click(startChat);
     $('.follow-button').click(follow);
 
@@ -53,7 +53,11 @@ $(document).ready(()=>{
     });
 
     $('#close-overlay').click(function(e){
-        $('#overlay').css('display','none')
+        $('#overlay').css('display','none');
+        $('#overlay').children().each((ind,ele)=>{
+            if(ele.id !== 'close-overlay')
+                ele.style.display = 'none';
+        })
     });
 
     $("[contenteditable]").focusout(function(){      

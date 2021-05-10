@@ -1,6 +1,7 @@
 from users.models import Account
 from django.db import models
 from .editorjsmod import EditorJsFieldMod
+from groups.models import Group
 import datetime
 
 # Create your models here.
@@ -29,6 +30,7 @@ class Post(models.Model):
     author=models.ForeignKey(Account,on_delete=models.CASCADE,related_name='posts',null=True)
     datetime=models.DateTimeField(auto_now_add=True)
     likes=models.ManyToManyField(Account,related_name='liked_posts')
+    tags=models.ManyToManyField(Group, related_name='posts')
     content=EditorJsFieldMod(
         editorjs_config={
             "tools":{

@@ -1,3 +1,4 @@
+from groups.models import Group
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render ,redirect, get_object_or_404
 from django.urls import reverse
@@ -7,19 +8,26 @@ from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.views.generic.detail import DetailView
 from users.models import Account
+from groups.models import Group
 # Create your views here.
 
-def index(request):
-    return render(request,'post_create.html',{'postform':PostForm})
+def feed(request):
+    groups = {}
+    for group in Group.objects.all():
+        groups[group.title]=group.id
+    return render(request,'feed.html',{'postform': PostForm, 'tags':json.dumps(groups)})
+
 def create_post(request):
     if request.method=='POST':
         postform=PostForm(request.POST)
-        print(request.POST)
         if postform.is_valid():
             post=postform.save(commit=False)
             post.author=request.user.account
             post.save()
-            return redirect('post:feed')
+            for tag in postform.cleaned_data.get('tags'):
+                post.tags.add(tag)
+            post.save()
+            return redirect('home')
         else:
             return HttpResponse('form-inv')
     else:
@@ -102,8 +110,11 @@ def feign_file_upload(request):
 #     model=Post
 #     context_object_name='post'
 import datetime
-def get_feed(user):
+def get_feed(user,tagNames=[]):
     feed=[]
+    tags=[]
+    for tname in tagNames:
+        tags.append(get_object_or_404(Group, title = tname))
     if user.is_authenticated:
         follow_feed=[]
         following = list(user.account.following.all())
@@ -111,8 +122,10 @@ def get_feed(user):
         for fuser in following:
             for post in fuser.posts.all():
                 post_age = datetime.datetime.now()-post.datetime
-                post_age = post_age.total_seconds() / 3600;
+                post_age = post_age.total_seconds() / 3600
                 if post_age<=24:
+                    if len(tags) and len([t for t in tags and post.tags.all()])==0:
+                        continue
                     follow_feed.append(post)
         follow_feed.sort(key=lambda x: x.datetime, reverse=True)
         general_feed=list(Post.objects.all())
@@ -120,6 +133,8 @@ def get_feed(user):
         feed=follow_feed[:]
         for post in general_feed:
             if post not in follow_feed:
+                if len(tags) and len([t for t in tags and post.tags.all()])==0:
+                        continue
                 feed.append(post)
     return feed
 
@@ -151,10 +166,11 @@ class PostSerializer(serializers.ModelSerializer):
     id=serializers.SerializerMethodField()
     author = serializers.SerializerMethodField()
     like_count = serializers.SerializerMethodField()
+    comment_count = serializers.SerializerMethodField()
     datetime=serializers.DateTimeField(format="%d %b,%Y %H:%M:%S")
     class Meta:
         model = Post
-        fields = ['author','like_count','datetime','content','id']
+        fields = ['author','like_count','datetime','content','id','comment_count']
     def get_author(self, post):
         if post.author:
             author={}
@@ -166,6 +182,8 @@ class PostSerializer(serializers.ModelSerializer):
             return 'Anonymous'
     def get_like_count(self,post):
         return len(post.likes.all())
+    def get_comment_count(self,post):
+        return len(post.comments.all())
     def get_id(self,post):
         return post.pk
 
@@ -179,7 +197,11 @@ def load_feed(request,index):
     user=request.user
     if not user.is_authenticated:
         return HttpResponse(json.dumps({'error':'Not Logged In'}),status=500)
-    feed=get_feed(user)
+    tags=[]
+    if request.method == 'POST':
+        tags = json.loads(request.POST.get('tags'))
+
+    feed=get_feed(user,tags)
     posts=[]
     if len(feed)>=index*load_count:
         for post in feed[index*load_count:min(len(feed),load_count*(index+1))]:
@@ -190,10 +212,6 @@ def load_feed(request,index):
     else:
         return HttpResponse(json.dumps({'error':'No more posts'}),status=500)
 
-def feed(request):
-    context={}
-    context['commentform']=CommentForm
-    return render(request, 'feed.html', context)
 
 
 
@@ -221,6 +239,7 @@ def load_comment(request, id):
     for comment in Post.objects.get(pk=id).comments.all():
         dic={}
         dic['author']=comment.author.name
+        dic['profile_img']=comment.author.profile_img_url
         dic['create_date']=comment.create_date.strftime("%d/%m/%y")
         dic['content']=comment.content
         comments.append(dic)

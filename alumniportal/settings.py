@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_editorjs',
     'chat',
     'faq',
+    'groups'
 ]
 
 MIDDLEWARE = [
