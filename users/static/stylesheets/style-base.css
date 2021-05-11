@@ -15,7 +15,7 @@
 }
 
 #right-pane{
-    top: 90px;
+    top: 95px;
     padding: 10px 3%;
     padding-bottom: 150px;
 }
@@ -51,8 +51,8 @@
 #header-options img{
     height: 9vw;
     width: 9vw;
-    max-width: 30px;
-    max-height: 30px;
+    max-width: 24px;
+    max-height: 24px;
 }
 
 #header-options .icon-tag-active{
@@ -101,12 +101,17 @@
 
     #content{
         width: 60%;
-        padding-left: 4%;
+        padding-left: 3.5%;
         padding-top: 10px;
     }
 
     #header{
-        height: 90px;
+        height: 95px;
+    }
+
+    #header-options img{
+        max-width: 30px;
+        max-height: 30px;
     }
 }
 
@@ -119,6 +124,10 @@
 
 .bg-accent{ 
     background-color:#4150D7;
+}
+
+.bg-accent-faded{
+    background-color: rgb(241,242,253);
 }
 
 .svg-accent path{

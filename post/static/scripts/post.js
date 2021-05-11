@@ -14,7 +14,7 @@ function parseHTML(data) {
                 str += `<p class="text-${fontSize} ${px} text-gray-500 mt-4 w-full text-justify">${ele.data.text}</p>`;
                 break;
             case "Image":
-                str += `<div class="post-img-wrapper mt-6 w-full">
+                str += `<div class="post-img-wrapper mt-3 sm:mt-6 w-full">
                             <img src="${ele.data.file.url}" class="w-full">
                             <span class="text-sm text-gray-400 italic mt-2">${ele.data.caption}</span>
                         </div>`;
@@ -27,7 +27,7 @@ function parseHTML(data) {
                     unit='MB';
                 }
                 size=Math.round(size * 100) / 100;
-                str += `<div class="post-attaches-wrapper mt-6 h-15 w-4/5 p-3 bg-gray-100 rounded flex items-center justify-between">		
+                str += `<div class="post-attaches-wrapper mt-3 sm:mt-6 h-15 w-4/5 p-3 bg-gray-100 rounded flex items-center justify-between">		
                             <div class="flex items-center">
                                 <img class = "h-10 w-10" src="/static/img/${ele.data.file.extension}-icon.svg">
                                 <div class = "ml-2">
