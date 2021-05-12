@@ -1,0 +1,16 @@
+{# accounts-results-partial.html #}
+<head>
+ <link rel="stylesheet" href="/static/stylesheets/style-base.css">
+</head>
+
+<div class = "search-partial"> 
+  {% if accounts %}
+    <ul class="search-list">
+    {% for account in accounts %}
+    <li class="search-list2"><a href="{% url 'account' account.email %}">{{ account.name }}</a></li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>No accounts found.</p>
+  {% endif %}
+</div>  

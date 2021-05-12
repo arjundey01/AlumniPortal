@@ -32,5 +32,7 @@ urlpatterns = [
   path('account/update/edu/<pk>/', views.update_edu, name='update-education'),
 
   path('account/delete/<type>/<pk>', views.delete_item, name='delete-item'),
+  #search
+  path("accounts/", views.accounts_view, name="accounts"),
 
 ]

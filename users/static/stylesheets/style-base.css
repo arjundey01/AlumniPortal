@@ -166,3 +166,59 @@ div[placeholder]:empty::before {
 .bg-footer{
     background-color: #3D3A3A;
 }
+
+
+/* search bar temporary */
+
+#search-bar{
+    width: 100%;
+    height: 80px;
+    background: white;
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+
+#search-bar form input{
+    flex-grow: 1;
+    background: none;
+    position: sticky;
+    min-width: 0;
+}
+
+.search-partial{
+  width: 100%;
+  display: flex;
+  position: sticky;
+  border: 2px solid #000;
+  height: auto;
+  align-items: flex-start;
+  flex :1;
+  flex-wrap: wrap;
+  left: 100px;
+  visibility: visible;
+}
+
+.search-list{
+    border: 2px solid #000;
+    visibility: visible;
+    display: flex;
+    position: sticky;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-left: 0;
+}
+
+.search-list2{
+    list-style: none;
+    display: block;
+    width: 100%;
+    position: sticky;
+    height: 100px;
+    text-align: center;
+ }

@@ -1,6 +1,6 @@
 from django.http.response import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from .auth_helper import get_sign_in_url, get_token_from_code, store_token, store_user, remove_user_and_token, get_token
 from .graph_helper import get_user
@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from post.views import feed
 from .forms import *
+from django.template.loader import render_to_string
 import json
 
 
@@ -306,3 +307,29 @@ def delete_item(request,type,pk):
     messages.success(request, 'The entry has been Deleted!')
 
     return redirect('/account/'+request.user.username+'#tab-'+type)
+
+
+
+    #search
+
+def accounts_view(request):
+    ctx = {}
+    url_parameter = request.GET.get("q")
+
+    if url_parameter:
+        accounts = Account.objects.filter(name__icontains=url_parameter)
+    else:
+        accounts = {}
+
+    ctx["accounts"] = accounts
+    if request.is_ajax():
+        html = render_to_string(
+            template_name="accounts-results-partial.html", 
+            context={"accounts": accounts}
+        )
+
+        data_dict = {"html_from_view": html}
+
+        return JsonResponse(data=data_dict, safe=False)
+
+    return render(request, "accounts.html", context=ctx)

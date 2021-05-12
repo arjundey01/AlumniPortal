@@ -9,7 +9,26 @@
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/stylesheets/style-base.css"> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
+    <script type="text/javascript" src="/static/scripts/main.js"></script>
+    <!--
+    {# accounts.html #}
+    <div id='search-bar'>
+        <form action="{% url 'accounts' %}" method="get">
+            <img src="/static/img/search.svg" alt="">
+            {# icon and search-box #}
+            <div class="col-6 align-left">
+            <i id="search-icon" class="fas fa-search"></i>
+            <input type="text" id="user-input" name='q' placeholder="Search">
+            </div>
+
+            {# account-list section #}
+            <div id="replaceable-content" class="col-6">
+            {% include 'accounts-results-partial.html' %}
+            </div>
+        </form>
+
+    </div>
+-->
 </head>
 <body>
 
