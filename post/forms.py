@@ -5,7 +5,7 @@ from groups.models import Group
 
 class PostForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), label='', required = False)
-    class Meta():
+    class Meta:
         model=Post
         fields=['content','tags']
         labels={'content':'','tags':''}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block head%}
+    <title>Groups | Alumni Portal</title>
+    <style>
+        #right-pane{
+            display: none !important;
+        }
+        #content{
+            width: 100% !important;
+            padding-right: 3.5%;
+            padding-left: 3.5%;
+        }
+    </style>
+{% endblock%}
+
+{% block content %}
+    <div class="flex justify-around flex-wrap">
+        {% for group in groups%}
+        <div class="w-80 mt-6 rounded mx-2 flex-grow sm:flex-grow-0">
+            <img src="{{group.cover_image.url}}" alt="" class="w-full h-64 sm:h-56 object-cover">
+            <div class="flex flex-col items-center bg-white py-2">
+                <p class="text-xl font-medium text-center">{{group.title}}</p>
+                <p class="member-count text-md text-gray-500 text-center" data-id="{{group.id}}">{{group.member_count}} Members</p>
+                {% if user.account in group.members.all %}
+                <div class="text-md text-white bg-accent rounded py-1 px-6 mt-3 sm:mt-7" data-id="{{group.id}}">
+                    Joined
+                </div>
+                {% else %}
+                <div class="join-group text-md text-white bg-accent rounded py-1 px-6 mt-3 sm:mt-7 cursor-pointer hover:opacity-90" data-id="{{group.id}}">
+                    Join Group
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% if user.is_staff %}
+        <div class="create-group cursor-pointer hover:opacity-90 w-80 mt-6 rounded mx-2 bg-gray-200 flex-grow sm:flex-grow-0 flex flex-col justify-center items-center self-strech" style="min-height: 352px;">
+            <img src="/static/img/add.svg" alt="" class="h-16 w-16 object-cover">
+            <p class="text-lg text-gray-500">Create</p>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block overlay %}
+    <form action="/groups/create/" method="POST" enctype="multipart/form-data" id="create-group-form" class="bg-white rounded p-5 hidden w-full md:w-3/5 lg:w-2/5 h-screen md:h-auto flex-col" >
+        {% csrf_token %}
+        <p class="text-2xl font-medium"> Create a Group</p>
+        <div class="bg-gray-200 p-3 rounded mt-7">
+            <input type="text" name="title" placeholder="Title" class="bg-transparent">
+        </div>
+        <input type="file" name="cover_image" accept="image/png, image/jpeg" id="create-group-img" class="hidden">
+        <p class="mt-10 text-gray-500">Cover image:</p>
+        <div id="create-group-prev" class="bg-gray-200 rounded h-72 w-full flex flex-col cursor-pointer items-center justify-center mt-1">
+            <img src="/static/img/add.svg" alt="" class="h-16 w-16 object-cover" >
+        </div>
+        <input type="submit" value="Create" class="self-center bg-accent text-white py-2 px-10 rounded mt-7">
+    </form>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/scripts/groups.js"></script>
+{% endblock %}

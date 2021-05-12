@@ -29,6 +29,7 @@
 <script>
     var tmp=document.createElement('div');
     document.body.appendChild(tmp);
+    tmp.setAttribute('id','comment-resize-helper');
     let textarea = document.querySelector("#comment-form-input");
     $('#comment-form-input').on("input", function(e){
         tmp.setAttribute('style',`width:${this.clientWidth}px;`);

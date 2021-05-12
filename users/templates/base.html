@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Portal</title>
     <link rel="stylesheet" href="/static/stylesheets/style-reset.css"> 
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/stylesheets/style-base.css"> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% block head %}{% endblock %}
+
     
 </head>
 <body>
-
     <div class="sidebar bg-white h-full fixed top-0 duration-500 overflow-hidden">
         <div id="logo" class="flex flex-col items-center justify-center mt-3 mb-5">
             <img src="/static/img/alumni-portal-logo.svg" alt="" class="h-14">
@@ -54,7 +54,7 @@
                 </a>
             </li>
             <li class="{% if request.resolver_match.view_name == 'groups' %}tab-active{% endif %} mt-2">
-                <a href="" class="flex items-center justify-start">
+                <a href="/groups/" class="flex items-center justify-start">
                     <div class="tab-indicator h-16 w-0 mr-9 bg-accent rounded-tr-lg rounded-br-lg"></div>
                     <div class='tab-icon-wrapper flex items-center justify-center w-12 h-12'>
                         <svg width="28" height="24" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
