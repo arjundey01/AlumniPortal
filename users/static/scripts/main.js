@@ -1,8 +1,8 @@
-var user_input
-var search_icon 
-var  accounts_div 
+user_input = $("#user-input")
+search_icon = $('#search-icon')
+accounts_div = $('#replaceable-content')
 const endpoint = '/accounts/'
-const delay_by_in_ms = 700
+const delay_by_in_ms = 300
 let scheduled_function = false
 
 let ajax_call = function (endpoint, request_parameters) {

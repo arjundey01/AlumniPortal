@@ -7,7 +7,7 @@
   {% if accounts %}
     <ul class="search-list">
     {% for account in accounts %}
-    <li class="search-list2"><a href="{% url 'account' account.email %}">{{ account.name }}</a></li>
+    <li class="search-list2"><img src="{{account.profile_img_url}}"><a href="{% url 'account' account.email %}">{{ account.name }}</a></li>
     {% endfor %}
     </ul>
   {% else %}
