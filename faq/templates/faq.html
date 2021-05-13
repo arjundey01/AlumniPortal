@@ -2,11 +2,12 @@
 
 {% block content %}
 <div class="faq-ask rounded w-full bg-white py-7 px-5 shadow-lg my-5 flex justify-between items-center">
-    <div class="flex items-center flex-grow">
+    <form id="question_form" class="flex items-center flex-grow" method="POST">
+        {% csrf_token %}
         <img class="h-5 w-5" src="/static/img/pencil.svg" alt="">
-        <div class="text-lg text-gray-600 ml-5 hidden md:block flex-grow" placeholder="Ask a Question" contenteditable></div>
-    </div>
-    <button class="bg-accent py-1 px-4 text-white text-md rounded">Ask</button>
+        <input name="content" type="text" id="question-text" class="text-lg text-gray-600 ml-5 hidden md:block flex-grow" placeholder="Ask a Question" contenteditable>
+    </form> 
+    <button id="ask_button" class="bg-accent py-1 px-4 text-white text-md rounded">Ask</button>
 </div>
 <div id="faq-questions">
     <div id="no-post" class="flex rounded bg-white justify-center items-center h-100 p-10 flex-col shadow-lg my-10 hidden">
@@ -101,6 +102,7 @@
 
 
 {% block right-pane%}
+    {% include "alumni_answers.html" %}
     {% include 'suggestions.html'%}
 {% endblock %}
 
@@ -108,5 +110,34 @@
 {% endblock%}
 
 {% block scripts %}
-<script type="text" id="data-username">{{user.username}}</script>
+    <script type="text" id="data-username">{{user.username}}</script>
+    <script>
+        $(document).ready(function () {
+            $("#ask_button").click(function (e) { 
+                e.preventDefault();
+                console.log("clicked the ask button");
+                if ($("#ask_text").html() === "") {
+                    alert("Enter some text first!");
+                    return;
+                }
+                let formdata = new FormData(document.getElementById("question_form"));
+                for (var pair of formdata) {
+                    console.log(pair[0] + ": " + pair[1]);
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/faq/create-question/",
+                    data: formdata,
+                    processData: false,
+                    contentType: false,
+                    enctype: "multipart/form-data",
+                    success: function (response) {
+                        console.log("Success!");
+                        // clear the question-text input's value
+                        $("#question-text").val("");
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
