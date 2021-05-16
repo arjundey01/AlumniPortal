@@ -75,7 +75,7 @@ def leave_group(request,id):
 
 def get_members(request,id):
     if request.user.is_authenticated:
-        if request.method == 'GET':
+        if request.method == 'POST':
             group = get_object_or_404(Group, id=id)
             members={'alumni':[],'common':[],'other':[]}
             for member in group.members.all():
@@ -84,6 +84,7 @@ def get_members(request,id):
                 m['profile_img']=member.profile_img_url
                 m['name']=member.name
                 if member.user.id == request.user.id:
+                    m['is_followed']=True
                     members['common'].append(m)
                     continue
                 m['is_followed']=member in request.user.account.following.all()
@@ -102,3 +103,7 @@ def get_members(request,id):
         else:
             return HttpResponse('Bad Request',status=400)
     return HttpResponse('Unauthorized', status=401)
+
+def test(request,id):
+    group = get_object_or_404(Group,id=id)
+    return render(request,'group_members.html',{'group':group})
