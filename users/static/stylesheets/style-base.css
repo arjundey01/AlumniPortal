@@ -15,15 +15,15 @@
 }
 
 #right-pane{
-    top: 95px;
-    padding: 10px 3%;
-    padding-bottom: 150px;
+    top: 72px;
+    padding: 8px 3%;
+    padding-bottom: 120px;
 }
 
 #content{
-    min-height: 1500px;
+    min-height: 1200px;
     width: 100%;
-    padding-top: 10px;
+    padding-top: 8px;
 }
 
 #main{
@@ -44,15 +44,15 @@
     fill: white;
 }
 .tab-active .tab-indicator{
-    width: 0.45rem;
-    margin-right: 1.8rem;
+    width: 0.35rem;
+    margin-right: 1.4rem;
 }
 
 #header-options img{
     height: 9vw;
     width: 9vw;
-    max-width: 24px;
-    max-height: 24px;
+    max-width: 19px;
+    max-height: 19px;
 }
 
 #header-options .icon-tag-active{
@@ -63,8 +63,8 @@
     border: 2px solid #4150D7;
     height: 12vw;
     width: 12vw;
-    max-width: 60px;
-    max-height: 60px;
+    max-width: 48px;
+    max-height: 48px;
 }
 
 #overlay{
@@ -75,13 +75,13 @@
 
 @media (min-width: 1336px){
     .sidebar{
-        width: 325px;
+        width: 260px;
         left:0;
     }
 
     #main{
-        width: calc(100% - 325px);
-        margin-left: 325px;
+        width: calc(100% - 260px);
+        margin-left: 260px;
     }
 
     #sidebar-btn{
@@ -89,7 +89,7 @@
     }
 
     #right-pane{
-        width: calc(0.4 * (100% - 325px));
+        width: calc(0.4 * (100% - 260px));
     }
 }
 
@@ -102,16 +102,16 @@
     #content{
         width: 60%;
         padding-left: 3.5%;
-        padding-top: 10px;
+        padding-top: 8px;
     }
 
     #header{
-        height: 95px;
+        height: 72px;
     }
 
     #header-options img{
-        max-width: 30px;
-        max-height: 30px;
+        max-width: 24px;
+        max-height: 24px;
     }
 }
 
