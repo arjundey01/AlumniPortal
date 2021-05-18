@@ -19,7 +19,7 @@ class Question(models.Model):
     @property
     def rev_priority(self):
         timediff = datetime.datetime.now() - self.posted_on
-        return timediff.total_seconds()//1000000 + 1 / (self.views or 1)
+        return timediff.total_seconds()//3600 + 1 / (self.views or 1)
 
 
 class Answer(models.Model):
