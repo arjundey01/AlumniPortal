@@ -3,7 +3,7 @@
 <style>
     #right-pane{
         width: 27%;
-        padding: 10px 1.5%;
+        padding: 8px 1.5%;
     }
 
     @media (min-width: 992px){
@@ -15,52 +15,53 @@
     @media (min-width: 1336px){
         #right-pane{
             width: calc(0.27 * (100% - 325px));
+            padding-left: 0;
         }
     }
 </style>
 {% endblock %}
 
 {%block content%}
-    <div class="w-full flex flex-col items-center mt-6">
+    <div class="w-full flex flex-col items-center mt-5">
 
-        <div class="w-full flex flex-col-reverse sm:flex-row items-center p-4 sm:p-8 bg-white mb-7 rounded">
-            <div class="three-member-imgs hidden mr-4 sm:flex">
-                <img src="" alt="" class="rounded-full p-0.5 bg-white object-cover h-12 w-12">
-                <img src="" alt="" class="rounded-full p-0.5 bg-white object-cover h-12 w-12 -ml-5">
-                <img src="" alt="" class="rounded-full p-0.5 bg-white object-cover h-12 w-12 -ml-5">
+        <div class="w-full flex flex-col-reverse sm:flex-row items-center p-3 sm:p-5 bg-white mb-6 rounded">
+            <div class="three-member-imgs hidden mr-3 sm:flex">
+                <img src="" alt="" class="rounded-full p-0.5 bg-white object-cover h-10 w-10">
+                <img src="" alt="" class="rounded-full p-0.5 bg-white object-cover h-10 w-10 -ml-4">
+                <img src="" alt="" class="rounded-full p-0.5 bg-white object-cover h-10 w-10 -ml-4">
             </div>
-            <p class="text-gray-500 flex-shrink-1 mt-2 sm:mt-0">
+            <p class="text-gray-500 text-sm flex-shrink-1 mt-2 sm:mt-0">
                 <span>{{group.member_count}} Members </span>
                 <span class="hidden md:inline">are part of this group</span>
             </p>
-            <form id="search-form" class="bg-accent-faded h-13 flex flex-grow self-stretch sm:self-center items-center sm:ml-8 md:ml-16 p-2.5" action="">
-                <img src="/static/img/search.svg" alt="" class="mx-1 md:mx-5 h-7 w-7">
+            <form id="search-form" class="bg-accent-faded flex flex-grow self-stretch rounded sm:self-center items-center sm:ml-6 md:ml-14 p-2" action="">
+                <img src="/static/img/search.svg" alt="" class="mx-1 md:mx-3 h-5 w-5">
                 <input type="text" name="" id="member-search-input" placeholder="Search Members..." class="flex-1 bg-transparent min-w-0">
             </form>
         </div>
 
-        <div class="w-5/6 rounded bg-white px-8 py-6 mb-5" >
+        <div class="w-full sm:w-5/6 rounded bg-white px-6 py-4 mb-4" >
             <p> Alumni </p>
             <div class="w-full members-section" id="members-alumni">
                 
             </div>
         </div>
 
-        <div class="w-5/6 rounded bg-white px-8 py-6 mb-5" >
+        <div class="w-full sm:w-5/6 rounded bg-white px-6 py-4 mb-4" >
             <p> Members with common groups</p>
             <div class="w-full members-section" id="members-common">
                 
             </div>
         </div>
 
-        <div class="w-5/6 rounded bg-white px-8 py-6 mb-5" >
+        <div class="w-full sm:w-5/6 rounded bg-white px-6 py-4 mb-4" >
             <p> Members </p>
             <div class="w-full members-section" id="members-other">
                 
             </div>
         </div>
 
-        <div class="w-5/6 rounded bg-white px-8 py-6 mb-5 hidden" >
+        <div class="w-full sm:w-5/6 rounded bg-white px-6 py-4 mb-4 hidden" >
             <p> Results </p>
             <div class="w-full" id="members-results">   
 
@@ -70,18 +71,16 @@
     </div>
 
     <template id="member-entry-temp">
-        <div class="flex justify-between items-center py-5">
+        <div class="flex justify-between items-center py-4">
             <div class="flex items-center justify-start">
-                <div class="rounded-full h-14 w-14 overflow-hidden flex items-center justify-center flex-shrink-0">
-                    <img src="{{user.account.profile_img_url}}" class= "member-img h-14 w-14 object-cover" alt="">
-                </div>
+                <img src="{{user.account.profile_img_url}}" class= "rounded-full member-img h-12 w-12 object-cover flex-shrink-0" alt="">
                 <div class="mx-4">
-                    <p class="member-name mt-1 text-lg font-medium">{{user.account.name}}</p>
-                    <p class="member-desg text-xs">Associate Project Manager | Google</p>
+                    <p class="member-name mt-1 text-md font-medium leading-4">{{user.account.name}}</p>
+                    <p class="member-desg text-xs font-light">Associate Project Manager | Google</p>
                 </div>
             </div>
             <div>
-                <button class="member-follow bg-accent py-1 px-4 text-white text-md rounded">Follow<b>&#8314</b></button>
+                <button class="member-follow bg-accent py-0.5 px-5 text-white text-sm rounded">Follow</button>
             </div>
         </div>
     </template>
