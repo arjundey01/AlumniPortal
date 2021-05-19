@@ -3,14 +3,14 @@
  <link rel="stylesheet" href="/static/stylesheets/style-base.css">
 </head>
 
-<div class = "search-partial"> 
+<div> 
   {% if accounts %}
-    <ul class="search-list">
+    <ul class="">
     {% for account in accounts %}
-    <li class="search-list2"><img src="{{account.profile_img_url}}"><a href="{% url 'account' account.email %}">{{ account.name }}</a></li>
+    <li class="flex bg-gray-100 rounded-1g h-16 w-96 ml-9 mr-5 mt-2.5 mb-2.5"><img class="mt-4 mb-4 ml-4 h-8 w-8"  src="{{account.profile_img_url}}"><a class="font-medium  non-italic text-x1  h-5 mt-4 ml-3" href="{% url 'account' account.email %}">{{ account.name }}</a></li>
     {% endfor %}
     </ul>
   {% else %}
-    <p>No accounts found.</p>
+   <!-- <p>No accounts found.</p>  -->
   {% endif %}
 </div>  
