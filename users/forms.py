@@ -1,4 +1,4 @@
-from .models import Contact, Education, Experience, Project
+from .models import Contact, Education, Experience, Project,PastJobs
 from django import forms
 from django.forms import widgets
 from django.contrib.auth.models import User
@@ -41,7 +41,12 @@ class UserUpdateForm(FormattedModelForm):        #for updating info of the user 
 class ExperienceForm(FormattedModelForm):
     class Meta:
         model=Experience
-        fields=['experience']
+        exclude=['user']
+
+class PastJobsForm(FormattedModelForm):
+    class Meta:
+        model=PastJobs
+        fields='__all__'
 
 class ProjectForm(FormattedModelForm):
     class Meta:

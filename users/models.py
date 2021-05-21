@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import re
-from datetime import datetime
+from datetime import date, datetime
 # Create your models here.
 
 def profile_image_path(instance, filename):
@@ -18,6 +18,7 @@ class Account(models.Model):
     last_active=models.DateTimeField(null=True,default=datetime.now)
     organization=models.ManyToManyField('Organization',related_name='employees')
     designation = models.ManyToManyField('Designation',related_name='employees')
+    pastjobs = models.ManyToManyField('PastJobs',related_name='employees')
     is_alumni = models.BooleanField(default=False)
     @property
     def profile_img_url(self):
@@ -32,6 +33,27 @@ class Account(models.Model):
 class Experience(models.Model):
     user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="experiences")
     experience=models.CharField(max_length=100)
+    start_date=models.DateField(default=date.today)
+    end_date=models.DateField(null=True, blank=True)
+
+    def get_duration(self):
+        duration={}
+        # months = (self.end_date.year - self.start_date.year)*12+ (self.end_date.month - self.start_date.month)
+        duration["years"]=(self.end_date.year - self.start_date.year)
+        duration["months"]=(self.end_date.month - self.start_date.month)
+        return duration
+
+    def get_start_date(self):
+        if(self.start_date):
+            return self.start_date
+        else:
+            return date.today()
+
+    def get_end_date(self):
+        if(self.end_date):
+            return self.end_date
+        else:
+            return False
 
 class Project(models.Model):
     user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="projects")
@@ -53,3 +75,28 @@ class Organization(models.Model):
 
 class Designation(models.Model):
     title=models.CharField(max_length=150)
+
+class PastJobs(models.Model):
+    organization=models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="jobs")
+    designation=models.ForeignKey(Designation,on_delete=models.CASCADE, related_name="jobs")
+    start_date=models.DateField(default=date.today)
+    end_date=models.DateField(null=True, blank=True)
+
+    def get_duration(self):
+        duration={}
+        # months = (self.end_date.year - self.start_date.year)*12+ (self.end_date.month - self.start_date.month)
+        duration["years"]=(self.end_date.year - self.start_date.year)
+        duration["months"]=(self.end_date.month - self.start_date.month)
+        return duration
+
+    def get_start_date(self):
+        if(self.start_date):
+            return self.start_date
+        else:
+            return date.today()
+
+    def get_end_date(self):
+        if(self.end_date):
+            return self.end_date
+        else:
+            return False

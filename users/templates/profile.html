@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 <!-- <button class="btn btn-outline-info" type="submit">Update</button> -->
-
+{% comment %} 
 
 <div>
   {% include 'update_forms.html' %}
@@ -262,6 +262,114 @@
       </div>
       {% endif %}
     </div>
+ {% endcomment %}
+<div class="container">
+  <!--experience-->
+  <div class=" bg-white p-5">
+
+    <!--heading-->
+    <div class="text-lg h-11  font-medium">
+        <span >Experience</span>
+        <span>{% if user == curr_user.user %}
+              <button id="new_experience" class="btn btn-outline-secondary btn-sm" value="show">
+                <span>&#43;</span>
+              </button>
+              {% endif %}
+        </span> 
+    </div>
+    <!--content-->
+    <div class="text-lg ">
+        <ul class="grid grid-cols-3">
+          {% for experience in experiences %}
+          <li>
+          <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="54" height="54" rx="27" fill="url(#paint0_linear)"/>
+              <path d="M26.9993 40.3346C34.3631 40.3346 40.3327 34.3651 40.3327 27.0013C40.3327 19.6375 34.3631 13.668 26.9993 13.668C19.6356 13.668 13.666 19.6375 13.666 27.0013C13.666 34.3651 19.6356 40.3346 26.9993 40.3346Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13.666 27H40.3327" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M26.9993 13.668C30.3344 17.3191 32.2297 22.0573 32.3327 27.0013C32.2297 31.9453 30.3344 36.6835 26.9993 40.3346C23.6643 36.6835 21.769 31.9453 21.666 27.0013C21.769 22.0573 23.6643 17.3191 26.9993 13.668V13.668Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs>
+              <linearGradient id="paint0_linear" x1="47" y1="3.53765e-07" x2="8.5" y2="54" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FFB75E"/>
+              <stop offset="1" stop-color="#ED8F03"/>
+              </linearGradient>
+              </defs>
+          </svg>
+          <p class="user-experience"> {{experience.experience}}</p> 
+          <span class="user-experience"> {{experience.get_start_date|date:" Y" }}-
+          {% if  experience.get_end_date %}
+          {{experience.get_end_date|date:"Y" }}&nbsp;{{experience.get_duration.months}}months&nbsp;{{experience.get_duration.years}}years
+          {% else %} Present
+          {% endif %}
+          </p> 
+            {% if user == curr_user.user %}
+            <button class="btn btn-danger btn-sm del-item-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
+              <i style="font-size:12px" class="fa fa-trash-o"></i>
+            </button>
+            <button class="edit btn btn-secondary btn-sm" data-update-id="{{ experience.id }}">
+              <i style="font-size:12px" class="fa fa-pencil"></i>
+            </button>
+            {% endif %}
+           </li>
+          {% endfor %}
+        </ul>
+        <form method="POST" action="{% url 'add-experience'%}" class="experience_form" style="display: none;">
+          {%csrf_token%}
+          {{ e_form.as_myformat }}
+          {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
+        </form>
+    </div> 
+
+  </div>
+  
+  <!--Past jobs-->
+  <div class="mt-7 bg-white p-5">
+
+    <!--heading-->
+    <div class="text-lg h-11  font-medium">
+        <span >Past Jobs</span>
+        {% comment %} <span>{% if user == curr_user.user %}
+              <button id="new_experience" class="btn btn-outline-secondary btn-sm" value="show">
+                <span>&#43;</span>
+              </button>
+              {% endif %}
+        </span>  {% endcomment %}
+    </div>
+    <!--content-->
+    <div class="text-lg ">
+        <ul class="grid grid-rows-2">
+          {% for experience in experiences %}
+          <li class="mt-6">
+          <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="54" height="54" rx="27" fill="url(#paint0_linear)"/>
+              <path d="M26.9993 40.3346C34.3631 40.3346 40.3327 34.3651 40.3327 27.0013C40.3327 19.6375 34.3631 13.668 26.9993 13.668C19.6356 13.668 13.666 19.6375 13.666 27.0013C13.666 34.3651 19.6356 40.3346 26.9993 40.3346Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13.666 27H40.3327" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M26.9993 13.668C30.3344 17.3191 32.2297 22.0573 32.3327 27.0013C32.2297 31.9453 30.3344 36.6835 26.9993 40.3346C23.6643 36.6835 21.769 31.9453 21.666 27.0013C21.769 22.0573 23.6643 17.3191 26.9993 13.668V13.668Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs>
+              <linearGradient id="paint0_linear" x1="47" y1="3.53765e-07" x2="8.5" y2="54" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FFB75E"/>
+              <stop offset="1" stop-color="#ED8F03"/>
+              </linearGradient>
+              </defs>
+          </svg>
+          <p class="user-experience"> {{experience.experience}}</p> 
+          <span class="user-experience"> {{experience.start_year}}-{{experience.end_year}}</p> 
+            {% comment %} {% if user == curr_user.user %}
+            <button class="btn btn-danger btn-sm del-item-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
+              <i style="font-size:12px" class="fa fa-trash-o"></i>
+            </button>
+            <button class="edit btn btn-secondary btn-sm" data-update-id="{{ experience.id }}">
+              <i style="font-size:12px" class="fa fa-pencil"></i>
+            </button>
+            {% endif %}
+           {% endcomment %}
+          </li>
+          {% endfor %}
+        </ul>
+    </div> 
+
+  </div>
+
+</div>
 
 
     <script>
@@ -369,5 +477,4 @@
       location.href = 'delete/' + type + '/' + id;
     })
     </script>
-
-{% endblock content %}    
+{% endblock %}
