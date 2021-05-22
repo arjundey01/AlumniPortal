@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 
 {% block head %}
+<title>{{group.title}} | Alumni Portal</title>
 <link rel="stylesheet" href="/static/stylesheets/style-group.css">
 {% endblock %}
 
 {% block content %}
 <div>
-    <div class="h-52 w-full bg-custom mt-6 grid grid-rows-1 items-stretch grid-flow-col ">
-        <button class="bg-white rounded ml-1.5 mt-5 h-9 w-9 content-center justify-center"><img src="/static/img/arrow-left.svg" alt="" class="w-9 h-5"></button>
-        <button class="bg-white rounded mr-1.5 mt-5 h-9 w-9 content-center justify-center justify-self-end"><img src="/static/img/dots-vertical.svg" alt="" class="w-9 h-5"></button>
+    <div class="h-52 w-full bg-bluegray mt-5 grid grid-rows-1 items-stretch grid-flow-col relative">
+        <img src="{{group.cover_image.url}}" class="w-full h-full object-cover" alt="">
+        <a href="/groups/" class="bg-white rounded absolute top-5 left-2 h-9 w-9 flex items-center justify-center hover:opacity-90"><img src="/static/img/arrow-left.svg" alt="" class="w-9 h-5"></a>
+        <button class="bg-white rounded absolute top-5 right-2 h-9 w-9 flex items-center justify-center"><img src="/static/img/dots-vertical.svg" alt="" class="w-9 h-5"></button>
     </div>
     <div class="grid grid-rows-2 items-stretch grid-flow-col h-52 w-full bg-white px-9 pt-5 pb-9">
         <div class="grid grid-cols-5">
             <div class="col-span-2">               
-                <div class="text-2xl font-medium mb-1">UX Designers</div>
-                <div class="text-xs">141 Members</div>
+                <div class="text-2xl font-medium mb-1">{{group.title}}</div>
+                <div class="text-xs">{{group.member_count}} Members</div>
             </div>
             <div class="col-span-3">
                 <div class="text-lg font-medium mb-1">About</div>
@@ -25,14 +27,56 @@
         </div>
         <div class="grid grid-cols-12 mt-14">
             <div class="col-span-6">
-                <img src="/static/img/Photo.png" class="rounded-3xl h-8 inline">
-                <input class="w-4/5 ml-4" type="text" placeholder="Share something with the group">
+                <img src="{{user.account.profile_img_url}}" class="rounded-full h-8 w-8 inline object-cover">
+                <span class="w-4/5 ml-4 text-gray-300">Share something with the group</span>
             </div>
             <div class="col-span-6 justify-self-end justify-around">
-            <button class="text-sm button py-2 px-5 lg:mr-6 mr-1"><img src="/static/img/pencil.svg" class="pencil w-4 h-4 mr-1 inline">&nbsp;Create post</button>
-            <button class="text-sm button py-2 px-5 "><img src="/static/img/information.svg" class="w-4 h-4 mr-1 inline">&nbsp;Ask Question</button>
+            <button class="create-post text-sm text-accent bg-accent-mid py-2 px-5 lg:mr-6 mr-1"><img src="/static/img/pencil.svg" class="pencil w-4 h-4 mr-1 inline">&nbsp;Create post</button>
+            <button class="text-sm text-accent bg-accent-mid py-2 px-5 "><img src="/static/img/information.svg" class="w-4 h-4 mr-1 inline">&nbsp;Ask Question</button>
             </div>
         </div>
     </div>
 </div>
+
+<div class="flex justify-around items-stretch bg-white rounded h-14 mt-6">
+    <div class="group-tab cursor-pointer flex items-center justify-center text-lg text-accent group-tab-active" data-tab="post">Post</div>
+    <div class="group-tab cursor-pointer flex items-center justify-center text-lg text-accent" data-tab="members">Members</div>
+    <div class="group-tab cursor-pointer flex items-center justify-center text-lg text-accent" data-tab="questions">Questions</div>
+</div>
+
+<div data-tab="post" class="group-tab-content w-11/12 mx-auto">
+    {% include "posts.html" %}
+    <script class='feed-tag' data-id="{{group.id}}" type='text'>{{group.title}}</script>
+</div>
+
+<div data-tab="members" class="group-tab-content w-full hidden">
+    {% include "group_members.html" %}
+</div>
+
+<div data-tab="questions" class="group-tab-content hidden"></div>
+
+{% endblock %}
+
+{% block right-pane %}
+    {% include "user_groups.html" %}
+{% endblock %}
+
+{% block overlay %}
+    {% include "post_create.html" %}
+    {% include "comment.html" %}
+{% endblock%}
+
+{% block scripts %}
+<script>
+
+        $('.group-tab').on('click', function(e){
+            let tabName = $(this).attr('data-tab');
+            console.log(tabName);
+            $('.group-tab-content').addClass('hidden');
+            $(`.group-tab-content[data-tab=${tabName}]`).removeClass('hidden');
+            $('.group-tab').removeClass('group-tab-active');
+            $(`.group-tab[data-tab=${tabName}]`).addClass('group-tab-active');
+        });
+    
+</script>
 {% endblock %}

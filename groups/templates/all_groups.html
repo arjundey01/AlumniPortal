@@ -49,13 +49,16 @@
     <form action="/groups/create/" method="POST" enctype="multipart/form-data" id="create-group-form" class="bg-white rounded p-5 hidden w-full md:w-3/5 lg:w-2/5 h-screen md:h-auto flex-col" >
         {% csrf_token %}
         <p class="text-2xl font-medium"> Create a Group</p>
-        <div class="bg-gray-200 p-3 rounded mt-7">
-            <input type="text" name="title" placeholder="Title" class="bg-transparent">
-        </div>
         <input type="file" name="cover_image" accept="image/png, image/jpeg" id="create-group-img" class="hidden">
         <p class="mt-10 text-gray-500">Cover image:</p>
-        <div id="create-group-prev" class="bg-gray-200 rounded h-72 w-full flex flex-col cursor-pointer items-center justify-center mt-1">
-            <img src="/static/img/add.svg" alt="" class="h-16 w-16 object-cover" >
+        <div id="create-group-prev" class="bg-gray-200 rounded h-60 mx-auto w-3/5 flex flex-col cursor-pointer items-center justify-center mt-1">
+            <img src="/static/img/add.svg" alt="" class="h-16 w-16 object-cover rounded" >
+        </div>
+        <div class="bg-gray-200 p-3 rounded mt-7">
+            <input type="text" name="title" placeholder="Title" class="bg-transparent w-full">
+        </div>
+        <div class="bg-gray-200 p-3 rounded mt-7">
+            <textarea name="description" placeholder="Description" style="resize: none;" class="bg-transparent w-full h-20"></textarea>
         </div>
         <input type="submit" value="Create" class="self-center bg-accent text-white py-2 px-10 rounded mt-7">
     </form>

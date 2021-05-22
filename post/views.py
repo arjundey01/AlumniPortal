@@ -19,6 +19,7 @@ def feed(request):
 
 def create_post(request):
     if request.method=='POST':
+        next = request.GET.get('next')
         postform=PostForm(request.POST)
         if postform.is_valid():
             post=postform.save(commit=False)
@@ -27,6 +28,8 @@ def create_post(request):
             for tag in postform.cleaned_data.get('tags'):
                 post.tags.add(tag)
             post.save()
+            if next:
+                return redirect(next)
             return redirect('home')
         else:
             return HttpResponse('form-inv')
@@ -115,6 +118,7 @@ def get_feed(user,tagNames=[]):
     tags=[]
     for tname in tagNames:
         tags.append(get_object_or_404(Group, title = tname))
+    print(tags)
     if user.is_authenticated:
         follow_feed=[]
         following = list(user.account.following.all())
@@ -124,7 +128,7 @@ def get_feed(user,tagNames=[]):
                 post_age = datetime.datetime.now()-post.datetime
                 post_age = post_age.total_seconds() / 3600
                 if post_age<=24:
-                    if len(tags) and len([t for t in tags and post.tags.all()])==0:
+                    if len(tags) and len(list(set(tags) & set(post.tags.all())))==0:
                         continue
                     follow_feed.append(post)
         follow_feed.sort(key=lambda x: x.datetime, reverse=True)
@@ -133,7 +137,7 @@ def get_feed(user,tagNames=[]):
         feed=follow_feed[:]
         for post in general_feed:
             if post not in follow_feed:
-                if len(tags) and len([t for t in tags and post.tags.all()])==0:
+                if len(tags) and len(list(set(tags) & set(post.tags.all())))==0:
                         continue
                 feed.append(post)
     return feed
@@ -203,7 +207,7 @@ def load_feed(request,index):
 
     feed=get_feed(user,tags)
     posts=[]
-    if len(feed)>=index*load_count:
+    if len(feed)>index*load_count:
         for post in feed[index*load_count:min(len(feed),load_count*(index+1))]:
             data=PostSerializer(post).data
             data['is_liked']=user.account in post.likes.all()
