@@ -9,6 +9,9 @@ from .models import Group
 def all_groups(request):
     groups=Group.objects.all()
     return render(request, "all_groups.html", context={'groups':groups})
+
+def group(request):
+    return render(request, "group.html")
     
 def create_group(request):
     if not request.user.is_authenticated:

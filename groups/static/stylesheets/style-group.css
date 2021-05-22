@@ -1,0 +1,16 @@
+#content{
+    width:75%;
+    padding-left: 3.5%;
+    padding-top: 8px;
+}
+.bg-custom{
+    background: rgba(108, 120, 152, 0.5);
+}
+
+.button{
+    color: #4150D7;
+    background: rgba(65, 80, 215, 0.16);
+}
+.pencil{
+    color: #4150D7 !important;
+}
