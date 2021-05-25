@@ -1,11 +1,142 @@
-{# accounts.html #}
 {% extends "base.html" %}
+{% block style %}
+ 
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="/static/stylesheets/accounts.css"> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-{% block content %} 
-<h3>Accounts</h3>
- {# account-list section #}
-  <div id="replaceable-content" class="col-6">
-    {% include 'accounts-results-partial.html' %}
-  </div>
+  <div class=" w-full h-screen">
+
+
+    <div class="flex w-full  justify-start h-10  bg-white mt-6" >
+      <button class="font-normal text-base non-italic font-sans text-gray-400  ml-7 my-2.5">Alumni</button>
+      <button class="font-normal text-base non-italic font-sans text-gray-400 ml-14 mr-14 my-2.5">Students</button>
+      <button class="font-normal text-base non-italic font-sans text-gray-400  my-2.5">Groups</button>
+    </div>
+
+
+    <div class=" justify-start flex h-6 mt-5 ">
+
+
+      <div class="dropdown ">
+        <button class="dropbtn w-16 h-6 flex justify-start  bg-white box-border rounded border border-gray-300 " onclick="myFunction()">
+        <p class="font-normal  font-sans non-italic text-xs ml-4 mt-0.5 text-gray-400 ">Job</p>
+        <i class="fa fa-caret-down my-2 ml-2"  style="font-size:10px"></i>
+      </button>
+        <div class="dropdown-content flex-col " id="job">
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+        </div>
+      </div> 
+
+
+      <div class="dropdown ml-2.5">
+        <button class="dropbtn w-24  h-6  flex justify-start  bg-white box-border rounded border border-gray-300  " onclick="myFunction1()">
+          <p class="font-normal  font-sans non-italic text-xs ml-2 mt-0.5 text-gray-400 ">Department</p>
+          <i class="fa fa-caret-down my-2 ml-2" style="font-size:10px"></i>
+        </button>
+        <div class="dropdown-content flex-col" id="department">
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+        </div>
+      </div> 
+
+
+      <div class="dropdown ml-2.5 ">
+        <button class="dropbtn w-20 h-6  flex justify-start  bg-white box-border rounded border border-gray-300 " onclick="myFunction2()">
+          <p class="font-normal  font-sans non-italic text-xs ml-2 mt-0.5 text-gray-400 ">Company</p>
+          <i class="fa fa-caret-down my-2 ml-2" style="font-size:10px"></i>
+        </button>
+        <div class="dropdown-content flex-col" id="company">
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+        </div>
+      </div> 
+
+      <div class="dropdown  ml-2.5 ">
+        <button class="dropbtn h-6 w-20  flex justify-start  bg-white box-border rounded border border-gray-300 " onclick="myFunction3()">
+          <p class="font-normal  font-sans non-italic text-xs ml-2 mt-0.5 text-gray-400 ">Grad year</p>
+          <i class="fa fa-caret-down my-2 ml-2" style="font-size:10px"></i>
+        </button>
+        <div class="dropdown-content flex-col" id="gradyear">
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+          <div>
+            <a href="#">Link 1</a>
+          </div>
+        </div>
+      </div> 
+
+    <script>
+      function myFunction() {
+          document.getElementById("job").classList.toggle("show");
+      }
+
+      function myFunction1() {
+          document.getElementById("department").classList.toggle("show");
+      }
+
+      function myFunction2() {
+          document.getElementById("company").classList.toggle("show");
+      }
+
+      function myFunction3() {
+          document.getElementById("gradyear").classList.toggle("show");
+      }
+    </script>
+
+      
+    </div>
+
+    
+    <div class="mt-5 bg-white">
+      {% if accounts %}
+      {% for account in accounts %}
+        <div class="flex justify-between items-center py-5 ">
+            <div class="flex items-center justify-start">
+                <div class="rounded-full h-14 w-24 overflow-hidden flex items-center justify-start flex-shrink-0">
+                    <img src="{{account.profile_img_url}}" class= "ml-7 h-14 w-14 object-cover" alt="">
+                </div>
+                <div class="mx-2 ">
+                    <a class="flex mt-3 font-medium  font-sans non-italic text-sm " href="{% url 'account' account.email %}">{{ account.name }}</a>
+                    <p class="font-sans font-medium font-light  text-xs text-gray-400 ">Associate Project Manager | Google</p>
+                </div>
+            </div>
+            <div>
+                <button class="bg-accent py-1 px-4 text-white text-md rounded mr-8">Follow<b>&#8314</b></button>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <!-- <p>No accounts found.</p>  -->
+       {% endif %}
+    </div>
+  </div>  
 
 {% endblock %}

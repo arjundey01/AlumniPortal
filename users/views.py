@@ -319,7 +319,7 @@ def accounts_view(request):
     if url_parameter:
         accounts = Account.objects.filter(name__icontains=url_parameter)
     else:
-        accounts = {}
+        accounts = Account.objects.all()
 
     ctx["accounts"] = accounts
     if request.is_ajax():
