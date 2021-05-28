@@ -10,6 +10,10 @@
     left:0;
 }
 
+#header{
+    z-index: 50;
+}
+
 #content-wrapper{
     background: rgb(204, 213, 221);
 }
@@ -72,24 +76,9 @@
     z-index: 10000;
 }
 
-
-@media (min-width: 1336px){
+@media (min-width: 768px){
     .sidebar{
-        width: 260px;
-        left:0;
-    }
-
-    #main{
-        width: calc(100% - 260px);
-        margin-left: 260px;
-    }
-
-    #sidebar-btn{
-        display: none;
-    }
-
-    #right-pane{
-        width: calc(0.4 * (100% - 260px));
+        width: 40vw;
     }
 }
 
@@ -113,7 +102,31 @@
         max-width: 24px;
         max-height: 24px;
     }
+
 }
+
+
+@media (min-width: 1336px){
+    .sidebar{
+        width: 260px;
+        left:0;
+    }
+
+    #main{
+        width: calc(100% - 260px);
+        margin-left: 260px;
+    }
+
+    #sidebar-btn{
+        display: none;
+    }
+
+    #right-pane{
+        width: calc(0.4 * (100% - 260px));
+    }
+}
+
+
 
 
 
@@ -128,6 +141,14 @@
 
 .bg-accent-faded{
     background-color: rgb(241,242,253);
+}
+
+.bg-accent-mid{
+    background-color: rgba(65, 80, 215, 0.16);
+}
+
+.bg-bluegray{
+    background: rgba(108, 120, 152, 0.5);
 }
 
 .svg-accent path{

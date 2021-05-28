@@ -1,0 +1,145 @@
+<div class="w-full flex flex-col items-center mt-5">
+
+    <div class="w-full flex flex-col-reverse sm:flex-row items-center p-3 sm:p-5 bg-white mb-6 rounded">
+        <div class="three-member-imgs hidden mr-3 sm:flex">
+            <img src="" alt="" class="rounded-full p-0.5 bg-white object-cover h-10 w-10">
+            <img src="" alt="" class="rounded-full p-0.5 bg-white object-cover h-10 w-10 -ml-4">
+            <img src="" alt="" class="rounded-full p-0.5 bg-white object-cover h-10 w-10 -ml-4">
+        </div>
+        <p class="text-gray-500 text-sm flex-shrink-1 mt-2 sm:mt-0">
+            <span>{{group.member_count}} Members </span>
+            <span class="hidden md:inline">are part of this group</span>
+        </p>
+        <form id="search-form" class="bg-accent-faded flex flex-grow self-stretch rounded sm:self-center items-center sm:ml-6 md:ml-14 p-2" action="">
+            <img src="/static/img/search.svg" alt="" class="mx-1 md:mx-3 h-5 w-5">
+            <input type="text" name="" id="member-search-input" placeholder="Search Members..." class="flex-1 bg-transparent min-w-0">
+        </form>
+    </div>
+
+    <div class="w-full sm:w-5/6 rounded bg-white px-6 py-4 mb-4" >
+        <p> Alumni </p>
+        <div class="w-full members-section" id="members-alumni">
+            
+        </div>
+    </div>
+
+    <div class="w-full sm:w-5/6 rounded bg-white px-6 py-4 mb-4" >
+        <p> Members with common groups</p>
+        <div class="w-full members-section" id="members-common">
+            
+        </div>
+    </div>
+
+    <div class="w-full sm:w-5/6 rounded bg-white px-6 py-4 mb-4" >
+        <p> Members </p>
+        <div class="w-full members-section" id="members-other">
+            
+        </div>
+    </div>
+
+    <div class="w-full sm:w-5/6 rounded bg-white px-6 py-4 mb-4 hidden" >
+        <p> Results </p>
+        <div class="w-full" id="members-results">   
+
+        </div>
+    </div>
+
+</div>
+
+<template id="member-entry-temp">
+    <div class="flex justify-between items-center py-4">
+        <div class="flex items-center justify-start">
+            <img src="{{user.account.profile_img_url}}" class= "rounded-full member-img h-12 w-12 object-cover flex-shrink-0" alt="">
+            <div class="mx-4">
+                <p class="member-name mt-1 text-md font-medium leading-4">{{user.account.name}}</p>
+                <p class="member-desg text-xs font-light">Associate Project Manager | Google</p>
+            </div>
+        </div>
+        <div>
+            <button class="member-follow bg-accent py-0.5 px-5 text-white text-sm rounded">Follow</button>
+        </div>
+    </div>
+</template>
+<script type="text" id="group-id">{{group.id}}</script>
+
+
+{% block scripts %}
+    <script src="/static/scripts/groups.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+    <script>
+        $(document).ready(function(){
+            const grp_id = $('#group-id').text();
+            let members=[];
+            let fuse = false;
+            let section_vis={};
+            $.ajax({
+                type:'POST',
+                url: `/groups/get-members/${grp_id}/`,
+                dataType: 'json',
+                success: (data)=>{
+                    console.log(data);
+                    let ctr=0;
+                    for( type in data ){
+                        data[type].forEach(ele => {
+                            let temp = document.getElementById("member-entry-temp");
+                            let p = temp.content.cloneNode(true);
+                            $('.member-name',p).text(ele.name);
+                            $('.member-img',p).attr('src',ele.profile_img);
+                            if(ele.is_followed){
+                                $('.member-follow',p).addClass('hidden');
+                            }
+                            $(`#members-${type}`).append(p);
+                            $(`.three-member-imgs img:eq( ${ctr++} )`).attr('src',ele.profile_img);
+                            members.push({...ele, type:type});
+                        });
+                        if(!data[type].length){
+                            $(`#members-${type}`).parent().addClass('hidden');
+                            section_vis[`members-${type}`]=false;
+                        }else{
+                            section_vis[`members-${type}`]=true;
+                        }
+                    }
+                    if(ctr<3){
+                        for(let i=3; i>ctr; i--){
+                            $(`.three-member-imgs img:eq( ${i-1} )`).addClass('hidden');
+                        }
+                    }
+                    fuse = new Fuse(members, {keys:['name']});
+                },
+                error: (e,f)=>{
+                    console.log(f);
+                }
+            })
+            
+            $('#member-search-input').on('input change', function(e){
+                if(!fuse)return;
+                if(this.value.length>=3){
+                    $('.members-section').parent().addClass('hidden');
+                    $('#members-results').parent().removeClass('hidden');
+                    $('#members-results').html("");
+                    const res=fuse.search(this.value);
+                    if(res.length === 0){
+                        $('#members-results').html('<p class="text-lg text-gray-500 text-center">No Results</p>');
+                    }
+                    res.forEach((ele)=>{
+                        let temp = document.getElementById("member-entry-temp");
+                        let p = temp.content.cloneNode(true);
+                        $('.member-name',p).text(ele.item.name);
+                        $('.member-img',p).attr('src',ele.item.profile_img);
+                        if(ele.item.is_followed){
+                            $('.member-follow',p).addClass('hidden');
+                        }
+                        $('#members-results').append(p);
+                    })
+                }else{
+                    $('.members-section').each((ind,ele)=>{
+                        if(section_vis[ele.id]){
+                            $(ele).parent().removeClass('hidden');
+                        }
+                        $('#members-results').parent().addClass('hidden');
+                    })
+                }
+            })
+        })
+    </script>
+{% endblock %}

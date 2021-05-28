@@ -2,8 +2,14 @@ $(document).ready(()=>{
 
 });
 
+$('.group-thumbnail').on('click',function(e){
+    const id = $(this).attr('data-id');
+    window.location = `/groups/${id}/`;
+});
+
 $('.join-group').on('click',function(e){
     const id = $(this).attr('data-id');
+    e.stopPropagation();
     $.ajax({
         type: 'POST',
         url: `/groups/join-group/${id}/`,
