@@ -1,3 +1,4 @@
+from datetime import date
 from django.http.response import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
@@ -12,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from post.views import feed
 from .forms import *
 import json
+import django.utils.timezone as timezone
 
 
 def home(request):
@@ -149,6 +151,8 @@ def profile(request, username):
             'projects' :projects,
             'educations': educations,
         }
+    
+        
     if(request.user == user.user):
         context['u_form']=UserUpdateForm(instance=request.user)
         context['e_form']=ExperienceForm()

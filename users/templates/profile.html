@@ -1,12 +1,63 @@
 {% extends "base.html" %}
-{% block style %}
- 
-{% endblock %}
+{% block head%}
+    <style>
+      #content{
+        width:75%;
+        padding-left: 3.5%;
+        padding-top: 8px;
+      }
+      .bg-custom{
+        background: rgba(108, 120, 152, 0.5);
+      }
+      .custom-button{
+        background:#4150D7;
+        color:#ffffff;
+      }
+      .font-blue{
+    color:#4150D7;
+    }
+    </style>
+{% endblock%}
 {% block content %}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="/static/stylesheets/style-profile.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<div>
+  <div class="h-52 w-full bg-custom mt-6 grid grid-rows-1 items-stretch grid-flow-col ">
+      <div class="col justify-self-end mt-5">  
+        <button class="bg-white rounded  h-9 w-36"><img src="/static/img/share.svg" alt="" class="w-9 h-5 inline"><span class="mr-3">Share Profile</span></button>
+        <button class="bg-white rounded mr-1.5  h-9 w-9 justify-self-end"><img src="/static/img/dots-vertical.svg" alt="" class="w-9 h-5"></button>
+      </div>
+    </div>
+    <div class="grid grid-rows-2  grid-flow-col w-full bg-white  px-5 pt-5 pb-9">
+        <div class="grid grid-cols-12">
+            <div class="col-span-3 xl:col-span-2 -mt-11 ">
+                <img src="/static/img/Photo.png" class="rounded-full h-32 inline absolute border-8 bg-white border-white">
+            </div>
+            <div class="col-span-6 xl:col-span-7">               
+                <div class=" font-medium text-xl mb-1">{{curr_user.name }}</div>
+                {% if curr_user.is_alumni%}
+                <img src="/static/img/iitg.svg" class="rounded-full inline h-8"><span class="text-xs font-medium">{{curr_user.branch}}<span>
+                <span class="text-xs font-light">{{curr_user.start_year}}-{{curr_user.graduation_year}}</span>
+                {% else %}
+                <div class="text-xs">{{curr_user.branch}} | {{curr_user.current_year}}</div>
+                {% endif %}
+            </div>  
+            <div class="col-span-3 flex justify-end">               
+                <button class="custom-button rounded p-1 text-sm font-normal h-8 w-44 justify-self-end">Follow</button>
+            </div>
+        </div>
+        <div class="grid mt-5">
+                <div class="col">
+                <div class="text-lg font-medium mb-1">About</div>
+                <div class="text-sm">{{curr_user.description}} </div>
+                {% comment %} <div class="text-sm">
+                {{curr_user.description}}
+                <div> {% endcomment %}
+        </div>
+    </div>
+</div>
 <!-- <button class="btn btn-outline-info" type="submit">Update</button> -->
 {% comment %} 
 
@@ -265,50 +316,45 @@
  {% endcomment %}
 <div class="container">
   <!--experience-->
-  <div class=" bg-white p-5">
+  <div class=" bg-white p-5 mt-5">
 
     <!--heading-->
-    <div class="text-lg h-11  font-medium">
+    <div class="text-lg  font-medium">
         <span >Experience</span>
-        <span>{% if user == curr_user.user %}
+        {% comment %} <span>{% if user == curr_user.user %}
               <button id="new_experience" class="btn btn-outline-secondary btn-sm" value="show">
                 <span>&#43;</span>
               </button>
               {% endif %}
-        </span> 
+        </span>  {% endcomment %}
     </div>
     <!--content-->
     <div class="text-lg ">
         <ul class="grid grid-cols-3">
+
           {% for experience in experiences %}
-          <li>
-          <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="54" height="54" rx="27" fill="url(#paint0_linear)"/>
-              <path d="M26.9993 40.3346C34.3631 40.3346 40.3327 34.3651 40.3327 27.0013C40.3327 19.6375 34.3631 13.668 26.9993 13.668C19.6356 13.668 13.666 19.6375 13.666 27.0013C13.666 34.3651 19.6356 40.3346 26.9993 40.3346Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M13.666 27H40.3327" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M26.9993 13.668C30.3344 17.3191 32.2297 22.0573 32.3327 27.0013C32.2297 31.9453 30.3344 36.6835 26.9993 40.3346C23.6643 36.6835 21.769 31.9453 21.666 27.0013C21.769 22.0573 23.6643 17.3191 26.9993 13.668V13.668Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <defs>
-              <linearGradient id="paint0_linear" x1="47" y1="3.53765e-07" x2="8.5" y2="54" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#FFB75E"/>
-              <stop offset="1" stop-color="#ED8F03"/>
-              </linearGradient>
-              </defs>
-          </svg>
-          <p class="user-experience"> {{experience.experience}}</p> 
-          <span class="user-experience"> {{experience.get_start_date|date:" Y" }}-
-          {% if  experience.get_end_date %}
-          {{experience.get_end_date|date:"Y" }}&nbsp;{{experience.get_duration.months}}months&nbsp;{{experience.get_duration.years}}years
-          {% else %} Present
-          {% endif %}
-          </p> 
-            {% if user == curr_user.user %}
+
+          <li class="grid grid-cols-12 mt-3">
+            <img src="/static/img/company.svg" class="rounded-full inline h-16 col-span-3">
+            <div class="col-span-9">
+
+            <p class="user-experience text-base font-medium"> {{experience.experience}}</p> 
+            <span class="user-experience text-xs"> 
+              {{experience.get_start_date|date:" Y" }}-
+              {% if  experience.get_end_date %}
+              {{experience.get_end_date|date:"Y" }}
+              {% else %} Present
+              {% endif %}
+            </span>
+            </div> 
+            {% comment %} {% if user == curr_user.user %}
             <button class="btn btn-danger btn-sm del-item-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
               <i style="font-size:12px" class="fa fa-trash-o"></i>
             </button>
             <button class="edit btn btn-secondary btn-sm" data-update-id="{{ experience.id }}">
               <i style="font-size:12px" class="fa fa-pencil"></i>
             </button>
-            {% endif %}
+            {% endif %} {% endcomment %}
            </li>
           {% endfor %}
         </ul>
@@ -320,39 +366,47 @@
     </div> 
 
   </div>
-  
   <!--Past jobs-->
-  <div class="mt-7 bg-white p-5">
+  <div class=" bg-white p-5 mt-5">
 
     <!--heading-->
     <div class="text-lg h-11  font-medium">
         <span >Past Jobs</span>
-        {% comment %} <span>{% if user == curr_user.user %}
+        <span>{% if user == curr_user.user %}
               <button id="new_experience" class="btn btn-outline-secondary btn-sm" value="show">
                 <span>&#43;</span>
               </button>
               {% endif %}
-        </span>  {% endcomment %}
+        </span> 
     </div>
     <!--content-->
     <div class="text-lg ">
-        <ul class="grid grid-rows-2">
+        <ul>
+
           {% for experience in experiences %}
-          <li class="mt-6">
-          <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="54" height="54" rx="27" fill="url(#paint0_linear)"/>
-              <path d="M26.9993 40.3346C34.3631 40.3346 40.3327 34.3651 40.3327 27.0013C40.3327 19.6375 34.3631 13.668 26.9993 13.668C19.6356 13.668 13.666 19.6375 13.666 27.0013C13.666 34.3651 19.6356 40.3346 26.9993 40.3346Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M13.666 27H40.3327" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M26.9993 13.668C30.3344 17.3191 32.2297 22.0573 32.3327 27.0013C32.2297 31.9453 30.3344 36.6835 26.9993 40.3346C23.6643 36.6835 21.769 31.9453 21.666 27.0013C21.769 22.0573 23.6643 17.3191 26.9993 13.668V13.668Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <defs>
-              <linearGradient id="paint0_linear" x1="47" y1="3.53765e-07" x2="8.5" y2="54" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#FFB75E"/>
-              <stop offset="1" stop-color="#ED8F03"/>
-              </linearGradient>
-              </defs>
-          </svg>
-          <p class="user-experience"> {{experience.experience}}</p> 
-          <span class="user-experience"> {{experience.start_year}}-{{experience.end_year}}</p> 
+          <li class="grid grid-cols-12 mb-3">
+          <img src="/static/img/company.svg" class="rounded-full inline h-16 col-span-1">
+          <div class="col-span-11 pl-3">
+                <div class="user-experience text-base font-medium">
+                    {{experience.experience}}
+                </div> 
+                <div class="user-experience text-xs font-normal"> 
+                    {{experience.get_start_date|date:"m Y" }}-
+                    {% if  experience.get_end_date %}
+                    {{experience.get_end_date|date:"m Y" }}&nbsp;
+                    <span class="ml-2 font-blue">
+                    {% if experience.get_duration.months %}
+                    {{experience.get_duration.months}}months
+                    {% endif %}
+                    &nbsp;
+                    {% if experience.get_duration.years %}
+                    {{experience.get_duration.years}}years</span>
+                    {% endif %}
+                    {% else %} Present
+                    {% endif %}
+                </div> 
+                <div class="text-sm">Work with clients and web studios as freelancer.  Work in next areas: eCommerce web projects; creative landing pages; iOs and Android apps; corporate web sites and corporate identity sometimes.</div>
+          </div>
             {% comment %} {% if user == curr_user.user %}
             <button class="btn btn-danger btn-sm del-item-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
               <i style="font-size:12px" class="fa fa-trash-o"></i>
@@ -360,15 +414,38 @@
             <button class="edit btn btn-secondary btn-sm" data-update-id="{{ experience.id }}">
               <i style="font-size:12px" class="fa fa-pencil"></i>
             </button>
-            {% endif %}
-           {% endcomment %}
-          </li>
+            {% endif %} {% endcomment %}
+           </li>
           {% endfor %}
         </ul>
+        <form method="POST" action="{% url 'add-experience'%}" class="experience_form" style="display: none;">
+          {%csrf_token%}
+          {{ e_form.as_myformat }}
+          {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
+        </form>
     </div> 
 
   </div>
+<!--Faq-->
+  <div class=" bg-white pt-5 pr-5 pb-5 mt-5 mb-10">
 
+    <!--heading-->
+    <div class="text-lg h-11  font-medium pl-5">
+        <span >Questions Answered</span>
+    </div>
+    <!--content-->
+    <div class="text-lg ">
+        <div class="text-sm font-medium mb-3 pl-5">
+        {% lorem 1 %}
+        </div>
+        <div class="text-sm grid grid-cols-12">
+        <div class="col-span-1 pl-5"><img src="/static/img/Photo.png" class="rounded-full inline h-8"></div>
+        <div class="col-span-11">{% lorem 1 %}</div>
+        </div>
+    </div> 
+
+  </div>
+  
 </div>
 
 

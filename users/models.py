@@ -1,7 +1,9 @@
+from time import time
 from django.db import models
 from django.contrib.auth.models import User
 import re
 from datetime import date, datetime
+import django.utils.timezone as timezone
 # Create your models here.
 
 def profile_image_path(instance, filename):
@@ -13,6 +15,10 @@ class Account(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
     name=models.CharField(max_length=100)
     email=models.EmailField()
+    description=models.CharField(max_length=400, default="This is my description")
+    branch=models.CharField(max_length=100,default="")
+    start_year=models.IntegerField(default=2019)
+    graduation_year=models.IntegerField(default=2023)
     following=models.ManyToManyField('Account',related_name='followers', blank=True)
     profile_img=models.ImageField(upload_to=profile_image_path,null=True)
     last_active=models.DateTimeField(null=True,default=datetime.now)
@@ -26,7 +32,11 @@ class Account(models.Model):
             return self.profile_img.url
         else:
             return "/static/img/default-avatar.svg"
-
+    def current_year(self):
+        if timezone.now().month<6:
+            return (self.start_year-timezone.now().year)*-1
+        else: 
+            return 1+((self.start_year-timezone.now().year)*-1)
     def __str__(self):
         return self.name
 
@@ -79,6 +89,7 @@ class Designation(models.Model):
 class PastJobs(models.Model):
     organization=models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="jobs")
     designation=models.ForeignKey(Designation,on_delete=models.CASCADE, related_name="jobs")
+    description=models.CharField(default="NA",max_length=255)
     start_date=models.DateField(default=date.today)
     end_date=models.DateField(null=True, blank=True)
 
