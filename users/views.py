@@ -13,12 +13,10 @@ from post.views import feed
 from .forms import *
 import json
 
-
 def home(request):
     if request.user.is_authenticated:
         return feed(request)
     return render(request, 'home.html')
-
 
 
 def sign_in(request):
@@ -28,7 +26,6 @@ def sign_in(request):
     request.session['auth_state'] = state
     # Redirect to the Azure sign-in page
     return HttpResponseRedirect(sign_in_url)
-
 
 def callback(request):
     # Get the state saved in session
@@ -50,13 +47,13 @@ def callback(request):
     return HttpResponseRedirect(reverse('home'))
 
 def signup_details(request):
-	if request.user.is_authenticated:
-		context={}
-		context['signup-form']=SignupForm()
-		return render(request,'signup-details.html',context)
-	else:
-		return HttpResponse('notLoggedIn',status=500)
-    		
+    if request.user.is_authenticated:
+        context={}
+        context['signup-form']=SignupForm()
+        return render(request,'signup-details.html',context)
+    else:
+        return HttpResponse('notLoggedIn',status=500)
+            
 def update_details(request):
     pass
 
@@ -76,12 +73,10 @@ def sign_out(request):
 #     else:
 #       return HttpResponse('exists')
 
-
 def test_signin(request, name):
     user = Account.objects.get(name=name).user
     login(request, user)
     return HttpResponseRedirect(reverse('home'))
-
 
 def follow(request):
     if request.user.is_authenticated:
@@ -95,7 +90,6 @@ def follow(request):
         except User.DoesNotExist:
             return HttpResponse('doesnotexist',status=404)
     return HttpResponse('notloggedin',status=500)
-
 
 def unfollow(request):
     if request.user.is_authenticated:
@@ -111,13 +105,11 @@ def unfollow(request):
             return HttpResponse('doesnotexist',status=500)
     return HttpResponse('notloggedin',status=500)
 
-
 def followers(request):
     if request.user.is_authenticated:
         user = request.user.account
         return HttpResponse(json.dumps([x.name for x in user.followers.all()]))
     return HttpResponse('notloggedin')
-
 
 def following(request):
     if request.user.is_authenticated:
@@ -133,27 +125,28 @@ def account(request):
 
 
 
-
 #========================================== PROFILE ==================================================
-
 
 def profile(request, username):
     user=get_object_or_404(User, username=username).account
     experiences=Experience.objects.all().filter(user=user)
     projects=Project.objects.all().filter(user=user)
     educations=Education.objects.all().filter(user=user)
+    jobs=PastJobs.objects.all().filter(user=user)
     # contact=get_object_or_404(Contact, user=request.user)
     context ={
             'curr_user': user,
             'experiences':experiences,
             'projects' :projects,
             'educations': educations,
+            'jobs':jobs
         }
     if(request.user == user.user):
         context['u_form']=UserUpdateForm(instance=request.user)
         context['e_form']=ExperienceForm()
         context['edu_form']=EducationForm()
         context['p_form']=ProjectForm()
+        context['j_form']=PastJobsForm()
         if Contact.objects.filter(user=user).exists():
             context['ct_form']=ContactUpdateForm(instance=user.contact)
         else:
@@ -187,6 +180,19 @@ def experience(request):
     return redirect('/account/'+request.user.username+'#tab-experience')
 
 @login_required(login_url='/signin/')
+def pastjobs(request):
+    if request.method == 'POST':
+        j_form=PastJobsForm(request.POST)
+        if j_form.is_valid():
+            j=j_form.save(commit=False)
+            j.user=request.user.account
+            j.save()
+            messages.success(request, 'Your Past job has been Updated!')
+        else:
+            messages.error(request,"Some Error Occured!")
+    return redirect('/account/'+request.user.username)
+
+@login_required(login_url='/signin/')
 def project(request):
     if request.method == 'POST':
         p_form=ProjectForm(request.POST)
@@ -212,7 +218,6 @@ def education(request):
             messages.error(request,"Some Error Occured!")
         return redirect('/account/'+request.user.username+'#tab-education')
 
-
 @login_required(login_url='/signin/')
 def update_contact(request):
     if request.method == 'POST':
@@ -231,7 +236,6 @@ def update_contact(request):
         return redirect('/account/'+request.user.username+'#tab-contact')
     return Http404
 
-
 @login_required(login_url='/signin/')
 def update_ex(request, pk):
     if request.method == 'POST':
@@ -247,6 +251,20 @@ def update_ex(request, pk):
         return redirect('/account/'+request.user.username+'#tab-experience')
     return Http404
 
+@login_required(login_url='/signin/')
+def update_job(request, pk):
+    if request.method == 'POST':
+        j_form=PastJobsForm(request.POST, instance=get_object_or_404(Experience, pk=pk))
+        if j_form.is_valid():
+
+            j=j_form.save(commit=False)
+            j.user=request.user.account
+            j.save()
+            messages.success(request, 'Your job has been Updated!')
+        else:
+            messages.error(request,"Some Error Occured!")
+        return redirect('/account/'+request.user.username)
+    return Http404
 
 @login_required(login_url='/signin/')
 def update_p(request, pk):
