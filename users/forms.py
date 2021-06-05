@@ -46,7 +46,7 @@ class ExperienceForm(FormattedModelForm):
 class PastJobsForm(FormattedModelForm):
     class Meta:
         model=PastJobs
-        fields='__all__'
+        exclude=['user']
 
 class ProjectForm(FormattedModelForm):
     class Meta:
