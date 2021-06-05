@@ -24,7 +24,6 @@ class Account(models.Model):
     last_active=models.DateTimeField(null=True,default=datetime.now)
     organization=models.ManyToManyField('Organization',related_name='employees')
     designation = models.ManyToManyField('Designation',related_name='employees')
-    pastjobs = models.ManyToManyField('PastJobs',related_name='employees')
     is_alumni = models.BooleanField(default=False)
     @property
     def profile_img_url(self):
@@ -33,7 +32,7 @@ class Account(models.Model):
         else:
             return "/static/img/default-avatar.svg"
     def current_year(self):
-        if timezone.now().month<6:
+        if timezone.now().month<7:
             return (self.start_year-timezone.now().year)*-1
         else: 
             return 1+((self.start_year-timezone.now().year)*-1)
@@ -87,6 +86,7 @@ class Designation(models.Model):
     title=models.CharField(max_length=150)
 
 class PastJobs(models.Model):
+    user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="jobs")
     organization=models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="jobs")
     designation=models.ForeignKey(Designation,on_delete=models.CASCADE, related_name="jobs")
     description=models.CharField(default="NA",max_length=255)

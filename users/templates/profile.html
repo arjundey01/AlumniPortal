@@ -26,7 +26,7 @@
 <div>
   <div class="h-52 w-full bg-custom mt-6 grid grid-rows-1 items-stretch grid-flow-col ">
       <div class="col justify-self-end mt-5">  
-        <button class="bg-white rounded  h-9 w-36"><img src="/static/img/share.svg" alt="" class="w-9 h-5 inline"><span class="mr-3">Share Profile</span></button>
+        <button class="bg-white rounded  h-9 w-36"><img src="/static/img/upload.svg" alt="" class="w-9 h-5 inline"><span class="mr-3">Share Profile</span></button>
         <button class="bg-white rounded mr-1.5  h-9 w-9 justify-self-end"><img src="/static/img/dots-vertical.svg" alt="" class="w-9 h-5"></button>
       </div>
     </div>
@@ -41,7 +41,7 @@
                 <img src="/static/img/iitg.svg" class="rounded-full inline h-8"><span class="text-xs font-medium">{{curr_user.branch}}<span>
                 <span class="text-xs font-light">{{curr_user.start_year}}-{{curr_user.graduation_year}}</span>
                 {% else %}
-                <div class="text-xs">{{curr_user.branch}} | {{curr_user.current_year}}</div>
+                <div class="text-xs font-medium">{{curr_user.branch}} | {{curr_user.current_year}} Year</div>
                 {% endif %}
             </div>  
             <div class="col-span-3 flex justify-end">               
@@ -64,7 +64,6 @@
 <div>
   {% include 'update_forms.html' %}
 </div>
-
 
   <div class="content-section" id="content">
 
@@ -171,7 +170,6 @@
   
       </div>
 
-
       <div id="tab-project" class="tab-pane fade">
 
         <h3>Projects
@@ -206,7 +204,6 @@
 
       </div>
 
-
       <div id="tab-education" class="tab-pane fade">
         
         <h3>Education
@@ -234,7 +231,6 @@
           {% endfor %}
         </ul> 
 
-
          <form method="POST" action="{% url 'add-education'%}" class="education_form" style="display: none;">
           {%csrf_token%}
            {{ edu_form.as_myformat }} 
@@ -242,7 +238,6 @@
         </form>
 
       </div>
-
 
       <div id="tab-contact" class="tab-pane fade">
 
@@ -293,7 +288,6 @@
 
       </div>
 
-
       {% if user == curr_user.user %}
       <div id="tab-update" class="tab-pane fade">
 
@@ -321,7 +315,7 @@
     <!--heading-->
     <div class="text-lg  font-medium">
         <span >Experience</span>
-        {% comment %} <span>{% if user == curr_user.user %}
+       {% comment %} <span>{% if user == curr_user.user %}
               <button id="new_experience" class="btn btn-outline-secondary btn-sm" value="show">
                 <span>&#43;</span>
               </button>
@@ -333,21 +327,20 @@
         <ul class="grid grid-cols-3">
 
           {% for experience in experiences %}
-
-          <li class="grid grid-cols-12 mt-3">
+          <li class="user-experience grid grid-cols-12 mt-3 {% if forloop.counter > 3%}hidden{% endif %}">
             <img src="/static/img/company.svg" class="rounded-full inline h-16 col-span-3">
             <div class="col-span-9">
 
             <p class="user-experience text-base font-medium"> {{experience.experience}}</p> 
             <span class="user-experience text-xs"> 
-              {{experience.get_start_date|date:" Y" }}-
+              {{experience.get_start_date|date:"M Y" }}-
               {% if  experience.get_end_date %}
-              {{experience.get_end_date|date:"Y" }}
+              {{experience.get_end_date|date:"M Y" }}
               {% else %} Present
               {% endif %}
             </span>
             </div> 
-            {% comment %} {% if user == curr_user.user %}
+          {% comment %} {% if user == curr_user.user %}
             <button class="btn btn-danger btn-sm del-item-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
               <i style="font-size:12px" class="fa fa-trash-o"></i>
             </button>
@@ -357,6 +350,9 @@
             {% endif %} {% endcomment %}
            </li>
           {% endfor %}
+          {% if experiences|length > 3 %}
+            <a id="user-exp" class="text-accent text-xs mt-5">SHOW ALL({{experiences|length|add:-3}})</a>
+          {% endif %}
         </ul>
         <form method="POST" action="{% url 'add-experience'%}" class="experience_form" style="display: none;">
           {%csrf_token%}
@@ -366,61 +362,64 @@
     </div> 
 
   </div>
-  <!--Past jobs-->
+<!--Past jobs-->
   <div class=" bg-white p-5 mt-5">
 
     <!--heading-->
     <div class="text-lg h-11  font-medium">
         <span >Past Jobs</span>
-        <span>{% if user == curr_user.user %}
-              <button id="new_experience" class="btn btn-outline-secondary btn-sm" value="show">
+        {% comment %} <span>{% if user == curr_user.user %}
+              <button id="new_job" class="btn btn-outline-secondary btn-sm" value="show">
                 <span>&#43;</span>
               </button>
               {% endif %}
-        </span> 
+        </span>  {% endcomment %}
     </div>
     <!--content-->
     <div class="text-lg ">
         <ul>
 
-          {% for experience in experiences %}
-          <li class="grid grid-cols-12 mb-3">
+          {% for job in jobs %}
+          <li class="user-jobs grid grid-cols-12 mb-3 {% if forloop.counter > 3%}hidden{% endif %} ">
           <img src="/static/img/company.svg" class="rounded-full inline h-16 col-span-1">
           <div class="col-span-11 pl-3">
-                <div class="user-experience text-base font-medium">
-                    {{experience.experience}}
+                <div class="user-job text-base font-medium">
+                    {{job.designation.title}}
                 </div> 
-                <div class="user-experience text-xs font-normal"> 
-                    {{experience.get_start_date|date:"m Y" }}-
-                    {% if  experience.get_end_date %}
-                    {{experience.get_end_date|date:"m Y" }}&nbsp;
+                <div class="user-job text-xs font-normal"> 
+                    {{job.get_start_date|date:"M Y" }}-
+                    {% if  job.get_end_date %}
+                    {{job.get_end_date|date:"M Y" }}&nbsp;
                     <span class="ml-2 font-blue">
-                    {% if experience.get_duration.months %}
-                    {{experience.get_duration.months}}months
+                    {% if job.get_duration.months %}
+                    {{job.get_duration.months}}months
                     {% endif %}
                     &nbsp;
-                    {% if experience.get_duration.years %}
-                    {{experience.get_duration.years}}years</span>
+                    {% if job.get_duration.years %}
+                    {{job.get_duration.years}}years</span>
                     {% endif %}
                     {% else %} Present
                     {% endif %}
                 </div> 
-                <div class="text-sm">Work with clients and web studios as freelancer.  Work in next areas: eCommerce web projects; creative landing pages; iOs and Android apps; corporate web sites and corporate identity sometimes.</div>
+                <div class="text-sm">{{ job.description }}</div>
           </div>
             {% comment %} {% if user == curr_user.user %}
-            <button class="btn btn-danger btn-sm del-item-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
+            <button class="btn btn-danger btn-sm del-item-btn" data-type="PastJobs" data-delete-id="{{ job.id }}" >
               <i style="font-size:12px" class="fa fa-trash-o"></i>
             </button>
-            <button class="edit btn btn-secondary btn-sm" data-update-id="{{ experience.id }}">
+            <button class="edit btn btn-secondary btn-sm" data-update-id="{{ job.id }}">
               <i style="font-size:12px" class="fa fa-pencil"></i>
             </button>
-            {% endif %} {% endcomment %}
-           </li>
+            {% endif %} 
+           </li> {% endcomment %}
           {% endfor %}
         </ul>
-        <form method="POST" action="{% url 'add-experience'%}" class="experience_form" style="display: none;">
+          {% if jobs|length > 3 %}
+            <a id="user-extrajob" class="text-accent text-xs mt-5">SHOW ALL({{jobs|length|add:-3}})</a>
+          {% endif %}
+        <form method="POST" action="{% url 'add-job'%}" class="pastJobs_form" style="display: none;">
           {%csrf_token%}
-          {{ e_form.as_myformat }}
+          {{ j_form.as_myformat }}
           {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
         </form>
     </div> 
@@ -448,7 +447,6 @@
   
 </div>
 
-
     <script>
       $(document).ready(()=>{
         if(location.hash!=""){
@@ -464,6 +462,15 @@
         }
       })        
       
+      $('#user-exp').on('click',function(e){
+        $('.user-experience').removeClass('hidden');
+        $(this).addClass('hidden');
+      })
+      $('#user-extrajob').on('click',function(e){
+        $('.user-jobs').removeClass('hidden');
+        $(this).addClass('hidden');
+      }) 
+
       $(".edit").click(function(ele){
         {
           // var id = $(this).attr("data-update-id")
@@ -496,6 +503,7 @@
           $(".overlay").css('display', 'block');
           $(".update_form").css('display', 'none');
           $(".update_p_form").css('display', 'none');
+          $(".update_j_form").css('display','none');
           $(".update_edu_form").css('display', 'block');
           $(".update_edu_form").attr('action', 'update/education/'+ $(this).attr("data-update-id")+'/');
           console.log($(".user-edu", $(this).parent()).text());
@@ -504,20 +512,19 @@
     })
 
     $("#new_experience").click(function(){
- 		if($(this).attr("val") == "show")
+    if($(this).attr("val") == "show")
         {
           $(".experience_form").css('display', 'block');
           $("#new_experience").html('<span>&#8722;</span>');
           $(this).attr("val","hide");
         }
-		else
+    else
        {
        $(".experience_form").css('display', 'none');
           $("#new_experience").html('<span>&#43;</span>');
            $(this).attr("val","show");
        }
     })
-
 
     $("#new_project").click(function(){
       if($(this).attr("val") == "show")
@@ -547,7 +554,22 @@
            $(this).attr("val","show");
        }
     })
-  
+
+    $("#new_job").click(function(){
+      if($(this).attr("val") == "show")
+        {
+          $(".pastJobs_form").css('display', 'block');
+          $("#new_job").html('<span>&#8722;</span>');
+          $(this).attr("val","hide");
+        }
+        else
+       {
+       $(".pastJobs_form").css('display', 'none');
+          $("#new_job").html('<span>&#43;</span>');
+           $(this).attr("val","show");
+       }
+    })
+
     $(".del-item-btn").click(function(){
       let id = $(this).attr('data-delete-id');
       let type = $(this).attr('data-type');
