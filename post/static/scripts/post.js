@@ -6,42 +6,48 @@ var csrf_token = ""
 
 function parseHTML(data) {
     let str = ``;
-    data.forEach(ele => {
-        switch (ele.type) {
-            case "paragraph":
-                let fontSize = ele.data.text.length >= 120 ? 'sm':'lg';
-                let px = ele.data.text.length >= 120 ? 'px-2' : 'px-4'
-                str += `<p class="text-${fontSize} ${px} text-gray-500 mt-4 w-full text-justify">${ele.data.text}</p>`;
-                break;
-            case "Image":
-                str += `<div class="post-img-wrapper mt-3 sm:mt-6 w-full">
-                            <img src="${ele.data.file.url}" class="w-full">
-                            <span class="text-sm text-gray-400 italic mt-2">${ele.data.caption}</span>
-                        </div>`;
-                break;
-            case "Attaches":
-                let size=ele.data.file.size/1024;
-                let unit='KB';
-                if(size>1023){
-                    size/=1024;
-                    unit='MB';
-                }
-                size=Math.round(size * 100) / 100;
-                str += `<div class="post-attaches-wrapper mt-3 sm:mt-6 h-15 w-4/5 p-3 bg-gray-100 rounded flex items-center justify-between">		
-                            <div class="flex items-center">
-                                <img class = "h-10 w-10" src="/static/img/${ele.data.file.extension}-icon.svg">
-                                <div class = "ml-2">
-                                    <p class = "text-md text-gray-500">${ele.data.title}</p>
-                                    <p class = "text-sm text-gray-400">${size} ${unit}</p>
-                                </div>
+    if(data["paragraph"])
+        data["paragraph"].forEach((ele)=>{
+            let fontSize = ele.text.length >= 120 ? 'sm':'lg';
+            let px = ele.text.length >= 120 ? 'px-2' : 'px-4'
+            str += `<p class="text-${fontSize} ${px} text-gray-500 mt-4 w-full text-justify">${ele.text}</p>`;
+        });
+    
+    if(data["attaches"])
+        data["attaches"].forEach((ele)=>{
+            let size=ele.file.size/1024;
+            let unit='KB';
+            if(size>1023){
+                size/=1024;
+                unit='MB';
+            }
+            size=Math.round(size * 100) / 100;
+
+            icon='file';
+            if(['png','jpg','jpeg','svg'].includes(ele.file.extension))icon='png';
+            else if(ele.file.extension=='pdf')icon='pdf';
+
+            str += `<div class="post-attaches-wrapper mt-3 sm:mt-6 h-15 w-4/5 p-3 bg-gray-100 rounded flex items-center justify-between">		
+                        <div class="flex items-center">
+                            <img class = "h-10 w-10" src="/static/img/${icon}-icon.svg">
+                            <div class = "ml-2">
+                                <p class = "text-md text-gray-500">${ele.title}</p>
+                                <p class = "text-sm text-gray-400">${size} ${unit}</p>
                             </div>
-                            <a href="${ele.data.file.url}">
-                                <img class = "h-10 w-10" src="/static/img/dl-icon.svg">
-                            </a>
-                        </div>`;
-                break;
-        }
-    });
+                        </div>
+                        <a href="${ele.file.url}">
+                            <img class = "h-10 w-10" src="/static/img/dl-icon.svg">
+                        </a>
+                    </div>`;
+        });
+    
+    if(data["image"])
+        data["image"].forEach((ele)=>{
+            str += `<div class="post-img-wrapper mt-3 sm:mt-6 w-full">
+                        <img src="${ele.file.url}" class="w-full">
+                        <!-- <span class="text-sm text-gray-400 italic mt-2">${ele.caption}</span> -->
+                    </div>`;
+        });
     return str;
 }
 var load_posts = function(index) {
@@ -61,26 +67,26 @@ var load_posts = function(index) {
                 var temp = document.getElementById("post-template");
                 var p = temp.content.cloneNode(true);
                 p.id = 'post-' + post.id;
-                p.querySelector('.post-author').setAttribute('href',`account/${post.author.username}`);
-                p.querySelector('.post-author-name').innerHTML = post.author.name;
-                p.querySelector('.post-author-img').setAttribute('src',post.author.profile_img)
-                p.querySelector('.post-date').innerHTML = post.datetime;
-                p.querySelector('.post-content').innerHTML = parseHTML(JSON.parse(post.content).blocks);
-                p.querySelector('.like-count').innerHTML = post.like_count;
-                p.querySelector('.comment-count').innerHTML = post.comment_count;
+                $('.post-author', p).attr('href',`account/${post.author.username}`);
+                $('.post-author-name', p).text(post.author.name);
+                $('.post-author-img', p).attr('src',post.author.profile_img)
+                $('.post-date', p).text(post.datetime);
+                $('.post-content', p).html(parseHTML(post.content));
+                $('.like-count', p).text(post.like_count);
+                $('.comment-count', p).text(post.comment_count);
                 if (post.is_liked) {
-                    $(p.querySelector('.like-button svg')).addClass('svg-accent');
-                    $(p.querySelector('.like-button p')).addClass('text-accent');
+                    $('.like-button svg', p).addClass('svg-accent');
+                    $('.like-button p', p).addClass('text-accent');
                 }
-                p.querySelector('.like-button').setAttribute('data-post-id', post.id);
-                p.querySelector('.like-button svg').setAttribute('id', 'like' + post.id.toString());
-                p.querySelector('.like-count').setAttribute('id', 'likecount' + post.id.toString());
-                p.querySelector('.comment-count').setAttribute('id', 'commentcount' + post.id.toString());
-                p.querySelector('.comment-button').addEventListener('click', function(){
+                $('.like-button', p).attr('data-post-id', post.id);
+                $('.like-button svg', p).attr('id', 'like' + post.id.toString());
+                $('.like-count', p).attr('id', 'likecount' + post.id.toString());
+                $('.comment-count', p).attr('id', 'commentcount' + post.id.toString());
+                $('.comment-button', p).on('click', function(){
                     showcomment(this);
                 } );
-                p.querySelector('.comment-button').setAttribute('data-post-id', post.id);
-                document.getElementById('feed').appendChild(p);
+                $('.comment-button', p).attr('data-post-id', post.id);
+                $('#feed').append(p);
                 donotload = false;
                 firstload=false;
                 initLikes($(`.like-button[data-post-id=${post.id}]`)[0]);

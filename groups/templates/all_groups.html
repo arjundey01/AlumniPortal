@@ -48,10 +48,14 @@
 {% block overlay %}
     <form action="/groups/create/" method="POST" enctype="multipart/form-data" id="create-group-form" class="bg-white rounded p-5 hidden w-full md:w-3/5 lg:w-2/5 h-screen md:h-auto flex-col" >
         {% csrf_token %}
-        <p class="text-2xl font-medium"> Create a Group</p>
+        <div class="flex justify-between items-center m-2">
+            <p class="text-xl">Create a Group</p>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer">
+                <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>   
+        </div>
         <input type="file" name="cover_image" accept="image/png, image/jpeg" id="create-group-img" class="hidden">
-        <p class="mt-10 text-gray-500">Cover image:</p>
-        <div id="create-group-prev" class="bg-gray-200 rounded h-60 mx-auto w-3/5 flex flex-col cursor-pointer items-center justify-center mt-1">
+        <div id="create-group-prev" class="bg-gray-200 rounded h-60 mx-auto w-3/5 flex flex-col cursor-pointer items-center justify-center mt-3">
             <img src="/static/img/add.svg" alt="" class="h-16 w-16 object-cover rounded" >
         </div>
         <div class="bg-gray-200 p-3 rounded mt-7">

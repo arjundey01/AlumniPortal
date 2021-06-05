@@ -1,4 +1,7 @@
 /*BASE LAYOUT*/
+:root{
+    --vh:100vh;
+}
 
 .sidebar{
     width: 70vw;
@@ -156,6 +159,10 @@
     background: rgba(108, 120, 152, 0.5);
 }
 
+.border-accent{
+    border-color:#4150D7;
+}
+
 .svg-accent path{
     stroke:#4150D7;
     fill: white;
@@ -197,4 +204,8 @@ div[placeholder]:empty::before {
     position: absolute;
     top: 0;
     z-index: -1000000;
+}
+
+.h-fullscreen{
+    height: var(--vh);
 }

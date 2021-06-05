@@ -4,7 +4,7 @@ $(document).ready(()=>{
 
 $('.group-thumbnail').on('click',function(e){
     const id = $(this).attr('data-id');
-    window.location = `/groups/${id}/`;
+    window.location = `/groups/page/${id}/`;
 });
 
 $('.join-group').on('click',function(e){

@@ -100,7 +100,7 @@ def upload_file_view(request):
     fileurl='posts/'+ request.user.username + '/'
     filepath=fs.save(fileurl + filename,f)
     fileurl=unquote(fs.url(filepath))
-    return JsonResponse({'success':1,'file':{'url':fileurl,"size":size,"name":str(f),"extension":"ext", "path": filepath}})
+    return JsonResponse({'success':1,'file':{'url':fileurl,"size":size,"name":str(f),"extension":fileurl.split('.')[-1], "path": filepath}})
     # return redirect('alumni_response:mypage')
 
 def feign_file_upload(request):
@@ -195,6 +195,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 
+
 def load_feed(request,index):
     load_count=5
     index=int(index)
@@ -209,6 +210,7 @@ def load_feed(request,index):
     posts=[]
     if len(feed)>index*load_count:
         for post in feed[index*load_count:min(len(feed),load_count*(index+1))]:
+            print(post.content)
             data=PostSerializer(post).data
             data['is_liked']=user.account in post.likes.all()
             posts.append(data)
