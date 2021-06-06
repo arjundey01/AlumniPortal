@@ -1,11 +1,13 @@
+from groups.models import Group
 from post.views import comment
 from django.http.response import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from rest_framework import serializers
 
 from .forms import QuestionForm
 from .models import Question
+from groups.models import Group
 
 import json, datetime
 
@@ -42,10 +44,10 @@ def create_question(request):
 class QuestionSerializer(serializers.ModelSerializer):
     ans_count = serializers.SerializerMethodField()
     author = serializers.SerializerMethodField()
-    content = serializers.CharField()
-    id = serializers.IntegerField()
+    # content = serializers.CharField()
+    # id = serializers.IntegerField()
     posted_on = serializers.DateTimeField(format="%d %b %Y")
-    views = serializers.IntegerField()
+    # views = serializers.IntegerField()
 
     class Meta:
         model = Question
@@ -64,15 +66,12 @@ class QuestionSerializer(serializers.ModelSerializer):
     def get_ans_count(self, obj):
         return int(obj.ans_count)
 
-# As datetime object by itself is not json serialisable a
-# fall_back_converter is written to serialize datetime.datetime
-# objects which is passed as a default parameter of json.dumps()
-def fall_back_converter(o):
-    if isinstance(o, datetime.datetime):
-        return o.strftime("%d %B %Y")
-
-def get_questions(user):
+def get_questions(user, tagNames = []):
     questions=[]
+    tags = []
+    for tag in tagNames:
+        tags.append(get_object_or_404(Group, title = tag))
+
     if user.is_authenticated:
         follow_questions = []
         following_users = list(user.account.following.all())
@@ -82,16 +81,19 @@ def get_questions(user):
                 question_age = datetime.datetime.now()-question.posted_on
                 question_age = question_age.total_seconds() / 3600
                 if question_age<=24:
+                    if len(tags) and len(list( set (tags) & set (question.tags.all()) )) == 0:
+                        continue
                     follow_questions.append(question)
         follow_questions.sort(key=lambda x: x.posted_on, reverse=True)
         general_questions=list(Question.objects.all())
         general_questions.sort(key=lambda x:x.rev_priority)
-        questions=follow_questions[:]
+        questions = follow_questions[:]
         for question in general_questions:
+            if len(tags) and len(list( set (tags) & set (question.tags.all()) )) == 0:
+                continue
             if question not in follow_questions:
                 questions.append(question)
     return questions
-
 
 def load_question(request, index):
     load_count=5
@@ -99,10 +101,11 @@ def load_question(request, index):
 
     if not request.user.is_authenticated:
         return HttpResponse(json.dumps({'error':'Not Logged In'}),status=500)
-    
+
+    tags = []
     if request.method == "POST":
-        print("Post request receieved!")
-        questions = get_questions(request.user)
+        tags = json.loads(request.POST.get('tags'))
+        questions = get_questions(request.user, tags)
         questions_to_be_sent=[]
         if len(questions) > index*load_count:
             for question in questions[index*load_count:min(len(questions),load_count*(index+1))]:

@@ -1,12 +1,15 @@
 from users.models import Account
 from django.db import models
 
+from groups.models import Group
+
 import datetime
 
 class Question(models.Model):
     author = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='questions')
     content = models.TextField(blank=False)
     posted_on = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField(Group, related_name='questions')
     views = models.IntegerField(default=0)
 
     def __str__(self):

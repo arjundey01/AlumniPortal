@@ -37,10 +37,15 @@ $(document).ready(function () {
 });
 
 let load_question = function (index) {
+  let tags = [];
+  $('.feed-tag').each((ind,ele)=>{
+      if(ele.textContent.length)
+          tags.push(ele.textContent);
+  });
   $.ajax({
     type: "POST",
     url: "/faq/load-question/" + index,
-    data: { csrfmiddlewaretoken: csrf_token },
+    data: {'tags': JSON.stringify(tags), 'csrfmiddlewaretoken': csrf_token },
     dataType: "json",
     success: function (data) {
       for(let question of data) {
