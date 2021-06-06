@@ -4,14 +4,16 @@ from django.http.response import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from .models import Group
+from post.forms import PostForm
 
 @login_required
 def all_groups(request):
     groups=Group.objects.all()
     return render(request, "all_groups.html", context={'groups':groups})
 
-def group(request):
-    return render(request, "group.html")
+def group(request,id):
+    group = get_object_or_404(Group,id=id)
+    return render(request,'group.html',{'group':group,'postform': PostForm })
     
 def create_group(request):
     if not request.user.is_authenticated:
@@ -75,7 +77,7 @@ def leave_group(request,id):
 
 def get_members(request,id):
     if request.user.is_authenticated:
-        if request.method == 'GET':
+        if request.method == 'POST':
             group = get_object_or_404(Group, id=id)
             members={'alumni':[],'common':[],'other':[]}
             for member in group.members.all():
@@ -84,6 +86,7 @@ def get_members(request,id):
                 m['profile_img']=member.profile_img_url
                 m['name']=member.name
                 if member.user.id == request.user.id:
+                    m['is_followed']=True
                     members['common'].append(m)
                     continue
                 m['is_followed']=member in request.user.account.following.all()
@@ -102,3 +105,6 @@ def get_members(request,id):
         else:
             return HttpResponse('Bad Request',status=400)
     return HttpResponse('Unauthorized', status=401)
+
+
+ 
