@@ -28,6 +28,7 @@ class Question(models.Model):
 class Answer(models.Model):
     author = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    posted_on = models.DateTimeField(auto_now_add=True)
     upvotes = models.IntegerField(default=0)
     accepted = models.BooleanField(default=False)
     content = models.TextField(blank=False)

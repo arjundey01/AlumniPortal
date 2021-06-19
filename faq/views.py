@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from rest_framework import serializers
 
-from .forms import QuestionForm
-from .models import Question
+from .forms import QuestionForm, AnswerForm
+from .models import Answer, Question
 from groups.models import Group
 
 import json, datetime
@@ -41,17 +41,65 @@ def create_question(request):
         ####################################
         return HttpResponse("No Post Request")
 
+def create_answer(request, id):
+    if request.method == "POST":
+        ans_form = AnswerForm(request.POST)
+        if ans_form.is_valid():
+            new_ans = ans_form.save(commit=False)
+            new_ans.author = request.user.account
+            new_ans.question = get_object_or_404(Question, pk=id)
+            new_ans.save()
+            return redirect('faq:detail_question', id=id)
+        else:
+            ##################################################
+            ##################################################
+            ### DURING DEPLOYMENT RETURN CUSTOM ERROR PAGE ###
+            ##################################################
+            ##################################################
+            print(ans_form.errors)
+            return HttpResponse("Error in Answer Form!")
+    else:
+        ####################################
+        ####################################
+        ### DURING DEPLOYMENT RETURN 404 ###
+        ####################################
+        ####################################
+        return HttpResponse("No Post Request")
+
+def question_detail(request, id):
+    question = get_object_or_404(Question, pk = id)
+    answers = list(question.answers.all())
+    answers.sort(key=lambda x: x.posted_on, reverse=True)
+    answers.sort(key=lambda x: x.rev_priority)
+    context = {
+        'question': question,
+        'answers': answers,
+    }
+    return render(request, 'question_detail.html', context);
+
 class QuestionSerializer(serializers.ModelSerializer):
     ans_count = serializers.SerializerMethodField()
+    answers = serializers.SerializerMethodField()
     author = serializers.SerializerMethodField()
-    # content = serializers.CharField()
-    # id = serializers.IntegerField()
     posted_on = serializers.DateTimeField(format="%d %b %Y")
-    # views = serializers.IntegerField()
 
     class Meta:
         model = Question
-        fields = ['ans_count', 'author', 'content', 'posted_on', 'id', 'views']
+        fields = ['ans_count', 'answers', 'author', 'content', 'posted_on', 'id', 'views']
+
+    def get_ans_count(self, obj):
+        return int(obj.ans_count)
+    
+    def get_answers(self, obj):
+        all_answers = list(obj.answers.all())
+        all_answers.sort(key=lambda x: x.posted_on, reverse=True)
+        all_answers.sort(key=lambda x: x.rev_priority)
+        answer = {}
+        if len(all_answers):
+            answer['name'] = all_answers[0].author.name
+            answer['profile_img'] = all_answers[0].author.profile_img_url
+            answer['content'] = all_answers[0].content
+        return answer
 
     def get_author(self, obj):
         if obj.author:
@@ -62,9 +110,6 @@ class QuestionSerializer(serializers.ModelSerializer):
             return author
         else:
             return 'Anonymous'
-
-    def get_ans_count(self, obj):
-        return int(obj.ans_count)
 
 def get_questions(user, tagNames = []):
     questions=[]
@@ -122,3 +167,31 @@ def load_question(request, index):
     ##################################################
     return HttpResponse("You aren't suppose to see this!")
     
+def get_best4(request):
+    questions=[]
+    tags = []
+    for tag in tagNames:
+        tags.append(get_object_or_404(Group, title = tag))
+
+    if user.is_authenticated:
+        follow_questions = []
+        following_users = list(user.account.following.all())
+        following_users.append(user.account)
+        for fuser in following_users:
+            for question in fuser.questions.all():
+                question_age = datetime.datetime.now()-question.posted_on
+                question_age = question_age.total_seconds() / 3600
+                if question_age<=24:
+                    if len(tags) and len(list( set (tags) & set (question.tags.all()) )) == 0:
+                        continue
+                    follow_questions.append(question)
+        follow_questions.sort(key=lambda x: x.posted_on, reverse=True)
+        general_questions=list(Question.objects.all())
+        general_questions.sort(key=lambda x:x.rev_priority)
+        questions = follow_questions[:]
+        for question in general_questions:
+            if len(tags) and len(list( set (tags) & set (question.tags.all()) )) == 0:
+                continue
+            if question not in follow_questions:
+                questions.append(question)
+    return questions

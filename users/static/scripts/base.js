@@ -13,7 +13,7 @@ $(document).ready(()=>{
         if(entry.hasClass('accordion-entry-collapsed')){
             expand(entry);
             $('.accordion-entry', entry.parent()).each(function(ind,ele){
-                console.log($(ele),entry);
+                // console.log($(ele),entry);
                 if(!$(ele).is(entry)){
                     collapse($(ele));
                 }
@@ -115,7 +115,7 @@ var getLastActive=function(username,interval){
             data:{'username':username},
             success: function(data){
                 if($('.chatbox-header').length){
-                    console.log(data);
+                    // console.log(data);
                     $('.chatbox-header span').text(data);
                 }
             }
@@ -130,7 +130,7 @@ var startChat=function(ele){
     let csrf=$(this).attr("data-csrf");
     let formData= new FormData();
     formData.append("csrfmiddlewaretoken",csrf);
-    console.log(other);
+    // console.log(other);
     formData.append("member",other);
     if(user!=""){
         $.ajax({ 

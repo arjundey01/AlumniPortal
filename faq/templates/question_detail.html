@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <p>Question: {{question.content}}</p>
+  
+  {% for ans in answers %}
+      <p>Ans: {{ans.content}}</p>
+  {% endfor %}
+
+  <form action="{% url 'faq:create_answer' id=question.pk %}" method="POST">
+      {% csrf_token %}
+      Post Your Answer:
+      <input type="text" name="content" id="">
+      <button type="submit" id="ans-submit">Post</button>
+  </form>
+{% endblock content %}
