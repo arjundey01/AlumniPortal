@@ -1,0 +1,28 @@
+<div class="w-full py-5 px-8 bg-white rounded-md mt-5 overflow-hidden">
+    <p class="text-md">Groups you are part of:</p>
+    <div class="mt-7 relative">
+        {% for group in user.account.groups.all %}
+        <a href="/groups/{{group.id}}/" class="user-group cursor-pointer flex mt-5 items-stretch {%if forloop.counter > 3 %}hidden{%endif%}" 
+        style="height: 58px;">
+            <img class="object-cover rounded-sm flex-shrink-0" style="width: 84px;" src="{{group.cover_image.url}}">
+            <div class="ml-4 flex flex-col">
+                <p class="text-md font-medium flex-shrink overflow-hidden leading-5" title="{{group.title}}">{{group.title}}</p>
+                <p class="text-xs text-gray-900">{{group.member_count}} Members</p>
+            </div>
+        </a>
+        {% empty %}
+        <p class="text-gray-500 text-center">None</p>
+        {% endfor %}
+        {% if user.account.groups.all|length > 3%}
+        <p id="user-group-exp" class="text-accent text-xs mt-5 cursor-pointer">View More</p>
+        {% endif%}
+        <div class="absolute -right-10 top-0 h-full w-28 bg-gradient-to-r from-transparent to-white"></div>
+    </div>
+</div>
+
+<script>
+    $('#user-group-exp').on('click', function(e){
+        $('.user-group').removeClass('hidden');
+        $(this).addClass('hidden');
+    })
+</script>
