@@ -42,11 +42,23 @@ class ExperienceForm(FormattedModelForm):
     class Meta:
         model=Experience
         exclude=['user']
+        widgets = {
+            'start_date': widgets.DateInput(attrs={'type': 'date','class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'end_date': widgets.DateInput(attrs={'type': 'date','class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'experience':widgets.TextInput(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'})
+        }
 
 class PastJobsForm(FormattedModelForm):
     class Meta:
         model=PastJobs
         exclude=['user']
+        widgets = {
+            'start_date': widgets.DateInput(attrs={'type': 'date','class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'end_date': widgets.DateInput(attrs={'type': 'date','class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'organization':widgets.Select(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'designation':widgets.Select(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'description':widgets.Textarea(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'})
+        }
 
 class ProjectForm(FormattedModelForm):
     class Meta:

@@ -134,7 +134,12 @@
 .text-accent{
     color:#4150D7;
 }
-
+.text-accent-2{
+   color:#EDEDED, 100%;
+}
+.bg{
+    background: rgba(237, 237, 237, 1);
+}
 .bg-accent{ 
     background-color:#4150D7;
 }

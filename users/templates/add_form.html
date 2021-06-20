@@ -1,0 +1,58 @@
+<form method="POST" action="{% url 'add-experience'%}" class="add_experience mx-16 p-5 bg-white flex grid grid-cols-3" style="display: none;">
+    {% csrf_token%}
+    {{ e_form.non_field_errors }}
+    <div class="mr-5 mt-2">
+        {{ e_form.experience.errors }}
+        <label class="text-gray-400" for="{{ e_form.experience.id_for_label }}">Role</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{e_form.experience}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ e_form.start_date.errors }}
+        <label class="text-gray-400" for="{{ e_form.start_date.id_for_label }}">Start Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{e_form.start_date}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ e_form.end_date.errors }}
+        <label class="text-gray-400" for="{{ e_form.end_date.id_for_label }}">End Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{e_form.end_date}}
+    </div>
+    <input type="submit">
+</form>
+<form method="POST" action="{% url 'add-job' %}" class="mx-16 add_job bg-white flex grid grid-cols-3" style="display: none;">
+    {% csrf_token%}
+    {{ j_form.non_field_errors }}
+    <div class="mr-5 mt-2">
+        {{ j_form.designation.errors }}
+        <label class="text-gray-400" for="{{ j_form.designation.id_for_label }}">Role</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.designation}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.organization.errors }}
+        <label class="text-gray-400" for="{{ j_form.organization.id_for_label }}">Organization</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.organization}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.start_date.errors }}
+        <label class="text-gray-400" for="{{ j_form.start_date.id_for_label }}">Start Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.start_date}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.end_date.errors }}
+        <label class="text-gray-400" for="{{ j_form.end_date.id_for_label }}">End Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.end_date}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.description.errors }}
+        <label class="text-gray-400" for="{{ j_form.description.id_for_label }}">Description</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.description}}
+    </div>
+    <input type="submit">
+</form>
