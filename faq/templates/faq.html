@@ -2,11 +2,12 @@
 
 {% block content %}
 <div class="faq-ask rounded w-full bg-white py-7 px-5 shadow-lg my-5 flex justify-between items-center">
-    <div class="flex items-center flex-grow">
+    <form id="question_form" action="{% url 'faq:create_question' %}" class="flex items-center flex-grow" method="POST">
+        {% csrf_token %}
         <img class="h-5 w-5" src="/static/img/pencil.svg" alt="">
-        <div class="text-lg text-gray-600 ml-5 hidden md:block flex-grow" placeholder="Ask a Question" contenteditable></div>
-    </div>
-    <button class="bg-accent py-1 px-4 text-white text-md rounded">Ask</button>
+        <input name="content" type="text" id="question-text" class="text-lg text-gray-600 ml-5 hidden md:block flex-grow" placeholder="Ask a Question" contenteditable>
+    </form> 
+    <button id="ask_button" class="bg-accent py-1 px-4 text-white text-md rounded">Ask</button>
 </div>
 <div id="faq-questions">
     <div id="no-post" class="flex rounded bg-white justify-center items-center h-100 p-10 flex-col shadow-lg my-10 hidden">
@@ -15,92 +16,62 @@
     </div>
 </div>
 
+<div id="question-container">
 
+</div>
+
+<template id="question-template">
     <div class="faq rounded w-full bg-white py-4 px-3 shadow-lg my-10">
         <div class="faq-header w-full px-3 md:py-3 overflow-auto flex justify-between items-center">
             <div class="flex justify-start flex-col">
-                <p class="faq-question text-lg md:text-xl mt-1">How often do you work past 5PM and on weekends?</p>
+                <p class="question-content faq-question text-lg md:text-xl mt-1"></p>
                 <div class="flex items-center">
                     <div class="text-sm text-gray-400">Posted by &nbsp;</div>
-                    <a class="faq-author text-accent text-sm" href="">Arjun Dey</a>
+                    <a class="question-author faq-author text-accent text-sm" href=""></a>
                 </div>
             </div>
             <div class="float-right flex flex-col items-end">
-                <a class="text-accent text-md text-right" href="">View Details</a>
+                <a class="question-details text-accent text-md text-right" href="">View Details</a>
             </div>
         </div>
         <div class="faq-answers py-4 flex flex-col items-center pt-0">
             <p class="text-gray-400 text-sm w-full ml-5">Answers:-</p>
-            <div class="px-3">
-                <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 accordion-entry-collapsed">
-                    <div class="accordion-question cursor-pointer flex justify-between items-center py-3 px-3">
-                        <div class="flex items-center justify-start">
-                            <div class="rounded-full h-12 w-12 overflow-hidden flex items-center justify-center flex-shrink-0">
-                                <img src="{{user.account.profile_img_url}}" class= "h-14 w-14 object-cover" alt="">
-                            </div>
-                            <div class="mx-4">
-                                <p class="mt-1">{{user.account.name}}</p>
-                                <p class="text-sm text-gray-400 mt-1">Associate Project Manager | Google</p>
-                            </div>
-                        </div>
-
-                        <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
-
-                    </div>
-                    <div class="accordion-answer">
-                        <p class="text-sm text-gray-500 m-2">In fermentum vehicula sem vitae eleifend. Nam pretium iaculis hendrerit. Nam in erat at elit ultricies tincidunt pharetra sit amet ante. Sed sed sem sit amet arcu laoreet finibus ac ac sem. </p>
-                    </div>
-                </div>
-                <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 accordion-entry-collapsed">
-                    <div class="accordion-question cursor-pointer flex justify-between items-center py-3 px-3">
-                        <div class="flex items-center justify-start">
-                            <div class="rounded-full h-12 w-12 overflow-hidden flex items-center justify-center flex-shrink-0">
-                                <img src="{{user.account.profile_img_url}}" class= "h-14 w-14 object-cover" alt="">
-                            </div>
-                            <div class="mx-4">
-                                <p class="mt-1">{{user.account.name}}</p>
-                                <p class="text-sm text-gray-400 mt-1">Associate Project Manager | Google</p>
-                            </div>
-                        </div>
-
-                        <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
-
-                    </div>
-                    <div class="accordion-answer">
-                        <p class="text-sm text-gray-500 m-2">In fermentum vehicula sem vitae eleifend. Nam pretium iaculis hendrerit. Nam in erat at elit ultricies tincidunt pharetra sit amet ante. Sed sed sem sit amet arcu laoreet finibus ac ac sem. </p>
-                    </div>
-                </div>
-                <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 accordion-entry-collapsed">
-                    <div class="accordion-question cursor-pointer flex justify-between items-center py-3 px-3">
-                        <div class="flex items-center justify-start">
-                            <div class="rounded-full h-12 w-12 overflow-hidden flex items-center justify-center flex-shrink-0">
-                                <img src="{{user.account.profile_img_url}}" class= "h-14 w-14 object-cover" alt="">
-                            </div>
-                            <div class="mx-4">
-                                <p class="mt-1">{{user.account.name}}</p>
-                                <p class="text-sm text-gray-400 mt-1">Associate Project Manager | Google</p>
-                            </div>
-                        </div>
-
-                        <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
-
-                    </div>
-                    <div class="accordion-answer">
-                        <p class="text-sm text-gray-500 m-2">In fermentum vehicula sem vitae eleifend. Nam pretium iaculis hendrerit. Nam in erat at elit ultricies tincidunt pharetra sit amet ante. Sed sed sem sit amet arcu laoreet finibus ac ac sem. </p>
-                    </div>
-                </div>
+            <div class="answer-container px-3">
                 
             </div>
         </div>
     </div>
+</template>
 
+<template id="answer-template">
+    <div class="w-full border-b-2 border-solid border-gray-200">
+        <div class="flex justify-between items-center py-3 px-3">
+            <div class="flex items-center justify-start">
+                <div class="rounded-full h-12 w-12 overflow-hidden flex items-center justify-center flex-shrink-0">
+                    <img src="{{user.account.profile_img_url}}" class= "ans-img h-14 w-14 object-cover" alt="">
+                </div>
+                <div class="mx-4">
+                    <p class="ans-author mt-1">{{user.account.name}}</p>
+                    <p class="text-sm text-gray-400 mt-1">Associate Project Manager | Google</p>
+                </div>
+            </div>
 
+        </div>
+        <div class="">
+            <p class="ans-content text-sm text-gray-500 m-2">In fermentum vehicula sem vitae eleifend. Nam pretium iaculis hendrerit. Nam in erat at elit ultricies tincidunt pharetra sit amet ante. Sed sed sem sit amet arcu laoreet finibus ac ac sem. </p>
+        </div>
+    </div>
+</template>
+
+<script id='csrf_token' type='text'>{{csrf_token}}</script>
+<script class='feed-tag' type='text'></script>
 
 {% endblock %}
 
 
 
 {% block right-pane%}
+    {% include "alumni_answers.html" %}
     {% include 'suggestions.html'%}
 {% endblock %}
 
@@ -108,5 +79,6 @@
 {% endblock%}
 
 {% block scripts %}
-<script type="text" id="data-username">{{user.username}}</script>
+    <script type="text" id="data-username">{{user.username}}</script>
+    <script src="/static/scripts/faq.js"></script>
 {% endblock %}

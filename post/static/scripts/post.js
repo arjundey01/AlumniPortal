@@ -125,7 +125,7 @@ $(document).ready(function() {
             type:'POST',
             url: '/post/comment/' + id+'/',
             data: formdata,
-            enctype: 'formdata', 
+            enctype: 'formdata',
             processData: false,
             contentType: false,
             

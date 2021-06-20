@@ -8,43 +8,50 @@
         </div>
         <p class="text-accent text-md">View More</p>
     </div>
-    <div class="mt-10">
-        <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-5 accordion-entry-collapsed">
-            <div class="accordion-question flex justify-between items-center p-2 cursor-pointer">
-                <p>How often do you work past 5PM and on weekends?</p>
-                <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
-            </div>
-            <div class="accordion-answer">
-                <p class="text-sm text-gray-500 m-2">In fermentum vehicula sem vitae eleifend. Nam pretium iaculis hendrerit. Nam in erat at elit ultricies tincidunt pharetra sit amet ante. Sed sed sem sit amet arcu laoreet finibus ac ac sem. </p>
-            </div>
-        </div>
-        <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-5 accordion-entry-collapsed">
-            <div class="accordion-question flex justify-between items-center p-2 cursor-pointer">
-                <p>How often do you work past 5PM and on weekends?</p>
-                <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
-            </div>
-            <div class="accordion-answer">
-                <p class="text-sm text-gray-500 m-2">In fermentum vehicula sem vitae eleifend. Nam pretium iaculis hendrerit. Nam in erat at elit ultricies tincidunt pharetra sit amet ante. Sed sed sem sit amet arcu laoreet finibus ac ac sem. </p>
-            </div>
-        </div>
-        <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-5 accordion-entry-collapsed">
-            <div class="accordion-question flex justify-between items-center p-2 cursor-pointer">
-                <p>How often do you work past 5PM and on weekends?</p>
-                <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
-            </div>
-            <div class="accordion-answer">
-                <p class="text-sm text-gray-500 m-2">In fermentum vehicula sem vitae eleifend. Nam pretium iaculis hendrerit. Nam in erat at elit ultricies tincidunt pharetra sit amet ante. Sed sed sem sit amet arcu laoreet finibus ac ac sem. </p>
-            </div>
-        </div>
-        <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-5 accordion-entry-collapsed">
-            <div class="accordion-question flex justify-between items-center p-2 cursor-pointer">
-                <p>How often do you work past 5PM and on weekends?</p>
-                <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
-            </div>
-            <div class="accordion-answer">
-                <p class="text-sm text-gray-500 m-2">In fermentum vehicula sem vitae eleifend. Nam pretium iaculis hendrerit. Nam in erat at elit ultricies tincidunt pharetra sit amet ante. Sed sed sem sit amet arcu laoreet finibus ac ac sem. </p>
-            </div>
-        </div>
-       
+
+    <div id="target" class="mt-10">
+        
     </div>
+
+    <template id="popular-questions">
+        <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-5 accordion-entry-collapsed">
+            <div class="accordion-question flex justify-between items-center p-2 cursor-pointer">
+                <p class="question-content"> </p>
+                <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
+            </div>
+            <div class="accordion-answer">
+                <p class="answer-content text-sm text-gray-500 m-2"> </p>
+            </div>
+        </div>
+    </template>
 </div>
+
+<script id='csrf_token' type='text'>{{csrf_token}}</script>
+<script>
+    csrf_token = $("#csrf_token").text();
+    $.ajax({
+        type: "POST",
+        url: "/faq/ans-from-alumni",
+        data: {'csrfmiddlewaretoken': csrf_token},
+        dataType: "json",
+        success: function (data) {
+            for (const question of data) {
+                // clone of children of template subtree
+                let qClone = $("#popular-questions").contents().clone(true);
+
+                // modify the data
+                $(".question-content", qClone).html(question.content);
+                $(".answer-content", qClone).html(question.answers.content);
+                
+                // append clone to target
+                $("#target").append(qClone);
+            }
+
+            // add event listners (from base.js )
+            loadAccordion();
+        },
+        error: function (data) {
+            console.log(data.responseJSON.error);
+        },
+    });
+</script>
