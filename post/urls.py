@@ -12,9 +12,7 @@ urlpatterns=[
     path('load-feed/<index>',views.load_feed),
     path('like-post/',views.like_post, name='like-post'),
     path('fileUpload/', csrf_exempt(views.upload_file_view)),
-    path('feign-fileUpload/', csrf_exempt(views.feign_file_upload)),
     path('imageUpload/', csrf_exempt(views.upload_image_view)),
-    path('feign-imageUpload/', csrf_exempt(views.feign_image_upload)),
     path('comment/<pk>/', views.comment, name='comment'),
     path('load-comment/<id>', views.load_comment),
 ]

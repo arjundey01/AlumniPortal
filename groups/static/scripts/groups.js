@@ -7,22 +7,6 @@ $('.group-thumbnail').on('click',function(e){
     window.location = `/groups/page/${id}/`;
 });
 
-$('.join-group').on('click',function(e){
-    const id = $(this).attr('data-id');
-    e.stopPropagation();
-    $.ajax({
-        type: 'POST',
-        url: `/groups/join-group/${id}/`,
-        success: (data)=>{
-            $(this).text('Joined');
-            $(this).off('click');
-            let ctr=$(`.member-count[data-id=${id}]`);
-            let val=parseInt(ctr.text().split(" ")[0]);
-            ctr.text(val+1 + " members");
-        }
-    })
-});
-
 $('.create-group').on('click',function(e){
     $('#overlay').css('display','flex');
     $('#create-group-form').css('display','flex');

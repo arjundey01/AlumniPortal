@@ -30,13 +30,21 @@ def chatroom(request,room_name):
             other=list(filter(lambda x:x.user.username!=request.user.username,list(chat.members.all())))[0]
             context={}
             context['title']=other.name
+            context['subtitle']=other.designation.title + " | " + other.organization.name
             context['room_icon']=other.profile_img_url
             context['room_name']=room_name
-            context['subtitle']=correct_tz(other.last_active) if other.last_active else ''
-            context['data']=json.loads(chat.data)
+            context['last_active']=correct_tz(other.last_active) if other.last_active else ''
             context['other']=other.user.username
             context['dp_urls']={}
             context['seen']=json.loads(chat.last_seen_msg)
+            data=json.loads(chat.data)
+            context['data']=[]
+            for i in range(0,len(data)):
+                time1=datetime.fromisoformat(data[i-1].get('time')) if i else None
+                time2=datetime.fromisoformat(data[i].get('time'))
+                if i==0 or time1.date()!=time2.date():
+                    context['data'].append({'date':time2.strftime("%b. %d, %Y"),'time':data[i].get('time')})
+                context['data'].append(data[i])
 
             convs=[]
             for conv in request.user.account.chats.all():
@@ -105,6 +113,9 @@ def get_online(request):
     return HttpResponse(json.dumps(active))
 
 def get_last_active(request):
+    account=request.user.account
+    account.last_active=datetime.utcnow()
+    account.save()
     try:
         username=request.GET['username'].strip('"')
         user=User.objects.get(username=username).account
@@ -116,6 +127,7 @@ def get_last_active(request):
             resp=la.astimezone(timezone.utc).strftime("%b. %d, %Y %I:%M %p")
             if diff.days<1 and diff.seconds<=30:
                 resp='Online'
+        print(resp)
         return HttpResponse(resp,status=200)
     except User.DoesNotExist:
         return HttpResponse('DNE',status=500)

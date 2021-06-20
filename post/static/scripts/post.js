@@ -69,6 +69,7 @@ var load_posts = function(index) {
                 p.id = 'post-' + post.id;
                 $('.post-author', p).attr('href',`account/${post.author.username}`);
                 $('.post-author-name', p).text(post.author.name);
+                $('.post-author-desg', p).text(post.author.desg);
                 $('.post-author-img', p).attr('src',post.author.profile_img)
                 $('.post-date', p).text(post.datetime);
                 $('.post-content', p).html(parseHTML(post.content));

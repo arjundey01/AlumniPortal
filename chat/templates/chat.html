@@ -6,48 +6,57 @@
 
 {% block content %}
 
-<section class="chatbox w-full overflow-hidden lg:rounded-lg bg-white flex flex-col h-full">
+<section class="chatbox w-full overflow-hidden lg:rounded bg-white flex flex-col h-full">
     <div class="chatbox-header w-full flex items-center py-3 border-b-2 border-solid border-gray-200">
-        <img class="rounded-full h-14 w-14 object-cover mx-5" src="{{room_icon}}" alt="">
+        <img class="rounded-full h-12 w-12 object-cover mx-5" src="{{room_icon}}" alt="">
         <div>
-            <p class="text-xl leading-5">{{title}}</p>
-            <span class="text-sm text-gray-600">{{subtitle}}</span>
+            <p class="text-lg leading-5">{{title}}</p>
+            <div class="flex items-center">
+                <span class="text-sm text-gray-600">{{last_active}}</span>
+                <div id="msg-typing" class="opacity-0 mx-2 mt-1 flex items-center w-5 h-4">
+                    <img src="/static/img/typing.gif" class="h-28 object-cover" alt="">
+                </div>
+            </div>
         </div>
     </div>
     <div class="chatbox-messages px-4 lg:px-10 overflow-scroll flex-grow">
         <div class="chatbox-dummy-msg h-full flex flex-col justify-center items-center" >
-            <img class="rounded-full h-24 w-24 object-cover my-2.5" src="{{room_icon}}" alt="">
+            <img class="rounded-full h-16 w-16 object-cover my-2.5" src="{{room_icon}}" alt="">
             
-            <p class="text-2xl">{{title}}</p>
-            <p class="text-md text-gray-500 leading-5">Project Manager | Google</p>
+            <p class="text-xl">{{title}}</p>
+            <p class="text-md text-gray-500 leading-5">{{subtitle}}</p>
             {% if data|length == 0%}
             <p class="text-sm text-gray-400 mt-3">Start a conversation</p>
             {% endif %}
         </div>
         {% for message in data %}
-        {% if message.username == user.username %}
+        {% if message.date %}
+        <div class="w-full my-5 flex justify-center">
+            <p class="msg-date text-sm text-gray-500 font-light" data-iso="{{message.time}}">{{message.date}}</p>
+        </div>
+        {% elif message.username == user.username %}
         <div class="msg-wrapper msg-wrapper-self w-full flex justify-end my-2.5">
             <div class="msg flex flex-col items-end">
                 <div class="flex">
-                    <p class="msg-text text-lg bg-accent py-4 px-4 rounded-lg text-white">{{message.text}}</p>
+                    <p data-id="{{message.id}}" class="msg-text bg-accent py-2 px-4 rounded-lg text-white">{{message.text}}</p>
                     <div></div>
                 </div>
                 <div class="msg-info flex mt-0.5 items-center">
-                    <span class="text-sm text-gray-500 font-light mr-2">18:30</span>
-                    {% if message.id >= seen|key:other%}
-                    <img src="/static/img/delivered.svg" class="h-6 w-6" alt="">
+                    <span class="text-xs text-gray-500 font-light mr-2">{{message.time|time_from_iso}}</span>
+                    {% if message.id > seen|key:other%}
+                    <img src="/static/img/delivered.svg" class="h-5 w-5" alt="">
                     {% else %}
-                    <img src="/static/img/read.svg" class="h-6 w-6" alt="">
+                    <img src="/static/img/read.svg" class="h-5 w-5" alt="">
                     {% endif %}
                 </div>
             </div>
         </div>
         {% else %}
         <div class="msg-wrapper msg-wrapper-self w-full flex my-2.5">
-            <img src="{{dp_urls|key:message.username}}" class="w-12 h-12 rounded-full object-cover mr-3">
+            <img src="{{dp_urls|key:message.username}}" class="w-10 h-10 rounded-full object-cover mr-3">
             <div class="msg flex flex-col">
-                <p class="msg-text text-lg bg-accent-faded py-4 px-4 rounded-lg">{{message.text}}</p>
-                <span class="text-sm text-gray-500 font-light mt-1">18:30</span>
+                <p class="msg-text bg-accent-faded py-2 px-4 rounded-lg">{{message.text}}</p>
+                <span class="text-xs text-gray-500 font-light mt-1">{{message.time|time_from_iso}}</span>
             </div>
         </div>
         {% endif %}
@@ -80,12 +89,12 @@
         <div class="msg-wrapper msg-wrapper-self w-full flex justify-end my-2.5">
             <div class="msg flex flex-col items-end">
                 <div class="flex">
-                    <p class="msg-text text-lg bg-accent py-4 px-4 rounded-lg text-white"></p>
+                    <p class="msg-text bg-accent py-2 px-4 rounded-lg text-white"></p>
                     <div></div>
                 </div>
                 <div class="msg-info flex mt-0.5 items-center">
-                    <span class="text-sm text-gray-500 font-light mr-2">18:30</span>
-                    <img src="/static/img/delivered.svg" class="h-6 w-6" alt="">
+                    <span class="msg-time text-xs text-gray-500 font-light mr-2">18:30</span>
+                    <img src="/static/img/delivered.svg" class="h-5 w-5" alt="">
                 </div>
             </div>
         </div>
@@ -93,34 +102,32 @@
 
     <template id="tmp-other-msg">
         <div class="msg-wrapper msg-wrapper-self w-full flex my-2.5">
-            <img src="" class="msg-profile-img w-12 h-12 rounded-full object-cover mr-3">
+            <img src="" class="msg-profile-img w-10 h-10 rounded-full object-cover mr-3">
             <div class="msg flex flex-col">
-                <p class="msg-text text-lg bg-accent-faded py-4 px-4 rounded-lg"></p>
-                <span class="text-sm text-gray-500 font-light mt-1">18:30</span>
+                <p class="msg-text bg-accent-faded py-2 px-4 rounded-lg"></p>
+                <span class="msg-time text-xs text-gray-500 font-light mt-1">18:30</span>
             </div>
         </div>
     </template>
-    <template id="tmp-msg-typing">
-        <div class="msg-wrapper msg-wrapper-other">
-            <div class="msg-profile-img-wrapper"><img src={{user.account.profile_img_url}}></div>
-            <div class="msg" style="padding: 0; height: 35px;">
-                <img src="/static/img/loading.gif" class="msg-typing-img">
-            </div>
+
+    <template id="tmp-msg-date">
+        <div class="w-full my-5 flex justify-center">
+            <p class="msg-date text-sm text-gray-500 font-light" data-iso=""></p>
         </div>
     </template>
 {% endblock%}
 
 {% block right-pane %}
-<section class="convos w-full pt-4 bg-white mt-2.5 rounded-lg">
-    <p class="text-xl font-medium my-4 ml-5">Messages</p>
-    <div class="w-full overflow-scroll mt-5">
+<section class="convos w-full pt-2 bg-white mt-2.5 rounded">
+    <p class="text-lg font-medium my-4 ml-4">Messages</p>
+    <div class="w-full overflow-scroll mt-4">
         {% for chat in convs %}
-        <a href="{% url 'chatroom' chat.group_name%}" class="conv relative flex items-center py-5 px-4 border-gray-200 
+        <a href="{% url 'chatroom' chat.group_name%}" class="conv relative flex items-center py-4 px-3 border-gray-200 
         {% if not forloop.last %}border-b-2{% endif %}">
         
-                <img src="{{chat|chat_other_img:user}}" class="w-16 h-16 rounded-full object-cover mx-2">
+                <img src="{{chat|chat_other_img:user}}" class="w-12 h-12 rounded-full object-cover mx-2">
                 <div class="conv-text overflow-hidden">
-                    <p class="text-lg font-medium">{{chat|chat_other_name:user}}</p>
+                    <p class="text-md font-medium">{{chat|chat_other_name:user}}</p>
                     <span class="text-sm text-gray-400 overflow-ellipsis overflow-hidden whitespace-nowrap w-full">
                         {% if chat.last_msg.username != user.username %}
                             {{chat|chat_other_name:user}}
@@ -143,6 +150,7 @@
     const username=JSON.parse(document.getElementById('username').textContent);
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
     const dp_urls = JSON.parse(document.getElementById('dp-urls').textContent);
+    let typingTimeout = false;
     
     const chatSocket = new WebSocket(
         'ws://'
@@ -153,14 +161,25 @@
     );
 
     chatSocket.onmessage = function(e) {
-        console.log(e);
         const data = JSON.parse(e.data);
+        console.log(data.type);
+        let messages=$(".chatbox-messages")[0];
         if(data.type=="message"){
-            let messages=$(".chatbox-messages")[0];
             let temp = document.getElementById(`tmp-${data.username == username? 'self':'other'}-msg`);
             let p = temp.content.cloneNode(true);
             p.querySelector(".msg-text").innerHTML=data.text;
+            const time = new Date(Date.parse(data.time));
+            p.querySelector(".msg-time").innerHTML=time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12:true });
             // p.querySelector(".msg-info img").style.display="none";
+            const lastdate = new Date(Date.parse($('.msg-date').last().attr('data-iso')));
+            if(lastdate.getDate()!=time.getDate()){
+                let dttmp = document.getElementById('tmp-msg-date');
+                let d = dttmp.content.cloneNode(true);
+                let dateStr = time.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+                dateStr = dateStr.substr(0,3)+"."+dateStr.substr(3);
+                $('.msg-date',d).text(dateStr);
+                messages.appendChild(d);
+            }
             if(data.username==username)
                 p.querySelector(".msg-wrapper").classList.add("msg-wrapper-self");
             else{
@@ -171,14 +190,21 @@
                 }));
             }
             messages.appendChild(p);
-            messages.scrollTop+=$('.msg-wrapper',messages).last()[0].clientHeight;
-        }else{
+            messages.scrollTop+=$('.msg-wrapper',messages).last()[0].clientHeight + 20;
+
+        }else if(data.type=="seen"){
             $('.msg-info img').attr('src','/static/img/read.svg')
+            
+        }else if(data.type=="typing"){
+            $('#msg-typing').removeClass('opacity-0');
+            if(typingTimeout)clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(()=>{
+                $('#msg-typing').addClass('opacity-0')},2000)
         }
         
     };
 
-    document.addEventListener("visibilitychange", function() {
+    $(document).on("visibilitychange", function() {
         if(document.visibilityState=="visible")chatSocket.send(JSON.stringify({
             'type':'seen'
         }));
@@ -193,14 +219,17 @@
         console.error('Chat socket closed unexpectedly');
     };
 
-    document.querySelector('#chatbox-input').focus();
-    document.querySelector('#chatbox-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {  // enter, return
+    $('#chatbox-input')[0].focus();
+    $('#chatbox-input').on('keyup',function(e) {
+        if(e.keyCode === 13){ 
             document.querySelector('#chatbox-send').click();
+        }else{
+            if($(this).val().length%5)return;
+            chatSocket.send(JSON.stringify({'type':'typing'}));
         }
-    };
+    });
 
-    document.querySelector('#chatbox-send').onclick = function(e) {
+    $('#chatbox-send').on('click',function(e) {
         const messageInputDom = document.querySelector('#chatbox-input');
         const message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
@@ -209,7 +238,7 @@
             'text':message
         }));
         messageInputDom.value = '';
-    };
+    });
 
     $(document).ready(function(){
         let messages=$(".chatbox-messages")[0];

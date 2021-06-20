@@ -84,14 +84,6 @@ def upload_image_view(request):
     fileurl=unquote(fs.url(filepath))
     return JsonResponse({'success':1,'file':{'url':fileurl,'path':filepath}})
 
-def feign_image_upload(request):
-    resp=upload_image_view(request)
-    fs=FileSystemStorage()
-    filename=json.loads(resp.content)['file']['path']
-    print(filename)
-    fs.delete(filename)
-    return resp
-
 def upload_file_view(request):
     f=request.FILES['file']
     size=int(request.POST['size'])
@@ -101,17 +93,8 @@ def upload_file_view(request):
     filepath=fs.save(fileurl + filename,f)
     fileurl=unquote(fs.url(filepath))
     return JsonResponse({'success':1,'file':{'url':fileurl,"size":size,"name":str(f),"extension":fileurl.split('.')[-1], "path": filepath}})
-    # return redirect('alumni_response:mypage')
 
-def feign_file_upload(request):
-    resp=upload_file_view(request)
-    fs=FileSystemStorage()
-    filename=json.loads(resp.content)['file']['path']
-    fs.delete(filename)
-    return resp
-# class PostDetailView(DetailView):
-#     model=Post
-#     context_object_name='post'
+
 import datetime
 def get_feed(user,tagNames=[]):
     feed=[]
@@ -171,7 +154,7 @@ class PostSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
     like_count = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField()
-    datetime=serializers.DateTimeField(format="%d %b,%Y %H:%M:%S")
+    datetime=serializers.DateTimeField(format="%d %b,%Y %I:%M %p")
     class Meta:
         model = Post
         fields = ['author','like_count','datetime','content','id','comment_count']
@@ -181,6 +164,7 @@ class PostSerializer(serializers.ModelSerializer):
             author['name']=(' ').join([ x.capitalize() for x in post.author.name.split()])
             author['profile_img']= post.author.profile_img_url
             author['username']=post.author.user.username
+            author['desg']=post.author.designation.title + " | " + post.author.organization.name
             return author
         else:
             return 'Anonymous'

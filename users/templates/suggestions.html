@@ -6,43 +6,47 @@
         </svg>
         <p class="text-md font-medium ml-2">Suggestions</p>
     </div>
-    <div>
-        <div class="flex justify-between items-center py-3">
-            <div class="flex items-center justify-start">
-                <img src="{{user.account.profile_img_url}}" class= "rounded-full h-10 w-10 object-cover flex-shrink-0" alt="">
-                <div class="mx-3">
-                    <p class="mt-1 leading-4">{{user.account.name}}</p>
-                    <p class="text-xs text-gray-400 mt-1">Associate Project Manager | Google</p>
-                </div>
-            </div>
-            <div>
-                <button class="bg-accent py-1 px-4 text-white text-xs rounded">Follow</button>
-            </div>
-        </div>
-        <div class="flex justify-between items-center py-3">
-            <div class="flex items-center justify-start">
-                <img src="{{user.account.profile_img_url}}" class= "rounded-full h-10 w-10 object-cover flex-shrink-0" alt="">
-                <div class="mx-3">
-                    <p class="mt-1 leading-4">{{user.account.name}}</p>
-                    <p class="text-xs text-gray-400 mt-1">Associate Project Manager | Google</p>
-                </div>
-            </div>
-            <div>
-                <button class="bg-accent py-1 px-4 text-white text-xs rounded">Follow</button>
-            </div>
-        </div>
-        <div class="flex justify-between items-center py-3">
-            <div class="flex items-center justify-start">
-                <img src="{{user.account.profile_img_url}}" class= "rounded-full h-10 w-10 object-cover flex-shrink-0" alt="">
-                <div class="mx-3">
-                    <p class="mt-1 leading-4">{{user.account.name}}</p>
-                    <p class="text-xs text-gray-400 mt-1">Associate Project Manager | Google</p>
-                </div>
-            </div>
-            <div>
-                <button class="bg-accent py-1 px-4 text-white text-xs rounded">Follow</button>
-            </div>
-        </div>
+    <div class="sugg-wrapper">
         
     </div>
 </div>
+
+<template id="sugg-temp">
+    <div class="flex justify-between items-center py-3">
+        <div class="flex items-center justify-start">
+            <img src="" class= "sugg-img rounded-full h-10 w-10 object-cover flex-shrink-0" alt="">
+            <div class="mx-3">
+                <p class="sugg-title mt-1 leading-4"></p>
+                <p class="sugg-subtitle text-xs text-gray-400 mt-1"></p>
+            </div>
+        </div>
+        <div>
+            <button class="follow-button bg-accent py-1 px-4 text-white text-xs rounded" data-user="">Follow</button>
+        </div>
+    </div>
+</template>
+
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            url:'/get-suggestions/',
+            dataType:'json',
+            success: (data)=>{
+                if(!data.length){
+                    $('.suggestions').addClass('hidden');
+                }
+                data.forEach(ele => {
+                    const tmp = $('#sugg-temp')[0];
+                    const p = tmp.content.cloneNode(true);
+                    $('.sugg-img',p).attr('src',ele.img);
+                    $('.sugg-title',p).text(ele.title);
+                    $('.sugg-subtitle',p).text(ele.subtitle);
+                    $('.follow-button',p).attr('data-user',ele.username);
+                    $('.sugg-wrapper').append(p);
+                });
+            }
+        })
+    });
+</script>
+{% endblock %}

@@ -1,4 +1,5 @@
 from django import template
+from datetime import datetime
 
 register = template.Library()
 
@@ -27,3 +28,7 @@ def chat_other_img(value, arg):
             url = user.profile_img_url
 
     return url
+
+@register.filter(name='time_from_iso')
+def time_from_iso(value):
+    return datetime.fromisoformat(value).strftime("%I:%M %p")

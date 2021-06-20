@@ -66,6 +66,10 @@ $(document).ready(()=>{
         }
     });
 
+    $('#header-profile').on('click', function(e){
+        $('#header-acc-opt').toggleClass('hidden');
+    });
+
     let vh = window.innerHeight;
     console.log(vh);
     document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -177,3 +181,19 @@ var follow=function(ele){
         }
     })
 }
+
+$('.join-group').on('click',function(e){
+    const id = $(this).attr('data-id');
+    e.stopPropagation();
+    $.ajax({
+        type: 'POST',
+        url: `/groups/join-group/${id}/`,
+        success: (data)=>{
+            $(this).text('Joined');
+            $(this).off('click');
+            let ctr=$(`.member-count[data-id=${id}]`);
+            let val=parseInt(ctr.text().split(" ")[0]);
+            ctr.text(val+1 + " members");
+        }
+    })
+});
