@@ -10,29 +10,10 @@ $(document).ready(function () {
 
   $("#ask_button").click(function (e) {
     e.preventDefault();
-    $("#question_form").submit();
-    /*if ($("#ask_text").html() === "") {
-            alert("Enter some text first!");
-            return;
-        }
-        let formdata = new FormData(document.getElementById("question_form"));
-        // for (var pair of formdata) {
-        //     console.log(pair[0] + ": " + pair[1]);
-        // }
-        $.ajax({
-            type: "POST",
-            url: "/faq/create-question/",
-            data: formdata,
-            processData: false,
-            contentType: false,
-            enctype: "multipart/form-data",
-            success: function (response) {
-                // clear the question-text input's value
-                console.log("Question Posted!")
-                $("#question-text").val("");
-                load_question();
-            }
-        });*/
+    if($("#question-text").val().length === 0) alert("Sorry, the question can't be empty!");
+    else { 
+      $("#question_form").submit();
+    }
   });
 });
 
@@ -52,31 +33,32 @@ let load_question = function (index) {
         // []. is shorthand for Array.prototype. //
         // instead we can also do [].forEach.call(data, (question) => {...}); too.
 
-        // template of the question.
-        let question_template = document.getElementById("question-template");
-
-        // clone node of the subtree of the template
-        let question_template_children_clone =
-          question_template.content.cloneNode(true);
+        // clone node of the subtree of the question template
+        let question_clone = $("#question-template").contents().clone(true);
 
         // set the id
-        question_template_children_clone.id = "question-" + question.id;
+        question_clone.attr("id", `question-${question.id}`);
 
         // modify the data for .question-content and .question-author within the clone node
-        question_template_children_clone.querySelector(
-          ".question-content"
-        ).innerHTML = question.content;
-        question_template_children_clone.querySelector(
-          ".question-author"
-        ).innerHTML = question.author.name;
-        question_template_children_clone.querySelector(
-            ".question-author"
-        ).href = `../account/${question.author.username}`
+        $(".question-content", question_clone).html(question.content);
+        $(".question-author", question_clone).html(question.author.name);
+        $(".question-author", question_clone).attr("href", `../account/${question.author.username}`);
+        $(".question-details", question_clone).attr("href", `${question.id}/`);
+        if(Object.keys(question.answers).length != 0) {
+          // clone node of subtree of the answer template
+          let answer_clone = $("#answer-template").contents().clone(true);
+  
+          // modify the data for answer
+          $(".ans-img", answer_clone).attr("src", question.answers.profile_img);
+          $(".ans-author", answer_clone).html(question.answers.name);
+          $(".ans-content", answer_clone).html(question.answers.content);
+          
+          // append answer_clone to question_clone
+          $(".answer-container", question_clone).append(answer_clone)
+        }
 
-        // append the clone to #question-container
-        document
-          .getElementById("question-container")
-          .appendChild(question_template_children_clone);
+        // append question_clone to #question-container
+        $("#question-container").append(question_clone);
       }
 
       donotload = false;
