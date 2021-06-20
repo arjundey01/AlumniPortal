@@ -1,12 +1,4 @@
-$(document).ready(()=>{
-    if($('.chatbox-header').length){
-        other=document.querySelector('#other-member').textContent;
-        getLastActive(other,10);
-    }
-    //getOnline(15);
-    $('.chat-button').click(startChat);
-    $('.follow-button').click(follow);
-
+let loadAccordion = () => {
     $('.accordion-question').click(function(e){
         
         let entry = $(this).parent();
@@ -39,7 +31,18 @@ $(document).ready(()=>{
             ele.addClass('accordion-entry-collapsed')
         }
     });
+};
 
+$(document).ready(()=>{
+    if($('.chatbox-header').length){
+        other=document.querySelector('#other-member').textContent;
+        getLastActive(other,10);
+    }
+    //getOnline(15);
+    $('.chat-button').click(startChat);
+    $('.follow-button').click(follow);
+
+    loadAccordion();
 
     $('#sidebar-btn').click(function(e){
         let state = $(this).attr('data-toggle');

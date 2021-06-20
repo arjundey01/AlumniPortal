@@ -9,4 +9,5 @@ urlpatterns = [
     path('load-question/<index>', views.load_question, name='load_question'),
     path('<id>/', views.question_detail, name='detail_question'),
     path('create-ans/<id>/', views.create_answer, name='create_answer'),
+    path('ans-from-alumni', views.get_best4, name='ans-from-alumni'),
 ]

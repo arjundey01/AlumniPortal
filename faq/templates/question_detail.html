@@ -1,16 +1,117 @@
 {% extends "base.html" %}
-
 {% block content %}
-  <p>Question: {{question.content}}</p>
-  
-  {% for ans in answers %}
-      <p>Ans: {{ans.content}}</p>
-  {% endfor %}
+<div class="faq rounded w-full bg-white py-4 px-3 shadow-lg my-10 px-3">
+  <div class="w-full border-b-2 border-solid border-gray-200">
+    <div class="flex justify-between items-center py-3 px-3">
+      <div class="flex items-center justify-start">
+        <div
+          class="
+            rounded-full
+            h-12
+            w-12
+            overflow-hidden
+            flex
+            items-center
+            justify-center
+            flex-shrink-0
+          "
+        >
+          <img
+            src="{{question.author.profile_img_url}}"
+            class="ans-img h-14 w-14 object-cover"
+            alt=""
+          />
+        </div>
+        <div class="mx-4">
+          <p class="ans-author mt-1">{{question.content}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="">
+      <p class="ans-content text-sm text-gray-500 m-2">
+        {{question.author.name}}
+      </p>
+      <p class="text-sm text-gray-400 mt-1">
+        Associate Project Manager | Google
+      </p>
+    </div>
+  </div>
+</div>
+<!-- <p>Question: {{question.content}}</p> -->
 
-  <form action="{% url 'faq:create_answer' id=question.pk %}" method="POST">
-      {% csrf_token %}
-      Post Your Answer:
-      <input type="text" name="content" id="">
+{% for ans in answers %}
+<div class="faq rounded w-full bg-white py-4 px-3 shadow-lg my-10 px-3">
+  <div class="w-full border-b-2 border-solid border-gray-200">
+    <div class="flex justify-between items-center py-3 px-3">
+      <div class="flex items-center justify-start">
+        <div
+          class="
+            rounded-full
+            h-12
+            w-12
+            overflow-hidden
+            flex
+            items-center
+            justify-center
+            flex-shrink-0
+          "
+        >
+          <img
+            src="{{ans.author.profile_img_url}}"
+            class="ans-img h-14 w-14 object-cover"
+            alt=""
+          />
+        </div>
+        <div class="mx-4">
+          <p class="ans-author mt-1">{{ans.author.name}}</p>
+          <p class="text-sm text-gray-400 mt-1">
+            Associate Project Manager | Google
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="">
+      <p class="ans-content text-sm text-gray-500 m-2">
+        {{ans.content}}
+      </p>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+<div class="faq rounded w-full bg-white py-4 px-3 shadow-lg my-10 px-3">
+  <div class="w-full border-b-2 border-solid border-gray-200">
+    <div class="flex justify-between items-center py-3 px-3">
+      <div class="flex items-center justify-start">
+        <div class="mx-4">
+          <p class="ans-author mt-1">Write an answer</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <form id="ans-form" action="{% url 'faq:create_answer' id=question.pk %}" method="POST">
+    {% csrf_token %}
+
+    <textarea class="w-full h-52" name="content"></textarea>
+    <div>
       <button type="submit" id="ans-submit">Post</button>
+    </div>
   </form>
+</div>
+
 {% endblock content %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $("#ans-submit").click((e) => {
+        e.preventDefault();
+        if($("textarea", $("#ans-form")).val().length === 0) alert("Sorry, empty answer isn't accepted!");
+        else {
+          $("#ans-form").submit();
+        }
+      });
+    });
+  </script>
+{% endblock scripts %}

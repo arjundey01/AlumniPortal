@@ -168,30 +168,23 @@ def load_question(request, index):
     return HttpResponse("You aren't suppose to see this!")
     
 def get_best4(request):
-    questions=[]
-    tags = []
-    for tag in tagNames:
-        tags.append(get_object_or_404(Group, title = tag))
-
-    if user.is_authenticated:
-        follow_questions = []
-        following_users = list(user.account.following.all())
-        following_users.append(user.account)
-        for fuser in following_users:
-            for question in fuser.questions.all():
-                question_age = datetime.datetime.now()-question.posted_on
-                question_age = question_age.total_seconds() / 3600
-                if question_age<=24:
-                    if len(tags) and len(list( set (tags) & set (question.tags.all()) )) == 0:
-                        continue
-                    follow_questions.append(question)
-        follow_questions.sort(key=lambda x: x.posted_on, reverse=True)
-        general_questions=list(Question.objects.all())
-        general_questions.sort(key=lambda x:x.rev_priority)
-        questions = follow_questions[:]
-        for question in general_questions:
-            if len(tags) and len(list( set (tags) & set (question.tags.all()) )) == 0:
-                continue
-            if question not in follow_questions:
-                questions.append(question)
-    return questions
+    if request.user.is_authenticated and request.method == "POST":
+        questions = list(Question.objects.all())
+        questions.sort(key=lambda x: x.posted_on, reverse=True)
+        questions.sort(key=lambda x:x.rev_priority)
+        count = 0
+        final_questions = []
+        for q in questions:
+            data = QuestionSerializer(q).data
+            if(data['answers'] != {}):
+                final_questions.append(data)
+                count += 1
+            if count == 4:
+                break
+        return HttpResponse(json.dumps(final_questions), status=200);
+    ##################################################
+    ##################################################
+    ### DURING DEPLOYMENT RETURN CUSTOM ERROR PAGE ###
+    ##################################################
+    ##################################################
+    return HttpResponse("You aren't suppose to see this!")

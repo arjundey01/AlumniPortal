@@ -24,7 +24,6 @@
     <div class="faq rounded w-full bg-white py-4 px-3 shadow-lg my-10">
         <div class="faq-header w-full px-3 md:py-3 overflow-auto flex justify-between items-center">
             <div class="flex justify-start flex-col">
-                <!-- <p id="question-content" class="faq-question text-lg md:text-xl mt-1">How often do you work past 5PM and on weekends?</p> -->
                 <p class="question-content faq-question text-lg md:text-xl mt-1"></p>
                 <div class="flex items-center">
                     <div class="text-sm text-gray-400">Posted by &nbsp;</div>
@@ -45,8 +44,8 @@
 </template>
 
 <template id="answer-template">
-    <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 accordion-entry-collapsed">
-        <div class="accordion-question cursor-pointer flex justify-between items-center py-3 px-3">
+    <div class="w-full border-b-2 border-solid border-gray-200">
+        <div class="flex justify-between items-center py-3 px-3">
             <div class="flex items-center justify-start">
                 <div class="rounded-full h-12 w-12 overflow-hidden flex items-center justify-center flex-shrink-0">
                     <img src="{{user.account.profile_img_url}}" class= "ans-img h-14 w-14 object-cover" alt="">
@@ -57,10 +56,8 @@
                 </div>
             </div>
 
-            <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>
-
         </div>
-        <div class="accordion-answer">
+        <div class="">
             <p class="ans-content text-sm text-gray-500 m-2">In fermentum vehicula sem vitae eleifend. Nam pretium iaculis hendrerit. Nam in erat at elit ultricies tincidunt pharetra sit amet ante. Sed sed sem sit amet arcu laoreet finibus ac ac sem. </p>
         </div>
     </div>
