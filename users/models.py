@@ -105,7 +105,6 @@ class PastJobs(models.Model):
             return self.start_date
         else:
             return date.today()
-
     def get_end_date(self):
         if(self.end_date):
             return self.end_date

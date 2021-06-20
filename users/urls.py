@@ -1,3 +1,4 @@
+from os import name
 from django.urls import path 
 
 from . import views
@@ -20,6 +21,7 @@ urlpatterns = [
   path('following',views.following),
   #path('account',views.account),
   path('account/<username>', views.profile , name='account'),
+  path('details/',views.details,name="details"),
 
   path('account/add/experience/', views.experience, name='add-experience'),
   path('account/add/project/', views.project, name='add-project'),
