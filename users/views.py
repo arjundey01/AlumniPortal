@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from post.views import feed
 from .forms import *
 import json
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 def home(request):
     if request.user.is_authenticated:
@@ -26,6 +27,15 @@ def sign_in(request):
     request.session['auth_state'] = state
     # Redirect to the Azure sign-in page
     return HttpResponseRedirect(sign_in_url)
+
+def details(request):
+    context={'user':request.user}
+    context['u_form']=UserUpdateForm(instance=request.user)
+    context['e_form']=ExperienceForm()
+    context['edu_form']=EducationForm()
+    context['p_form']=ProjectForm()
+    context['j_form']=PastJobsForm()
+    return render(request, 'details.html',context)
 
 def callback(request):
     # Get the state saved in session
@@ -42,6 +52,7 @@ def callback(request):
         account.name = user['displayName']
         account.email = user['mail']
         account.save()
+        return HttpResponseRedirect(reverse('details'))
     login(request, User.objects.get(username=user['mail']))
     store_token(request, token)
     return HttpResponseRedirect(reverse('home'))
@@ -238,18 +249,15 @@ def update_contact(request):
 
 @login_required(login_url='/signin/')
 def update_ex(request, pk):
-    if request.method == 'POST':
-        e_form=ExperienceForm(request.POST, instance=get_object_or_404(Experience, pk=pk))
-        if e_form.is_valid():
-
-            e=e_form.save(commit=False)
-            e.user=request.user.account
-            e.save()
-            messages.success(request, 'Your experience has been Updated!')
-        else:
-            messages.error(request,"Some Error Occured!")
-        return redirect('/account/'+request.user.username+'#tab-experience')
-    return Http404
+    e_form=ExperienceForm(request.POST or None, instance=get_object_or_404(Experience, pk=pk))
+    if e_form.is_valid():
+        e=e_form.save(commit=False)
+        e.user=request.user.account
+        e.save()
+        messages.success(request, 'Your experience has been Updated!')
+    else:
+        messages.error(request,"Some Error Occured!")
+    return redirect('/account/'+request.user.username+'#tab-experience')
 
 @login_required(login_url='/signin/')
 def update_job(request, pk):
@@ -321,6 +329,9 @@ def delete_item(request,type,pk):
     elif type == 'education':
         edu = get_object_or_404(Education, pk=pk)
         edu.delete()
+    elif type=='PastJobs':
+        job = get_object_or_404(PastJobs, pk=pk)
+        job.delete()
     messages.success(request, 'The entry has been Deleted!')
 
     return redirect('/account/'+request.user.username+'#tab-'+type)

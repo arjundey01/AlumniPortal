@@ -52,282 +52,28 @@
                 <div class="col">
                 <div class="text-lg font-medium mb-1">About</div>
                 <div class="text-sm">{{curr_user.description}} </div>
-                {% comment %} <div class="text-sm">
-                {{curr_user.description}}
-                <div> {% endcomment %}
         </div>
     </div>
 </div>
-<!-- <button class="btn btn-outline-info" type="submit">Update</button> -->
-{% comment %} 
-
-<div>
-  {% include 'update_forms.html' %}
-</div>
-
-  <div class="content-section" id="content">
-
-    {% if messages %}
-        {% for message in messages %}
-        <p{% if message.tags %} class="{{ message.tags }}-msg"{% endif %}>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
-
-    <div class="media" >
-      <img class="profile-img" src="{{ curr_user.profile_img_url }}"> 
-      <div class="media-body profile-info">
-        <h2 class="account-heading">{{ curr_user.name }}</h2>
-        <p class="text-secondary">{{ curr_user.email }}</p>
-        <p class="text-secondary">{{ curr_user.company }}</p>
-        <p class="profile-about">Cras id erat at nisl dapibus gravida eu et lacus. Nullam quis felis at nibh dapibus dapibus. Donec imperdiet mollis sem, rhoncus dapibus leo finibus sed. Vestibulum facilisis porta tristique.</p>
-        {% if user == curr_user.user %}
-        <p style="text-align:left;"><button class="camera"><i class="fa fa-camera"></i></button></p>
-        {% endif %}
-      </div>
-      <div>
-        <div class="container">
-          <div class="bg-light p-4 d-flex justify-content-end text-center profile-stats card">
-            <ul class="list-inline mb-0">
-              <li class="list-inline-item">
-                <h5 class="font-weight-bold mb-0 d-block">{{ curr_user.posts.count }}</h5><small class="text-muted"> <i class="fas fa-image mr-1"></i>Posts</small>
-              </li>
-              <li class="list-inline-item">
-                <h5 class="font-weight-bold mb-0 d-block">{{ curr_user.followers.count }}</h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Followers</small>
-              </li>
-              <li class="list-inline-item">
-                <h5 class="font-weight-bold mb-0 d-block">{{ curr_user.following.count}}</h5></h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Following</small>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="profile-actions">  
-          {% if user != curr_user.user%}
-            {% if curr_user in user.account.following.all %}
-            <i class="fas fa-check fa-2x"></i>
-            {% else %}
-            <i class="fas fa-plus fa-2x follow-button" data-username="{{curr_user.user.username}}"></i>
-            {% endif %}
-          <i class="fas fa-comment fa-2x chat-button" data-self="{{user.username}}" data-other="{{curr_user.user.username}}" data-csrf="{{csrf_token}}" style="cursor: pointer;"></i>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  
-    <ul class="nav nav-tabs profile-tabs">
-      <li class="nav-item">
-        <a data-toggle="tab" class="nav-link active" href="#tab-experience">Experience</a>
-      </li>
-      <li class="nav-item">
-        <a data-toggle="tab" class="nav-link" href="#tab-project">Projects</a>
-      </li>
-      <li class="nav-item">
-        <a data-toggle="tab" class="nav-link" href="#tab-education">Education</a>
-      </li>
-      <li class="nav-item">
-        <a data-toggle="tab" class="nav-link" href="#tab-contact">Contact</a>
-      </li>
-      {% if user == curr_user.user %}
-      <li class="nav-item">
-        <a data-toggle="tab" class="nav-link" href="#tab-update">Update</a>
-      </li>
-      {% endif %}
-    </ul>
-    <div class="tab-content">
-      
-      
-      <div id="tab-experience" class="tab-pane fade show active">
-
-        <h3>Experiences
-          {% if user == curr_user.user %}
-          <button id="new_experience" class="btn btn-outline-secondary btn-sm" value="show">
-            <span>&#43;</span>
-          </button>
-          {% endif %}
-        </h3>
-
-        <ul>
-          {% for experience in experiences %}
-          <li>
-           <p class="user-experience"> {{experience.experience}}</p> 
-            {% if user == curr_user.user %}
-            <button class="btn btn-danger btn-sm del-item-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
-              <i style="font-size:12px" class="fa fa-trash-o"></i>
-            </button>
-            <button class="edit btn btn-secondary btn-sm" data-update-id="{{ experience.id }}">
-              <i style="font-size:12px" class="fa fa-pencil"></i>
-            </button>
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ul>
-
-        <form method="POST" action="{% url 'add-experience'%}" class="experience_form" style="display: none;">
-          {%csrf_token%}
-          {{ e_form.as_myformat }}
-          {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
-        </form>
-  
-      </div>
-
-      <div id="tab-project" class="tab-pane fade">
-
-        <h3>Projects
-          {% if user == curr_user.user %}
-          <button id="new_project" class="btn btn-outline-secondary btn-sm" value="show">
-            <span>&#43;</span>
-          </button>
-          {% endif %}
-        </h3>
-
-        <ul>
-          {% for project in projects %}
-          <li>
-           <p class="user-project"> {{project.project}}</p>
-            {% if user == curr_user.user %}
-            <button class="btn btn-danger btn-sm del-item-btn" data-type="project" data-delete-id="{{ project.id }}">
-              <i style="font-size:12px" class="fa fa-trash-o"></i>
-            </button>
-            <button class="pedit btn btn-secondary btn-sm" data-update-id="{{ project.id }}">
-              <i style="font-size:12px" class="fa fa-pencil"></i>
-            </button>
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ul> 
-
-         <form method="POST" action="{% url 'add-project'%}" class="project_form" style="display: none;">
-          {%csrf_token%}
-           {{ p_form.as_myformat }} 
-           {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
-        </form>
-
-      </div>
-
-      <div id="tab-education" class="tab-pane fade">
-        
-        <h3>Education
-          {% if user == curr_user.user %}
-          <button id="new_education" class="btn btn-outline-secondary btn-sm" value="show">
-            <span>&#43;</span>
-          </button>
-          {% endif %}
-        </h3>
-        
-        <ul>
-          {% for education in educations %}
-          <li>
-            <p class="user-edu">{{education.education}}</p>
-            
-            {% if user == curr_user.user %}
-            <button class="btn btn-danger btn-sm del-item-btn" data-type="education" data-delete-id="{{ education.id }}">
-              <i style="font-size:12px" class="fa fa-trash-o"></i>
-            </button>
-            <button class="eduedit btn btn-secondary btn-sm"  data-update-id="{{ education.id }}">
-              <i style="font-size:12px" class="fa fa-pencil"></i>
-            </button>
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ul> 
-
-         <form method="POST" action="{% url 'add-education'%}" class="education_form" style="display: none;">
-          {%csrf_token%}
-           {{ edu_form.as_myformat }} 
-           {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
-        </form>
-
-      </div>
-
-      <div id="tab-contact" class="tab-pane fade">
-
-        <h3>Contact</h3>
-        <div id="contact"> 
-
-          {% if user == curr_user.user %}
-
-          <form method="POST" enctype="multipart/form-data" action="{% url 'update-contact' %}"  >         
-            {%csrf_token%}                     
-            <fieldset class="form-group">
-              {{ ct_form.as_myformat }}      
-            </fieldset>
-            <div class="form-group">
-              <button class="btn btn-outline-info" type="submit">Update</button> 
-            </div>                  
-          </form>
-
-          {% else %}
-          
-            {% if curr_user.gmail == null %}
-            Gmail: Not Provided
-            {% else %}
-            Gmail: {{ curr_user.gmail }}
-            {% endif %}
-            <br>
-            {% if curr_user.outlook == null %}
-            Outlook: Not Provided
-            {% else %}
-            Outlook: {{ curr_user.outlook }}
-            {% endif %}
-            <br>
-            {% if curr_user.mobile == null %}
-            Mobile: Not Provided
-            {% else %}
-            Mobile: {{ curr_user.mobile }}
-            {% endif %}
-            <br>
-            {% if curr_user.linkedin == null %}
-            Linkedin: Not Provided
-            {% else %}
-            Linkedin: {{ curr_user.linkedin }}
-            {% endif %}
-
-          {% endif %}
-
-        </div>
-
-      </div>
-
-      {% if user == curr_user.user %}
-      <div id="tab-update" class="tab-pane fade">
-
-        <div id="update-form">  
-          <form method="POST" enctype="multipart/form-data" action="{% url 'update-account'%}"  >         
-            {%csrf_token%}                     
-            <fieldset class="form-group">
-              <legend class="border-bootom mb-4">Profile Info</legend> 
-              {{ u_form.as_myformat }}      
-            </fieldset>
-            <div class="form-group">
-              <button class="btn btn-outline-info" type="submit">Update</button> 
-            </div>                  
-          </form>
-        </div>
-
-      </div>
-      {% endif %}
-    </div>
- {% endcomment %}
-<div class="container">
+<div  class="container">
   <!--experience-->
-  <div class=" bg-white p-5 mt-5">
+  <div id="#tab-experience" class=" bg-white p-5 mt-5">
 
     <!--heading-->
-    <div class="text-lg  font-medium">
+    <div class="text-lg font-medium">
         <span >Experience</span>
-       {% comment %} <span>{% if user == curr_user.user %}
-              <button id="new_experience" class="btn btn-outline-secondary btn-sm" value="show">
-                <span>&#43;</span>
-              </button>
-              {% endif %}
-        </span>  {% endcomment %}
+       <span>{% if user == curr_user.user %}
+          <button id="new_experience" val="show">
+            <img class="h-2 inline" src="/static/img/add.svg" alt="+">
+          </button>
+          {% endif %}
+        </span>
     </div>
     <!--content-->
     <div class="text-lg ">
         <ul class="grid grid-cols-3">
-
           {% for experience in experiences %}
-          <li class="user-experience grid grid-cols-12 mt-3 {% if forloop.counter > 3%}hidden{% endif %}">
+          <li class="user-experience grid grid-cols-12 mt-3 {% if forloop.counter > 3%}hidden{% endif %}" value="{{experience.id}}">
             <img src="/static/img/company.svg" class="rounded-full inline h-16 col-span-3">
             <div class="col-span-9">
 
@@ -340,40 +86,34 @@
               {% endif %}
             </span>
             </div> 
-          {% comment %} {% if user == curr_user.user %}
-            <button class="btn btn-danger btn-sm del-item-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
+           {% if user == curr_user.user %}
+            <button class="btn btn-danger btn-sm del-exp-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
               <i style="font-size:12px" class="fa fa-trash-o"></i>
             </button>
             <button class="edit btn btn-secondary btn-sm" data-update-id="{{ experience.id }}">
               <i style="font-size:12px" class="fa fa-pencil"></i>
             </button>
-            {% endif %} {% endcomment %}
+            {% endif %} 
            </li>
           {% endfor %}
           {% if experiences|length > 3 %}
             <a id="user-exp" class="text-accent text-xs mt-5">SHOW ALL({{experiences|length|add:-3}})</a>
           {% endif %}
         </ul>
-        <form method="POST" action="{% url 'add-experience'%}" class="experience_form" style="display: none;">
-          {%csrf_token%}
-          {{ e_form.as_myformat }}
-          {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
-        </form>
     </div> 
 
   </div>
 <!--Past jobs-->
   <div class=" bg-white p-5 mt-5">
-
     <!--heading-->
     <div class="text-lg h-11  font-medium">
         <span >Past Jobs</span>
-        {% comment %} <span>{% if user == curr_user.user %}
-              <button id="new_job" class="btn btn-outline-secondary btn-sm" value="show">
-                <span>&#43;</span>
+        <span>{% if user == curr_user.user %}
+              <button id="new_job" val="show">
+                <img class="h-2 inline" src="/static/img/add.svg" alt="+">
               </button>
               {% endif %}
-        </span>  {% endcomment %}
+        </span> 
     </div>
     <!--content-->
     <div class="text-lg ">
@@ -403,31 +143,24 @@
                 </div> 
                 <div class="text-sm">{{ job.description }}</div>
           </div>
-            {% comment %} {% if user == curr_user.user %}
-            <button class="btn btn-danger btn-sm del-item-btn" data-type="PastJobs" data-delete-id="{{ job.id }}" >
+            {% if user == curr_user.user %}
+            <button class="btn btn-danger btn-sm del-job-btn" data-type="PastJobs" data-delete-id="{{ job.id }}" >
               <i style="font-size:12px" class="fa fa-trash-o"></i>
             </button>
-            <button class="edit btn btn-secondary btn-sm" data-update-id="{{ job.id }}">
+            <button class="edit-job btn btn-secondary btn-sm" data-update-id="{{ job.id }}">
               <i style="font-size:12px" class="fa fa-pencil"></i>
             </button>
             {% endif %} 
-           </li> {% endcomment %}
+           </li>
           {% endfor %}
         </ul>
           {% if jobs|length > 3 %}
             <a id="user-extrajob" class="text-accent text-xs mt-5">SHOW ALL({{jobs|length|add:-3}})</a>
           {% endif %}
-        <form method="POST" action="{% url 'add-job'%}" class="pastJobs_form" style="display: none;">
-          {%csrf_token%}
-          {{ j_form.as_myformat }}
-          {% if user == curr_user.user %}<button class="btn btn-outline-info" type="submit">Submit</button> {% endif %}
-        </form>
     </div> 
-
   </div>
 <!--Faq-->
   <div class=" bg-white pt-5 pr-5 pb-5 mt-5 mb-10">
-
     <!--heading-->
     <div class="text-lg h-11  font-medium pl-5">
         <span >Questions Answered</span>
@@ -444,136 +177,12 @@
     </div> 
 
   </div>
-  
 </div>
-
-    <script>
-      $(document).ready(()=>{
-        if(location.hash!=""){
-              var lt=location.hash.substring(1);
-              console.log(lt);
-              $(".nav-link[href='#"+lt+"']").click();
-          }
-      })
-      
-      $(".update-close").click(function(){
-        {
-          $(".overlay").css("display", "none");
-        }
-      })        
-      
-      $('#user-exp').on('click',function(e){
-        $('.user-experience').removeClass('hidden');
-        $(this).addClass('hidden');
-      })
-      $('#user-extrajob').on('click',function(e){
-        $('.user-jobs').removeClass('hidden');
-        $(this).addClass('hidden');
-      }) 
-
-      $(".edit").click(function(ele){
-        {
-          // var id = $(this).attr("data-update-id")
-          $(".overlay").css('display', 'block');
-          $(".update_p_form").css('display', 'none');
-          $(".update_edu_form").css('display', 'none');
-          $(".update_form").css('display', 'block');
-          $(".update_form").attr('action', 'update/experience/'+ $(this).attr("data-update-id")+'/');
-          console.log($(".user-experience", $(this).parent()).text());
-          $(".update_form input[type=text]").val($(".user-experience", $(this).parent()).text());
-        }
-    })
-
-    $(".pedit").click(function(ele){
-        {
-          // var id = $(this).attr("data-update-id")
-          $(".overlay").css('display', 'block');
-          $(".update_form").css('display', 'none');
-          $(".update_edu_form").css('display', 'none');
-          $(".update_p_form").css('display', 'block');
-          $(".update_p_form").attr('action', 'update/project/'+ $(this).attr("data-update-id")+'/');
-          console.log($(".user-project", $(this).parent()).text());
-          $(".update_p_form input[type=text]").val($(".user-project", $(this).parent()).text());
-        }
-    })
-
-    $(".eduedit").click(function(ele){
-        {
-          // var id = $(this).attr("data-update-id")
-          $(".overlay").css('display', 'block');
-          $(".update_form").css('display', 'none');
-          $(".update_p_form").css('display', 'none');
-          $(".update_j_form").css('display','none');
-          $(".update_edu_form").css('display', 'block');
-          $(".update_edu_form").attr('action', 'update/education/'+ $(this).attr("data-update-id")+'/');
-          console.log($(".user-edu", $(this).parent()).text());
-          $(".update_edu_form input[type=text]").val($(".user-edu", $(this).parent()).text());
-        }
-    })
-
-    $("#new_experience").click(function(){
-    if($(this).attr("val") == "show")
-        {
-          $(".experience_form").css('display', 'block');
-          $("#new_experience").html('<span>&#8722;</span>');
-          $(this).attr("val","hide");
-        }
-    else
-       {
-       $(".experience_form").css('display', 'none');
-          $("#new_experience").html('<span>&#43;</span>');
-           $(this).attr("val","show");
-       }
-    })
-
-    $("#new_project").click(function(){
-      if($(this).attr("val") == "show")
-        {
-          $(".project_form").css('display', 'block');
-          $("#new_project").html('<span>&#8722;</span>');
-          $(this).attr("val","hide");
-        }
-      else
-       {
-       $(".project_form").css('display', 'none');
-          $("#new_project").html('<span>&#43;</span>');
-           $(this).attr("val","show");
-       }
-    })
-    $("#new_education").click(function(){
-      if($(this).attr("val") == "show")
-        {
-          $(".education_form").css('display', 'block');
-          $("#new_education").html('<span>&#8722;</span>');
-          $(this).attr("val","hide");
-        }
-        else
-       {
-       $(".education_form").css('display', 'none');
-          $("#new_education").html('<span>&#43;</span>');
-           $(this).attr("val","show");
-       }
-    })
-
-    $("#new_job").click(function(){
-      if($(this).attr("val") == "show")
-        {
-          $(".pastJobs_form").css('display', 'block');
-          $("#new_job").html('<span>&#8722;</span>');
-          $(this).attr("val","hide");
-        }
-        else
-       {
-       $(".pastJobs_form").css('display', 'none');
-          $("#new_job").html('<span>&#43;</span>');
-           $(this).attr("val","show");
-       }
-    })
-
-    $(".del-item-btn").click(function(){
-      let id = $(this).attr('data-delete-id');
-      let type = $(this).attr('data-type');
-      location.href = 'delete/' + type + '/' + id;
-    })
-    </script>
+{% endblock %}
+{% block overlay %}
+  {% include 'update_forms.html' %}
+  {% include 'add_form.html' %}
+{% endblock %}
+{% block scripts %}
+<script src="/static/scripts/profile.js"></script>
 {% endblock %}

@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="{% static 'stylesheets/style-base.css' %}">
+  <title>Details</title>
+</head>
+<body>
+<div class="flex justify-center  mt-8 ">
+    <div>
+    <img class="h-48 w-48" src="{% static 'img/logo.svg' %}" alt="">
+    </div>
+</div>
+<div class="flex justify-between mt-9 mx-9 sm:mx-16">
+    <div class="text-2xl text-blue-700 pt-1.5">Enter details</div>
+    <div><input type="button" value="Next" onclick="submitForms()" class="bg-accent w-28 text-white rounded-md py-1 px-0.5  lg:mr-32"/></div>
+</div>
+<hr  class="mx-9 sm:mx-16 mt-4">
+<div id="step1">
+<!--current Job-->
+<div  class="mx-9 sm:ml-16 mr-16 lg:mr-64  mt-3">
+    <div class="text-xl">Current Job</div>
+    <form id="form1" method="POST" action="{% url 'add-job' %}" class="flex justify-start grid sm:grid-cols-3 xl:grid-cols-4">
+    {% csrf_token%}
+    {{ j_form.non_field_errors }}
+    <div class="mr-5 mt-2">
+        {{ j_form.designation.errors }}
+        <label class="text-gray-400" for="{{ j_form.designation.id_for_label }}">Role</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.designation}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.organization.errors }}
+        <label class="text-gray-400" for="{{ j_form.organization.id_for_label }}">Organization</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.organization}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.start_date.errors }}
+        <label class="text-gray-400" for="{{ j_form.start_date.id_for_label }}">Start Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.start_date}}
+    </div>
+    <div class="mr-5 mt-2 col-span-2">
+        {{ j_form.description.errors }}
+        <label class="text-gray-400" for="{{ j_form.description.id_for_label }}">Description</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.description}}
+    </div>
+    <input class="hidden" type="submit">
+    </form>
+</div>
+<div  class="mx-9 sm:ml-16 mr-16 lg:mr-64 mt-6">
+    <span class="text-xl">Past Jobs</span>
+              <button id="add_row">
+                <img class="h-3 inline" src="/static/img/add.svg" alt="+">
+              </button>
+    <form id="current" method="POST" action="{% url 'add-job' %}" class="flex justify-start grid sm:grid-cols-3 xl:grid-cols-4">
+    {% csrf_token%}
+    {{ j_form.non_field_errors }}
+    <div class="mr-5 mt-2">
+        {{ j_form.designation.errors }}
+        <label class="text-gray-400" for="{{ j_form.designation.id_for_label }}">Role</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.designation}}
+    </div> 
+    <div class="mr-5 mt-2">
+        {{ j_form.organization.errors }}
+        <label class="text-gray-400" for="{{ j_form.organization.id_for_label }}">Organization</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.organization}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.start_date.errors }}
+        <label class="text-gray-400" for="{{ j_form.start_date.id_for_label }}">Start Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.start_date}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.end_date.errors }}
+        <label class="text-gray-400" for="{{ j_form.end_date.id_for_label }}">Start Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.end_date}}
+    </div>
+    <div class="mr-5 mt-2 col-span-2">
+        {{ j_form.description.errors }}
+        <label class="text-gray-400" for="{{ j_form.description.id_for_label }}">Description</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.description}}
+    </div>
+    <input class="hidden" type="submit">
+    </form>
+    <form method="POST" action="{% url 'add-job' %}" id="extra1" class="hidden flex justify-start grid sm:grid-cols-3 xl:grid-cols-4">
+    {% csrf_token%}
+    {{ j_form.non_field_errors }}
+    <div class="mr-5 mt-2">
+        {{ j_form.designation.errors }}
+        <label class="text-gray-400" for="{{ j_form.designation.id_for_label }}">Role</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.designation}}
+    </div> 
+    <div class="mr-5 mt-2">
+        {{ j_form.organization.errors }}
+        <label class="text-gray-400" for="{{ j_form.organization.id_for_label }}">Organization</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.organization}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.start_date.errors }}
+        <label class="text-gray-400" for="{{ j_form.start_date.id_for_label }}">Start Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.start_date}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.end_date.errors }}
+        <label class="text-gray-400" for="{{ j_form.end_date.id_for_label }}">End Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.end_date}}
+    </div>
+    <div class="mr-5 mt-2 col-span-2">
+        {{ j_form.description.errors }}
+        <label class="text-gray-400" for="{{ j_form.description.id_for_label }}">Description</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.description}}
+    </div>
+    <input class="hidden" type="submit">
+    </form>
+    <form id="extra2" method="POST" action="{% url 'add-job' %}" class="hidden flex justify-start grid sm:grid-cols-3 xl:grid-cols-4">
+    {% csrf_token%}
+    {{ j_form.non_field_errors }}
+    <div class="mr-5 mt-2">
+        {{ j_form.designation.errors }}
+        <label class="text-gray-400" for="{{ j_form.designation.id_for_label }}">Role</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.designation}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.organization.errors }}
+        <label class="text-gray-400" for="{{ j_form.organization.id_for_label }}">Organization</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.organization}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.start_date.errors }}
+        <label class="text-gray-400" for="{{ j_form.start_date.id_for_label }}">Start Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.start_date}}
+    </div>
+    <div class="mr-5 mt-2">
+        {{ j_form.end_date.errors }}
+        <label class="text-gray-400" for="{{ j_form.end_date.id_for_label }}">End Date</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.end_date}}
+    </div>
+    <div class="mr-5 mt-2 col-span-2">
+        {{ j_form.description.errors }}
+        <label class="text-gray-400" for="{{ j_form.description.id_for_label }}">Description</label><br>
+        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+        {{j_form.description}}
+    </div>
+    <input class="hidden" type="submit">
+    </form>
+</div>
+<div>
+<div class="mt-44 bg-footer h-72 flex items-end justify-between pb-10 px-20">
+      <div class="flex flex-col items-center">
+        <img class="h-24 w-24" src="{% static 'img/alumni-portal-logo.svg' %}" alt="">
+        <p class="text-white opacity-80 text-2xl mt-4">Alumni Portal</p>
+        <p class="text-white opacity-50 text-lg">IIT Guwahati</p>
+      </div >
+      
+      <div class="flex items-center justify-between w-96">
+        <svg width="60" height="60" viewBox="0 0 35 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.16257 0H15.9061L8.79687 12.2355L10.8622 16.1841L20.3355 0H27.826L35 12.4L27.7436 25H18.9861L26.229 12.5234L24.0395 8.84902L14.5384 25H7.17172L0 12.2344L7.16257 0Z" fill="white" fill-opacity="0.7"/>
+        </svg>
+        <p class="text-white opacity-50 text-xl"> Maintained by SWC</p>
+        <p class="text-white opacity-50 text-xl"> |</p>
+        <p class="text-white opacity-50 text-xl"> 2021</p>
+      </div>
+
+      <div class="flex justify-between w-60">
+        <div class="w-12 h-11 bg-white opacity-30 rounded-md"></div>
+        <div class="w-12 h-11 bg-white opacity-30 rounded-md"></div>
+        <div class="w-12 h-11 bg-white opacity-30 rounded-md"></div>
+      </div>
+        
+    </div>
+<script>
+var x=2;
+$(document).on('click', '#add_row', function () {
+    if(x==2){
+        $('#extra1').removeClass("hidden");x=1;
+    }
+    else {
+        $('#extra2').removeClass("hidden");
+        console.log("second");x=0;
+    }
+});
+submitForms = function(){
+    document.forms["form1"].submit();
+    document.forms["current"].submit();
+    if(x<2)document.forms["extra1"].submit();
+    if(x<1)document.forms["extra2"].submit();
+}
+</script>
+</body>
+</html>
+     
