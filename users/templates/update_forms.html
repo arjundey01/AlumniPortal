@@ -1,18 +1,21 @@
-<form method="POST" class="update_ex_form" style="display: none;">
+<form method="POST" class="update_ex_form bg-white p-5" style="display: none;">
   {%csrf_token%}
   {{e_form}}
   {% if user == curr_user.user %}
   <button class="btn btn-outline-info submit_update" type="submit">Submit</button> 
   {% endif %}
 </form>
-<form method="POST" class="update_job_form" style="display: none;">
+<form method="POST" class="update_job_form bg-white p-5" style="display: none;">
   {%csrf_token%}
-  {{j_form}}
+  {% comment %} {{j_form}} {% endcomment %}
+  <span id="desc">{{j_form.description}}<span>
   {% if user == curr_user.user %}
-  <button class="btn btn-outline-info submit_update" type="submit">Submit</button> 
+  <button class="h-5 w-5 submit_update" type="submit">Submit</button> 
   {% endif %}
 </form>
-
+{% block scripts %}
+<script src="/static/scripts/profile.js"></script>
+{% endblock %}
 {% comment %} <form method="POST" class="update_p_form" >
   {%csrf_token%}
   {{ p_form.as_myformat }}

@@ -16,6 +16,14 @@
       .font-blue{
     color:#4150D7;
     }
+    @media(max-width:1024px){
+      #content{
+        width:100%;
+        padding-left: 3.5%;
+        padding-top: 8px;
+        padding-right:3.5%;
+      }
+    }
     </style>
 {% endblock%}
 {% block content %}
@@ -30,12 +38,12 @@
         <button class="bg-white rounded mr-1.5  h-9 w-9 justify-self-end"><img src="/static/img/dots-vertical.svg" alt="" class="w-9 h-5"></button>
       </div>
     </div>
-    <div class="grid grid-rows-2  grid-flow-col w-full bg-white  px-5 pt-5 pb-9">
-        <div class="grid grid-cols-12">
-            <div class="col-span-3 xl:col-span-2 -mt-11 ">
-                <img src="/static/img/Photo.png" class="rounded-full h-32 inline absolute border-8 bg-white border-white">
+    <div class="grid grid-rows-3 sm:grid-rows-2  grid-flow-col w-full bg-white  px-5 pt-5 pb-9 overflow-visible">
+        <div class="grid row-span-2 sm:row-span-1 grid-cols-12">
+            <div class="col-span-12 sm:col-span-3 xl:col-span-2 -mt-11 ">
+                <img src="/static/img/Photo.png" class="rounded-full h-32 inline sm:absolute border-8 bg-white border-white">
             </div>
-            <div class="col-span-6 xl:col-span-7">               
+            <div class="col-span-12 sm:col-span-6 xl:col-span-7">               
                 <div class=" font-medium text-xl mb-1">{{curr_user.name }}</div>
                 {% if curr_user.is_alumni%}
                 <img src="/static/img/iitg.svg" class="rounded-full inline h-8"><span class="text-xs font-medium">{{curr_user.branch}}<span>
@@ -44,11 +52,11 @@
                 <div class="text-xs font-medium">{{curr_user.branch}} | {{curr_user.current_year}} Year</div>
                 {% endif %}
             </div>  
-            <div class="col-span-3 flex justify-end">               
+            <div class="col-span-12 sm:col-span-3 flex justify-start sm:justify-end">               
                 <button class="custom-button rounded p-1 text-sm font-normal h-8 w-44 justify-self-end">Follow</button>
             </div>
         </div>
-        <div class="grid mt-5">
+        <div class="grid  mt-5">
                 <div class="col">
                 <div class="text-lg font-medium mb-1">About</div>
                 <div class="text-sm">{{curr_user.description}} </div>
@@ -62,22 +70,22 @@
     <!--heading-->
     <div class="text-lg font-medium">
         <span >Experience</span>
-       <span>{% if user == curr_user.user %}
+       <span>
+       {% if user == curr_user.user %}
           <button id="new_experience" val="show">
             <img class="h-2 inline" src="/static/img/add.svg" alt="+">
           </button>
-          {% endif %}
+        {% endif %}
         </span>
     </div>
     <!--content-->
     <div class="text-lg ">
-        <ul class="grid grid-cols-3">
+        <ul class="grid grid-cols-1sm:grid-cols-3">
           {% for experience in experiences %}
           <li class="user-experience grid grid-cols-12 mt-3 {% if forloop.counter > 3%}hidden{% endif %}" value="{{experience.id}}">
             <img src="/static/img/company.svg" class="rounded-full inline h-16 col-span-3">
             <div class="col-span-9">
-
-            <p class="user-experience text-base font-medium"> {{experience.experience}}</p> 
+            <p id="role{{experience.id}}"class=" user-experience text-base font-medium"> {{experience.experience}}</p> 
             <span class="user-experience text-xs"> 
               {{experience.get_start_date|date:"M Y" }}-
               {% if  experience.get_end_date %}
@@ -180,8 +188,9 @@
 </div>
 {% endblock %}
 {% block overlay %}
-  {% include 'update_forms.html' %}
   {% include 'add_form.html' %}
+  {% include 'update_forms.html' %}
+  
 {% endblock %}
 {% block scripts %}
 <script src="/static/scripts/profile.js"></script>

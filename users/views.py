@@ -1,4 +1,5 @@
-from django.http.response import Http404
+from json.encoder import JSONEncoder
+from django.http.response import Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -12,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from post.views import feed
 from .forms import *
 import json
+from django.core import serializers
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 def home(request):
@@ -35,6 +37,7 @@ def details(request):
     context['edu_form']=EducationForm()
     context['p_form']=ProjectForm()
     context['j_form']=PastJobsForm()
+    print(request)
     return render(request, 'details.html',context)
 
 def callback(request):
@@ -179,6 +182,18 @@ def update_account(request):
 
 @login_required(login_url='/signin/')
 def experience(request):
+    if request.is_ajax and request.method == 'POST':
+        e_form=ExperienceForm(request.POST)
+        if e_form.is_valid():
+            e=e_form.save(commit=False)
+            ser_instance=serializers.serialize('json',[e])
+            e.user=request.user.account
+            e.save()
+            messages.success(request, 'Your Experience has been Updated!')
+            return JsonResponse({'instance':ser_instance},status=200)
+        else:
+            messages.error(request,"Some Error Occured!")
+            return JsonResponse({"error":e_form.errors},status=400)
     if request.method == 'POST':
         e_form=ExperienceForm(request.POST)
         if e_form.is_valid():
@@ -192,6 +207,18 @@ def experience(request):
 
 @login_required(login_url='/signin/')
 def pastjobs(request):
+    if request.is_ajax and request.method == 'POST':
+        j_form=PastJobsForm(request.POST)
+        if j_form.is_valid():
+            j=j_form.save(commit=False)
+            ser_instance=serializers.serialize('json',[j])
+            j.user=request.user.account
+            j.save()
+            messages.success(request, 'Your Experience has been Updated!')
+            return JsonResponse({'instance':ser_instance},status=200)
+        else:
+            messages.error(request,"Some Error Occured!")
+            return JsonResponse({"error":j_form.errors},status=400)
     if request.method == 'POST':
         j_form=PastJobsForm(request.POST)
         if j_form.is_valid():

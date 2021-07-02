@@ -21,7 +21,7 @@
     </div>
     <input type="submit">
 </form>
-<form method="POST" action="{% url 'add-job' %}" class="mx-16 add_job bg-white flex grid grid-cols-3" style="display: none;">
+<form method="POST" action="{% url 'add-job' %}" class="p-5 mx-16 add_job bg-white flex grid grid-cols-3" style="display: none;">
     {% csrf_token%}
     {{ j_form.non_field_errors }}
     <div class="mr-5 mt-2">
