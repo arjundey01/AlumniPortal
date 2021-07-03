@@ -6,7 +6,7 @@ app_name="groups"
 
 urlpatterns=[
     path('', views.all_groups ,name='groups'),
-    path('<id>/',views.group,name='group'),
+    path('page/<id>/',views.group,name='group'),
     path('create/', csrf_exempt(views.create_group) ,name='create'),
     path('delete/<id>/', csrf_exempt(views.delete_group) ,name='delete'),
     path('rename/<id>/', csrf_exempt(views.rename_group) ,name='rename'),

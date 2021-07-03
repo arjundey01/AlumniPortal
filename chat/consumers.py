@@ -24,7 +24,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data=json.loads(text_data)
-        print(data)
         if data['type']=='message':
             resp={}
             resp['username']=self.scope['user'].username
@@ -42,18 +41,30 @@ class ChatConsumer(AsyncWebsocketConsumer):
         elif data['type']=='seen':
             await self.update_seen()
             await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'msg_seen',
-                'username':self.scope['user'].username
-            }
-        )
+                self.room_group_name,
+                {
+                    'type': 'msg_seen',
+                    'username':self.scope['user'].username
+                }
+            )
+        elif data['type']=='typing':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'msg_typing',
+                    'username':self.scope['user'].username
+                }
+            )
         
 
     async def msg_seen(self,event):
         if self.scope['user'].username!=event['username']:
             await self.send(json.dumps({'type':'seen','username':event['username']}))
 
+    async def msg_typing(self,event):
+        if self.scope['user'].username!=event['username']:
+            await self.send(json.dumps({'type':'typing','username':event['username']}))
+    
     async def chat_message(self, event):
         message = event['message']
         message=json.loads(message)
@@ -62,6 +73,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_chat(self,data):
+        print('saving chat',data)
         chat=Chats.objects.get(pk=self.room_name)
         chat_data=json.loads(chat.data)
         data['id']=chat_data[-1]['id']+1 if len(chat_data) else 0

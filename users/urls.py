@@ -12,6 +12,7 @@ urlpatterns = [
   path('signup-details', views.signup_details, name='signup-details'),
   path('update-details', views.update_details, name='update-details'),
   path('callback', views.callback, name='callback'),
+  path('update-details',views.update_details),
   #path('test',views.test),
   #path('test-signup/<name>/<email>',views.test_signup),
   path('test-signin/<name>',views.test_signin),
@@ -36,5 +37,10 @@ urlpatterns = [
   path('account/update/job/<pk>/', views.update_job, name='update-job'),
 
   path('account/delete/<type>/<pk>', views.delete_item, name='delete-item'),
+
+  path('search-sugg/',views.search_sugg, name="search-sugg"),
+  path('search/',views.search_res,name="search"),
+
+  path('get-suggestions/',views.suggestions, name = 'suggestions')
 
 ]

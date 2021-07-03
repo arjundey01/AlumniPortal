@@ -1,4 +1,5 @@
 from django import template
+from datetime import datetime
 
 register = template.Library()
 
@@ -19,6 +20,10 @@ def chat_other_name(value, arg):
 
     return name
 
+@register.filter(name='first_word')
+def first_word(value):
+    return value.split(' ')[0]
+
 @register.filter(name='chat_other_img')
 def chat_other_img(value, arg):
     url = None
@@ -27,3 +32,7 @@ def chat_other_img(value, arg):
             url = user.profile_img_url
 
     return url
+
+@register.filter(name='time_from_iso')
+def time_from_iso(value):
+    return datetime.fromisoformat(value).strftime("%I:%M %p")

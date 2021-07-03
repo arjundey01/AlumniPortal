@@ -1,0 +1,75 @@
+<form id="search-form" class="bg-accent-faded h-10 md:w-1/3 w-1/2 flex items-center ml-4 sm:ml-8 md:ml-16 rounded-sm relative" action="/search/" method="GET">
+    <input type="text" name="query" id="search-input" placeholder="Search..." class="flex-1 ml-4 bg-transparent min-w-0" autocomplete="off">
+    <img src="/static/img/search.svg" alt="" class="h-full w-10 px-2 bg-accent rounded-sm">
+    <div id="search-sugg-wrp" class="absolute w-screen -ml-4 sm:w-full sm:ml-0 bg-white shadow-lg top-10 pb-2 hidden">      
+        
+    </div>
+</form>
+
+<template id="search-sugg-cat-tmp">
+    <div class="border-t-2 border-gray-200 border-solid pl-8 pr-5 pt-4 pb-6">
+        <p class="search-sugg-cat text-gray-400 text-sm my-1">GROUPS</p>
+        <div class="search-sugg-entries">
+
+        </div>
+    </div>
+</template>
+
+<template id="search-sugg-entry-tmp">
+    <div>
+        <a class="search-sugg-url bg-gray-100 mt-2.5 flex items-center h-16 px-4 rounded-lg cursor-pointer">
+            <img src="{{user.account.profile_img_url}}" class="search-sugg-img h-9 w-9 rounded-full object-cover">
+            <div class="ml-2">
+                <p class="search-sugg-title text-sm">UX/UI Designer</p>
+                <p class="search-sugg-subt text-xs">126 members</p>
+            </div>
+        </a>
+    </div>
+</template>
+
+<script>
+    $(document).ready(function(){
+        $('#search-input').on('keyup', function(e){
+            if(e.keyCode==13){
+                $('#search-form').submit();
+            }else{
+                $.ajax({
+                    url:'/search-sugg/',
+                    data:{'query':$(this).val()},
+                    dataType:'json',
+                    success: (data)=>{
+                        if(data.query!=$(this).val())return;
+                        console.log(data);
+                        $('#search-sugg-wrp').removeClass('hidden');
+                        $('#search-sugg-wrp').html("");
+                        for(const cat in data.results){
+                            if(!data.results[cat].length)continue;
+                            const tempWrp = $('#search-sugg-cat-tmp')[0];
+                            const d = tempWrp.content.cloneNode(true);
+                            $('.search-sugg-cat',d).text(cat.toUpperCase());
+                            let ctr=1;
+                            for(const entry of data.results[cat]){
+                                const tmp = $('#search-sugg-entry-tmp')[0];
+                                const p = tmp.content.cloneNode(true);;
+                                $('.search-sugg-title',p).text(entry.title);
+                                $('.search-sugg-subt',p).text(entry.subtitle);
+                                $('.search-sugg-img',p).attr('src',entry.img);
+                                $('.search-sugg-url',p).attr('href',entry.url);
+                                $('.search-sugg-entries',d).append(p);
+                                ctr++;
+                                if(ctr>2)break;
+                            }
+                            $('#search-sugg-wrp').append(d);
+                        }
+                    },
+                    error: (err)=>{
+                        console.log(err);
+                    }
+                })
+            }
+        })
+        $(window).on('click',function(e){
+            $('#search-sugg-wrp').addClass('hidden');
+        })
+    });
+</script>

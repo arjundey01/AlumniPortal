@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{%block head%}
+<style>
+    .search-tab-active{
+        border-bottom: 4px #4150D7 solid;
+        margin-top: 4px;
+    }
+</style>
+{%endblock%}
+
+{% block content %}
+<div class="flex bg-white mt-5 h-10">
+    <div class="search-tab mx-8 cursor-pointer flex items-center text-gray-500 search-tab-active" data-id="alumni" >Alumni</div>
+    <div class="search-tab mx-8 cursor-pointer flex items-center text-gray-500" data-id="students" >Students</div>
+    <div class="search-tab mx-8 cursor-pointer flex items-center text-gray-500" data-id="groups" >Groups</div>
+</div>
+
+
+<div id="search-alumni" class="search-tab-content rounded w-full bg-white py-4 px-8 shadow-lg my-10">
+    {% for res in results.alumni %}
+    <div class="flex justify-between items-center py-3">
+        <a href="{{res.url}}" class="flex items-center justify-start">
+            <img src="{{res.img}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
+            <div class="mx-3">
+                <p class="mt-1 leading-3">{{res.title}}</p>
+                <p class="text-xs mt-1">{{res.subtitle}}</p>
+            </div>
+        </a>
+        <div>
+            {% if res.followed %}
+            <button class="bg-accent py-1 px-7 text-sm text-white rounded" >Following</button>
+            {% else %}
+            <button class="follow-button bg-accent py-1 px-7 text-sm text-white rounded" data-user="{{res.username}}">Follow</button>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="flex text-lg text-gray-500 justify-center my-10">
+        No Results 
+    </div>
+    {% endfor %}
+</div>
+
+
+<div id="search-students" class="search-tab-content rounded w-full bg-white py-4 px-8 shadow-lg my-10 hidden">
+    {% for res in results.student %}
+    <div class="flex justify-between items-center py-3">
+        <a href="{{res.url}}" class="flex items-center justify-start">
+            <img src="{{res.img}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
+            <div class="mx-3">
+                <p class="mt-1 leading-3">{{res.title}}</p>
+                <p class="text-xs mt-1">{{res.subtitle}}</p>
+            </div>
+        </a>
+        <div>
+            {% if res.followed %}
+            <button class="bg-accent py-1 px-7 text-sm text-white rounded" >Following</button>
+            {% else %}
+            <button class="follow-button bg-accent py-1 px-7 text-sm text-white rounded" data-user="{{res.username}}">Follow</button>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="flex text-lg text-gray-500 justify-center my-10">
+        No Results 
+    </div>
+    {% endfor %}
+</div>
+
+
+<div id="search-groups" class="search-tab-content rounded w-full bg-white py-4 px-8 shadow-lg my-10 hidden">
+    {% for res in results.group %}
+    <div class="flex justify-between items-center py-3">
+        <a href="{{res.url}}" class="flex items-center justify-start">
+            <img src="{{res.img}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
+            <div class="mx-3">
+                <p class="mt-1 leading-3">{{res.title}}</p>
+                <p class="text-xs mt-1">{{res.subtitle}}</p>
+            </div>
+        </a>
+        <div>
+            {% if res.joined %}
+            <button class="bg-accent py-1 px-7 text-sm text-white rounded" >Joined</button>
+            {% else %}
+            <button class="join-group bg-accent py-1 px-7 text-sm text-white rounded" data-id="{{res.id}}">Join Group</button>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="flex text-lg text-gray-500 justify-center my-10">
+        No Results 
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    $('.search-tab').on('click', function(e){
+        $('.search-tab').removeClass('search-tab-active');
+        $(this).addClass('search-tab-active');
+        $('.search-tab-content').addClass('hidden');
+        $(`#search-${$(this).attr('data-id')}`).removeClass('hidden');
+    })
+</script>
+{% endblock %}

@@ -9,6 +9,7 @@ from .forms import PostForm, CommentForm
 from django.views.generic.detail import DetailView
 from users.models import Account
 from groups.models import Group
+from time import sleep
 # Create your views here.
 
 def feed(request):
@@ -62,16 +63,16 @@ def update_post(request, pk):
         return render(request, 'alumni_response/post_update.html', context)
 
 
-def delete_post(request,pk):
+def delete_post(request):
     if request.user.is_authenticated:
-        try:
-            post=Post.objects.get(pk=pk)
+        if request.method == 'POST':
+            post=get_object_or_404(Post,pk=request.POST.get('id'))
+            if post.author!=request.user.account:
+                return HttpResponse('forbidden', status=403)
             post.delete()
             return HttpResponse('success')
-        except Post.DoesNotExist:
-            return HttpResponse('doesNotExist',status=500)
-    else:
-        return HttpResponse('notLoggedIn',status=500)
+        return HttpResponse('badRequest', status=400)
+    return HttpResponse('notLoggedIn',status=500)
 
 import json
 from urllib.parse import unquote
@@ -84,14 +85,6 @@ def upload_image_view(request):
     fileurl=unquote(fs.url(filepath))
     return JsonResponse({'success':1,'file':{'url':fileurl,'path':filepath}})
 
-def feign_image_upload(request):
-    resp=upload_image_view(request)
-    fs=FileSystemStorage()
-    filename=json.loads(resp.content)['file']['path']
-    print(filename)
-    fs.delete(filename)
-    return resp
-
 def upload_file_view(request):
     f=request.FILES['file']
     size=int(request.POST['size'])
@@ -100,18 +93,9 @@ def upload_file_view(request):
     fileurl='posts/'+ request.user.username + '/'
     filepath=fs.save(fileurl + filename,f)
     fileurl=unquote(fs.url(filepath))
-    return JsonResponse({'success':1,'file':{'url':fileurl,"size":size,"name":str(f),"extension":"ext", "path": filepath}})
-    # return redirect('alumni_response:mypage')
+    return JsonResponse({'success':1,'file':{'url':fileurl,"size":size,"name":str(f),"extension":fileurl.split('.')[-1], "path": filepath}})
 
-def feign_file_upload(request):
-    resp=upload_file_view(request)
-    fs=FileSystemStorage()
-    filename=json.loads(resp.content)['file']['path']
-    fs.delete(filename)
-    return resp
-# class PostDetailView(DetailView):
-#     model=Post
-#     context_object_name='post'
+
 import datetime
 def get_feed(user,tagNames=[]):
     feed=[]
@@ -171,7 +155,7 @@ class PostSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
     like_count = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField()
-    datetime=serializers.DateTimeField(format="%d %b,%Y %H:%M:%S")
+    datetime=serializers.DateTimeField(format="%d %b,%Y %I:%M %p")
     class Meta:
         model = Post
         fields = ['author','like_count','datetime','content','id','comment_count']
@@ -181,6 +165,7 @@ class PostSerializer(serializers.ModelSerializer):
             author['name']=(' ').join([ x.capitalize() for x in post.author.name.split()])
             author['profile_img']= post.author.profile_img_url
             author['username']=post.author.user.username
+            author['desg']=post.author.designation.title + " | " + post.author.organization.name
             return author
         else:
             return 'Anonymous'
@@ -190,6 +175,7 @@ class PostSerializer(serializers.ModelSerializer):
         return len(post.comments.all())
     def get_id(self,post):
         return post.pk
+
 
 
 
@@ -209,6 +195,7 @@ def load_feed(request,index):
     posts=[]
     if len(feed)>index*load_count:
         for post in feed[index*load_count:min(len(feed),load_count*(index+1))]:
+            print(post.content)
             data=PostSerializer(post).data
             data['is_liked']=user.account in post.likes.all()
             posts.append(data)

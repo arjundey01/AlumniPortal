@@ -6,5 +6,6 @@ urlpatterns = [
     path(r'start/',views.start_chat),
     path(r'online/',views.get_online),
     path(r'last-active/',views.get_last_active),
-    path(r'',views.chats,name='chats')
+    path(r'',views.chats,name='chats'),
+    path(r'get-convs/',views.get_convs),
 ]
