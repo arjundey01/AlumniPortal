@@ -1,0 +1,8 @@
+<div class="faq-ask rounded w-full bg-white py-7 px-5 shadow-lg my-5 flex justify-between items-center" style="display: none;">
+    <form id="question_form" action="{% url 'faq:create_question' %}" class="flex items-center flex-grow" method="POST">
+        {% csrf_token %}
+        <img class="h-5 w-5" src="/static/img/pencil.svg" alt="">
+        <input name="content" type="text" id="question-text" class="text-lg text-gray-600 ml-5 hidden md:block flex-grow" placeholder="Ask a Question" contenteditable>
+    </form> 
+    <button id="ask_button" class="bg-accent py-1 px-4 text-white text-md rounded">Ask</button>
+</div>
