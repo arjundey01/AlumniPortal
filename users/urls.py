@@ -22,7 +22,7 @@ urlpatterns = [
   #path('account',views.account),
   path('account/<username>', views.profile , name='account'),
   path('details/',views.details,name="details"),
-
+  path('update/profile/',views.updateProfile,name="update-profile"),
   path('account/add/experience/', views.experience, name='add-experience'),
   path('account/add/project/', views.project, name='add-project'),
   path('account/add/education/', views.education, name='add-education'),
@@ -33,7 +33,7 @@ urlpatterns = [
   path('account/update/experience/<pk>/', views.update_ex, name='update-experience'),
   path('account/update/project/<pk>/', views.update_p, name='update-project'),
   path('account/update/edu/<pk>/', views.update_edu, name='update-education'),
-  path('account/update/job/<pk>/', views.update_job, name='update-job'),
+  path('account/update/job/', views.update_job, name='update-job'),
 
   path('account/delete/<type>/<pk>', views.delete_item, name='delete-item'),
 

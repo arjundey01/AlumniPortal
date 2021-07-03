@@ -1,16 +1,50 @@
+{% comment %} <form method="POST" class="update_job_form bg-white p-5" style="display: none;">
+  {% csrf_token %}
+ {{j_form}}
+  {% if user == curr_user.user %}
+  <button class="h-5 w-5 submit_update" type="submit">Submit</button> 
+  {% endif %}
+</form> {% endcomment %}
+    <div data-id=""  class="update_job_form  bg-white mx-9 sm:ml-16 mr-16 lg:mr-64  mt-3 overflow-hidden" style="display: none;">
+        <form  method="PUT" action="{% url 'add-job'%}" id="formedit" class="flex justify-start grid md:grid-cols-3 xl:grid-cols-4 p-5">
+            {% csrf_token%}
+            {{ j_form.non_field_errors }}
+            <div class="mr-5 mt-2 ">
+                {{ j_form.designation.errors }}
+                <label class="text-gray-400" for="{{ j_form.designation.id_for_label }}">Role</label><br>
+                {{j_form.designation}}
+            </div>
+            <br class="sm:hidden">
+            <div class=" mr-5 mt-2">
+                {{ j_form.organization.errors }}
+                <label class="text-gray-400" for="{{ j_form.organization.id_for_label }}">Organization</label><br>
+                {{j_form.organization}}
+            </div><br class="sm:hidden">
+            <div class="mr-5 mt-2">
+                {{ j_form.start_date.errors }}
+                <label class="text-gray-400" for="{{ j_form.start_date.id_for_label }}">Start Date</label><br>
+                {{j_form.start_date}}
+            </div><br class="sm:hidden">
+            <div class="mr-5 mt-2">
+                {{ j_form.end_date.errors }}
+                <label class="text-gray-400" for="{{ j_form.end_date.id_for_label }}">End Date</label><br>
+                {{j_form.end_date}}
+            </div>
+            <div class=" mr-5 mt-2 col-span-2">
+                {{ j_form.description.errors }}
+                <label class="text-gray-400" for="{{ j_form.description.id_for_label }}">Description</label><br>
+                {{j_form.description}}
+            </div>
+            <div class="">
+                <button type="submit" name="submit" value="submit" class="bg-accent w-28 text-white rounded-md py-1 px-0.5 mt-7">Add</button>
+            </div>
+        </form>
+    </div>
 <form method="POST" class="update_ex_form bg-white p-5" style="display: none;">
-  {%csrf_token%}
+  {% csrf_token %}
   {{e_form}}
   {% if user == curr_user.user %}
   <button class="btn btn-outline-info submit_update" type="submit">Submit</button> 
-  {% endif %}
-</form>
-<form method="POST" class="update_job_form bg-white p-5" style="display: none;">
-  {%csrf_token%}
-  {% comment %} {{j_form}} {% endcomment %}
-  <span id="desc">{{j_form.description}}<span>
-  {% if user == curr_user.user %}
-  <button class="h-5 w-5 submit_update" type="submit">Submit</button> 
   {% endif %}
 </form>
 {% block scripts %}
@@ -34,4 +68,31 @@
   {% endif %}
 </form> {% endcomment %}
 
-
+<script>
+$('#formedit').on('submit', function(e){
+    e.preventDefault();
+    $.ajax({
+            type : "PUT", 
+            url:"{% url 'update-job'%}",
+            data: {
+            designation: $('#id_designation').val(),
+            organization: $('#id_organization').val(),
+            description: $('#id_description').val(),
+            start_date: $('#id_start_date').val(),
+            end_date: $('#id_end_date').val(),
+            id:$('.update_job_form').attr('data-id')
+            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+            dataType: "json",
+            },
+            cache: false,
+            success: function(data){
+            $('#formedit')[0].reset();
+            alert("submission success") /* response message */
+            $("#overlay").css('display', 'none');
+            },
+            failure: function() {
+                alert("submission failed")
+            }
+        });
+    });  
+</script>
