@@ -22,7 +22,7 @@ def create_group(request):
         form = GroupForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('groups')
+            return redirect('/groups/')
     return HttpResponse('Bad Request',status=400)
 
 def delete_group(request,id):

@@ -1,183 +1,250 @@
 {% extends "base.html" %}
 {% load extra_tags%}
-{% block style %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+{% block head %}
     <link rel="stylesheet" href="/static/stylesheets/style-chat.css">
 {% endblock %} 
+
 {% block content %}
-        
-    <div class="chatbox-wrapper">
-        <div class="row">
-            <section class="convos col-lg-3 col-md-3">
-                {% for chat in convs %}
-                <a href="{% url 'chatroom' chat.group_name%}">
-                    <div class="well conv">
-                        <img src="{{chat|chat_other_img:user}}">
-                        <div>
-                            <p>{{chat|chat_other_name:user}}</p>
-                            <span>
-                                {% if chat.last_msg.username != user.username %}
-                                    {{chat|chat_other_name:user}}
-                                {% else %}
-                                    You
-                                {% endif %}
-                                : {{chat.last_msg.text}}
-                            </span>
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
-            </section>
-            <section class="chatbox col-lg-9 col-md-9 col-sm-12 col-xs-12">
-                <div class="chatbox-header well">
-                    <img src="{{room_icon}}" alt="">
-                    <div>
-                        <p>{{title}}</p>
-                        <span>{{subtitle}}</span>
-                    </div>
-                </div>
-                <div class="chatbox-messages well">
-                    <div class="chatbox-dummy-msg" style="height: 100%;">
-                        <div>
-                            <img src="{{room_icon}}" alt="">
-                        </div>
-                        <p>{{title}}</p>
-                        <p style="font-size: 14px; color: #999;">Start a conversation</p>
-                    </div>
-                    {% for message in data %}
 
-                    <div class="msg-wrapper {%if message.username == user.username%}msg-wrapper-self{%else%}msg-wrapper-other{%endif%}">
-                        <div class="msg-profile-img-wrapper"><img src="{{dp_urls|key:message.username}}"></div>
-                        <div class="msg">
-                            <p class="msg-text">{{message.text}}</p>
-                            <div class="msg-info">
-                                <img src="/static/img/read.svg" alt="" 
-                                {% if message.username == user.username and message.id >= seen|key:other%}style="display:none;"{% endif %}>
-                                <span>18:30</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {% endfor %}
+<section class="chatbox w-full overflow-hidden lg:rounded bg-white flex flex-col h-full">
+    <div class="chatbox-header w-full flex items-center py-3 border-b-2 border-solid border-gray-200">
+        <img class="rounded-full h-12 w-12 object-cover mx-5" src="{{room_icon}}" alt="">
+        <div>
+            <p class="text-lg leading-5">{{title}}</p>
+            <div class="flex items-center">
+                <span class="text-sm text-gray-600">{{last_active}}</span>
+                <div id="msg-typing" class="opacity-0 mx-2 mt-1 flex items-center w-5 h-4">
+                    <img src="/static/img/typing.gif" class="h-28 object-cover" alt="">
                 </div>
-
-                <div class="chatbox-footer well">
-                    <div class="input-group input-group-md">
-                        <input type="text" class="form-control" id="chatbox-input"placeholder="Write something here...">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" id="chatbox-send">Send</button>
-                        </span>
-                    </div>
-                </div>
-            </section>
+            </div>
         </div>
-    </div>  
+    </div>
+    <div class="chatbox-messages px-4 lg:px-10 overflow-scroll flex-grow">
+        <div class="chatbox-dummy-msg h-full flex flex-col justify-center items-center" >
+            <img class="rounded-full h-16 w-16 object-cover my-2.5" src="{{room_icon}}" alt="">
+            
+            <p class="text-xl">{{title}}</p>
+            <p class="text-md text-gray-500 leading-5">{{subtitle}}</p>
+            {% if data|length == 0%}
+            <p class="text-sm text-gray-400 mt-3">Start a conversation</p>
+            {% endif %}
+        </div>
+        {% for message in data %}
+        {% if message.date %}
+        <div class="w-full my-5 flex justify-center">
+            <p class="msg-date text-sm text-gray-500 font-light" data-iso="{{message.time}}">{{message.date}}</p>
+        </div>
+        {% elif message.username == user.username %}
+        <div class="msg-wrapper msg-wrapper-self w-full flex justify-end my-2.5">
+            <div class="msg flex flex-col items-end">
+                <div class="flex">
+                    <p data-id="{{message.id}}" class="msg-text bg-accent py-2 px-4 rounded-lg text-white">{{message.text}}</p>
+                    <div></div>
+                </div>
+                <div class="msg-info flex mt-0.5 items-center">
+                    <span class="text-xs text-gray-500 font-light mr-2">{{message.time|time_from_iso}}</span>
+                    {% if message.id > seen|key:other%}
+                    <img src="/static/img/delivered.svg" class="h-5 w-5" alt="">
+                    {% else %}
+                    <img src="/static/img/read.svg" class="h-5 w-5" alt="">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="msg-wrapper msg-wrapper-self w-full flex my-2.5">
+            <img src="{{dp_urls|key:message.username}}" class="w-10 h-10 rounded-full object-cover mr-3">
+            <div class="msg flex flex-col">
+                <p class="msg-text bg-accent-faded py-2 px-4 rounded-lg">{{message.text}}</p>
+                <span class="text-xs text-gray-500 font-light mt-1">{{message.time|time_from_iso}}</span>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="chatbox-footer py-2 sm:py-5 flex items-center px-2 sm:px-10 border-t-2 border-solid border-gray-100">
+        <div class="rounded-lg border-2 border-gray-200 flex flex-grow items-center border-solid p-3 min-w-0">
+            <input type="text" class="text-lg flex-grow min-w-0 focus:outline-none bg-transparent flex-shrink" id="chatbox-input" placeholder="Write something here...">
+            <!-- <svg width="26" height="26" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-20 cursor-pointer flex-shrink-0">
+                <path d="M18.5 9.91553L10.3446 17.9086C9.3455 18.8878 7.99043 19.4379 6.57749 19.4379C5.16455 19.4379 3.80948 18.8878 2.81039 17.9086C1.81129 16.9294 1.25 15.6013 1.25 14.2165C1.25 12.8317 1.81129 11.5036 2.81039 10.5244L10.9658 2.53127C11.6319 1.87846 12.5352 1.51172 13.4772 1.51172C14.4192 1.51172 15.3225 1.87846 15.9886 2.53127C16.6547 3.18408 17.0289 4.06948 17.0289 4.99269C17.0289 5.9159 16.6547 6.8013 15.9886 7.45411L7.82432 15.4472C7.49129 15.7736 7.0396 15.957 6.56862 15.957C6.09764 15.957 5.64595 15.7736 5.31291 15.4472C4.97988 15.1208 4.79279 14.6781 4.79279 14.2165C4.79279 13.7549 4.97988 13.3122 5.31291 12.9858L12.8471 5.61022" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>                 -->
+        </div>
+        <div id="chatbox-send" class="ml-2 sm:ml-5 cursor-pointer">
+            <svg width="56" height="56" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0.5" y="0.539062" width="32" height="31.8689" rx="4" fill="#4150D7"/>
+                <path d="M22.1673 10.832L14.834 18.1353" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22.1673 10.832L17.5007 24.1107L14.834 18.1353L8.83398 15.4796L22.1673 10.832Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>   
+        </div>
+    </div>
+</section>
+
     
     {{room_name|json_script:"room-name"}}
     {{user.username|json_script:"username"}}
     {{other|json_script:"other-member"}}
     {{dp_urls|json_script:"dp-urls"}}
-    <template id="tmp-msg">
-        <div class="msg-wrapper">
-            <div class="msg-profile-img-wrapper"><img src={{user.account.profile_img_url}}></div>
-            <div class="msg">
-                <p class="msg-text"></p>
-                <div class="msg-info">
-                    <img src="/static/img/read.svg" alt="">
-                    <span>18:30</span>
+    <template id="tmp-self-msg">
+        <div class="msg-wrapper msg-wrapper-self w-full flex justify-end my-2.5">
+            <div class="msg flex flex-col items-end">
+                <div class="flex">
+                    <p class="msg-text bg-accent py-2 px-4 rounded-lg text-white"></p>
+                    <div></div>
+                </div>
+                <div class="msg-info flex mt-0.5 items-center">
+                    <span class="msg-time text-xs text-gray-500 font-light mr-2">18:30</span>
+                    <img src="/static/img/delivered.svg" class="h-5 w-5" alt="">
                 </div>
             </div>
-            
         </div>
     </template>
-    <template id="tmp-msg-typing">
-        <div class="msg-wrapper msg-wrapper-other">
-            <div class="msg-profile-img-wrapper"><img src={{user.account.profile_img_url}}></div>
-            <div class="msg" style="padding: 0; height: 35px;">
-                <img src="/static/img/loading.gif" class="msg-typing-img">
+
+    <template id="tmp-other-msg">
+        <div class="msg-wrapper msg-wrapper-self w-full flex my-2.5">
+            <img src="" class="msg-profile-img w-10 h-10 rounded-full object-cover mr-3">
+            <div class="msg flex flex-col">
+                <p class="msg-text bg-accent-faded py-2 px-4 rounded-lg"></p>
+                <span class="msg-time text-xs text-gray-500 font-light mt-1">18:30</span>
             </div>
         </div>
     </template>
 
-    <script>
-        const username=JSON.parse(document.getElementById('username').textContent);
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        const dp_urls = JSON.parse(document.getElementById('dp-urls').textContent);
+    <template id="tmp-msg-date">
+        <div class="w-full my-5 flex justify-center">
+            <p class="msg-date text-sm text-gray-500 font-light" data-iso=""></p>
+        </div>
+    </template>
+{% endblock%}
+
+{% block right-pane %}
+<section class="convos w-full pt-2 bg-white mt-2.5 rounded">
+    <p class="text-lg font-medium my-4 ml-4">Messages</p>
+    <div class="w-full overflow-scroll mt-4">
+        {% for chat in convs %}
+        <a href="{% url 'chatroom' chat.group_name%}" class="conv relative flex items-center py-4 px-3 border-gray-200 
+        {% if not forloop.last %}border-b-2{% endif %}">
         
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/chat/'
-            + roomName
-            + '/'
-        );
-
-        chatSocket.onmessage = function(e) {
-            console.log(e);
-            const data = JSON.parse(e.data);
-            if(data.type=="message"){
-                let messages=$(".chatbox-messages")[0];
-                let temp = document.getElementById("tmp-msg");
-                let p = temp.content.cloneNode(true);
-                p.querySelector(".msg-text").innerHTML=data.text;
-                p.querySelector(".msg-profile-img-wrapper img").src=dp_urls[data.username];
-                p.querySelector(".msg-info img").style.display="none";
-                if(data.username==username)
-                    p.querySelector(".msg-wrapper").classList.add("msg-wrapper-self");
-                else{
-                    p.querySelector(".msg-wrapper").classList.add("msg-wrapper-other");
-                    if(document.visibilityState=="visible")chatSocket.send(JSON.stringify({
-                        'type':'seen'
-                    }));
-                }
-                messages.appendChild(p);
-                messages.scrollTop+=$('.msg-wrapper',messages).last()[0].clientHeight;
-            }else{
-                $('.msg-wrapper-self .msg-info img').each((ind,ele)=>{
-                    ele.style.display="block";
-                });
-            }
+                <img src="{{chat|chat_other_img:user}}" class="w-12 h-12 rounded-full object-cover mx-2">
+                <div class="conv-text overflow-hidden">
+                    <p class="text-md font-medium">{{chat|chat_other_name:user}}</p>
+                    <span class="text-sm text-gray-400 overflow-ellipsis overflow-hidden whitespace-nowrap w-full">
+                        {% if chat.last_msg.username != user.username %}
+                            {{chat|chat_other_name:user|first_word}}
+                        {% else %}
+                            You
+                        {% endif %}
+                        : {{chat.last_msg.text}}
+                    </span>
+                </div>
+                <div class="absolute right-4 top-0 bg-gradient-to-r from-transparent to-white w-10 h-full"></div>
             
-        };
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock%}
 
-        document.addEventListener("visibilitychange", function() {
-            if(document.visibilityState=="visible")chatSocket.send(JSON.stringify({
-                'type':'seen'
-            }));
-        })
-        chatSocket.onopen= function(e){
-            chatSocket.send(JSON.stringify({
-                        'type':'seen'
-                    }));
-        }
+{% block scripts%}
+<script>
+    const username=JSON.parse(document.getElementById('username').textContent);
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    const dp_urls = JSON.parse(document.getElementById('dp-urls').textContent);
+    let typingTimeout = false;
+    
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/chat/'
+        + roomName
+        + '/'
+    );
 
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        document.querySelector('#chatbox-input').focus();
-        document.querySelector('#chatbox-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chatbox-send').click();
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        console.log(data.type);
+        let messages=$(".chatbox-messages")[0];
+        if(data.type=="message"){
+            let temp = document.getElementById(`tmp-${data.username == username? 'self':'other'}-msg`);
+            let p = temp.content.cloneNode(true);
+            p.querySelector(".msg-text").innerHTML=data.text;
+            const time = new Date(Date.parse(data.time));
+            p.querySelector(".msg-time").innerHTML=time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12:true });
+            // p.querySelector(".msg-info img").style.display="none";
+            const lastdate = new Date(Date.parse($('.msg-date').last().attr('data-iso')));
+            if(lastdate.getDate()!=time.getDate()){
+                let dttmp = document.getElementById('tmp-msg-date');
+                let d = dttmp.content.cloneNode(true);
+                let dateStr = time.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+                dateStr = dateStr.substr(0,3)+"."+dateStr.substr(3);
+                $('.msg-date',d).text(dateStr);
+                messages.appendChild(d);
             }
-        };
+            if(data.username==username)
+                p.querySelector(".msg-wrapper").classList.add("msg-wrapper-self");
+            else{
+                p.querySelector(".msg-profile-img").src=dp_urls[data.username];
+                p.querySelector(".msg-wrapper").classList.add("msg-wrapper-other");
+                if(document.visibilityState=="visible")chatSocket.send(JSON.stringify({
+                    'type':'seen'
+                }));
+            }
+            messages.appendChild(p);
+            messages.scrollTop+=$('.msg-wrapper',messages).last()[0].clientHeight + 20;
 
-        document.querySelector('#chatbox-send').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chatbox-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'type':'message',
-                'username':username,
-                'text':message
-            }));
-            messageInputDom.value = '';
-        };
+        }else if(data.type=="seen"){
+            $('.msg-info img').attr('src','/static/img/read.svg')
+            
+        }else if(data.type=="typing"){
+            $('#msg-typing').removeClass('opacity-0');
+            if(typingTimeout)clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(()=>{
+                $('#msg-typing').addClass('opacity-0')},2000)
+        }
+        
+    };
 
-        $(document).ready(function(){
-            let messages=$(".chatbox-messages")[0];
-            messages.scrollTop=messages.scrollHeight;
-        })
-    </script>
+    $(document).on("visibilitychange", function() {
+        if(document.visibilityState=="visible")chatSocket.send(JSON.stringify({
+            'type':'seen'
+        }));
+    })
+    chatSocket.onopen= function(e){
+        chatSocket.send(JSON.stringify({
+                    'type':'seen'
+                }));
+    }
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    $('#chatbox-input')[0].focus();
+    $('#chatbox-input').on('keyup',function(e) {
+        if(e.keyCode === 13){ 
+            document.querySelector('#chatbox-send').click();
+        }else{
+            if($(this).val().length%5)return;
+            chatSocket.send(JSON.stringify({'type':'typing'}));
+        }
+    });
+
+    $('#chatbox-send').on('click',function(e) {
+        const messageInputDom = document.querySelector('#chatbox-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'type':'message',
+            'username':username,
+            'text':message
+        }));
+        messageInputDom.value = '';
+    });
+
+    $(document).ready(function(){
+        let messages=$(".chatbox-messages")[0];
+        messages.scrollTop=messages.scrollHeight;
+    })
+</script>
 
 
 {% endblock %}

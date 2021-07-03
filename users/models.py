@@ -20,10 +20,10 @@ class Account(models.Model):
     start_year=models.IntegerField(default=2019)
     graduation_year=models.IntegerField(default=2023)
     following=models.ManyToManyField('Account',related_name='followers', blank=True)
-    profile_img=models.ImageField(upload_to=profile_image_path,null=True)
+    profile_img=models.ImageField(upload_to=profile_image_path,null=True, blank=True)
     last_active=models.DateTimeField(null=True,default=datetime.now)
-    organization=models.ManyToManyField('Organization',related_name='employees')
-    designation = models.ManyToManyField('Designation',related_name='employees')
+    organization=models.ForeignKey('Organization',related_name='employees', on_delete=models.CASCADE, null=True)
+    designation = models.ForeignKey('Designation',related_name='employees', on_delete=models.CASCADE, null=True)
     is_alumni = models.BooleanField(default=False)
     @property
     def profile_img_url(self):
@@ -82,8 +82,14 @@ class Contact(models.Model):
 class Organization(models.Model):
     name=models.CharField(max_length=150)
 
+    def __str__(self):
+        return self.name
+
 class Designation(models.Model):
     title=models.CharField(max_length=150)
+    
+    def __str__(self):
+        return self.title
 
 class PastJobs(models.Model):
     user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="jobs")

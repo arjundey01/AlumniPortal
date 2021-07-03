@@ -3,7 +3,7 @@ from json.encoder import JSONEncoder
 import re
 from django.http.response import Http404, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, request
 from django.urls import reverse
 from .auth_helper import get_sign_in_url, get_token_from_code, store_token, store_user, remove_user_and_token, get_token
 from .graph_helper import get_user
@@ -13,9 +13,13 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from post.views import feed
+from groups.models import Group
 from .forms import *
 import json
 import operator
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from fuzzywuzzy import fuzz
+
 def home(request):
     if request.user.is_authenticated:
         return feed(request)
@@ -385,3 +389,55 @@ def delete_item(request,type,pk):
     messages.success(request, 'The entry has been Deleted!')
 
     return redirect('/account/'+request.user.username+'#tab-'+type)
+
+
+def search(query, user):
+    res = {'group':[],'alumni':[],'student':[]}
+    for group in Group.objects.all():
+        score = fuzz.partial_ratio(query, group.title)
+        if score>50:
+            ele={'title':group.title,'subtitle':str(group.member_count)+' members',
+            'img':group.cover_image.url,'url':reverse('groups:group',args=[group.id]),'id':group.id,'match':score}
+            ele['joined']=user.account in group.members.all()
+            res['group'].append(ele)
+    for acc in Account.objects.all():
+        if acc == user.account:
+            continue
+        score = fuzz.partial_ratio(query, acc.name)
+        cat = 'alumni' if acc.is_alumni else 'student'
+        if score>50:
+            ele ={'title':acc.name,'subtitle':acc.designation.title,'img':acc.profile_img_url,
+            'url':reverse('account',args=[acc.user.username]),'username':acc.user.username,'match':score}
+            ele['followed']=user.account in acc.followers.all()
+            res[cat].append(ele)
+    res['group'].sort(key=lambda x:x.get('match'))
+    res['alumni'].sort(key=lambda x:x.get('match'))
+    res['student'].sort(key=lambda x:x.get('match'))
+    return res
+
+def search_sugg(request):
+    query = request.GET.get('query')
+    res = search(query, request.user)        
+    return HttpResponse(json.dumps({'query':query,'results':res}))
+
+
+def search_res(request):
+    query = request.GET.get('query')
+    res = search(query, request.user)
+    return render(request, "search_results.html",{"results":res})
+
+@login_required
+def suggestions(request):
+    res = []
+    for acc in Account.objects.all():
+        if acc in request.user.account.following.all() or acc==request.user.account:
+            continue
+        score=0
+        score+=len(list(set(acc.groups.all()) & set(request.user.account.groups.all())))/len(Group.objects.all())
+        score+=int(acc.organization == request.user.account.organization)
+        ele ={'title':acc.name,'subtitle':acc.designation.title,'img':acc.profile_img_url,
+            'url':reverse('account',args=[acc.user.username]),'username':acc.user.username,'score':score}
+        res.append(ele)
+    res.sort(key=lambda x:x.get('score'))
+    return HttpResponse(json.dumps(res))
+    

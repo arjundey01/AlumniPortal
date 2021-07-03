@@ -12,7 +12,7 @@
 
 <template id="post-template">
     <div class="post rounded w-full bg-white py-1 sm:py-3 px-1 md:px-5 shadow-lg my-5">
-        <div class="post-header w-full px-3 py-1.5 md:py-2.5 overflow-auto flex justify-between">
+        <div class="post-header w-full px-3 py-1.5 md:py-2.5 overflow-auto flex justify-between overflow-visible">
             <a class="post-author flex items-center justify-start">
                 <img class="post-author-img rounded-full object-cover h-12 sm:h-14 w-12 sm:w-14 flex-shrink-0" src="" alt="">
                 <div class="mx-4">
@@ -21,7 +21,15 @@
                 </div>
             </a>
             <div class="float-right flex flex-col items-end">
-                <img src="/static/img/more.svg" alt="" class="post-options h-5 w-5">
+                <div class="relative overflow-visible ">
+                    <img src="/static/img/more.svg" alt="" class="post-options-button cursor-pointer h-5 w-5 hidden">
+                    <div class="post-options bg-white absolute top-6 right-0 shadow-lg w-32 right-0 px-1 py-1 border-2 border-gray-100 border-solid hidden">
+                        <div class="post-delete block text-sm text-gray-500 hover:bg-gray-100 py-2 px-1 flex items-center cursor-pointer" href="#">
+                            <img src="/static/img/delete.svg" class="h-4 -mt-0.5">
+                            <p class="ml-2">Delete</p>
+                        </div>
+                    </div>
+                </div>
                 <p class="post-date text-xs text-gray-400 mt-1 text-right">57 minutes ago</p>
             </div>
         </div>
@@ -42,12 +50,12 @@
                     </svg>
                     <p class="text-sm text-gray-400 font-light mx-4 hidden md:block">Comment</p>
                 </div>
-                <div class="flex justify-start items-center mx-1 cursor-pointer">
+                <!-- <div class="flex justify-start items-center mx-1 cursor-pointer">
                     <svg height="18" width="18" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
                         <path d="M990,379.2L500,24v164.3C214.5,289.2,10,561.5,10,881.5c0,32,2.1,63.6,6,94.5C53,742,255.6,563,500,563v171.5L990,379.2z" fill="none" stroke-width="70" stroke="#CCCCCC"/>
                     </svg>
                     <p class="text-sm text-gray-400 font-light mx-4 hidden md:block">Share</p>
-                </div>
+                </div> -->
             </div>
             <div class="post-stats mt-3 lg:mt-0 mb-2 lg:mb-0">
                 <p class="text-xs text-gray-400 font-light"><span class="like-count"></span> Likes | <span class="comment-count"></span> Comments</p>

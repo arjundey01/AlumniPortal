@@ -8,3 +8,4 @@ requests
 msal
 requests-oauthlib
 Pillow
+fuzzywuzzy==0.18.0
