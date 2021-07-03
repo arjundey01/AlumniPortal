@@ -1,4 +1,5 @@
-from .models import Contact, Education, Experience, Project,PastJobs
+from typing import Text
+from .models import Account, Contact, Designation, Education, Experience, Organization, Project,PastJobs
 from django import forms
 from django.forms import widgets
 from django.contrib.auth.models import User
@@ -9,6 +10,16 @@ class SignupForm(forms.Form):
     profile_img=forms.ImageField(label='')
     phone=forms.CharField(max_length=13)
     location=forms.CharField(max_length=25)
+class profileForm(forms.ModelForm):
+    class Meta:
+         model = Account                           
+         fields = ['branch','description','graduation_year','profile_img']
+         widgets = {
+            'branch': widgets.TextInput(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'graduation_year': widgets.NumberInput(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'description':widgets.Textarea(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'profile_img':widgets.FileInput(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'})
+        }
 
 class FormattedModelForm(forms.ModelForm):
     def as_myformat(self):
@@ -43,22 +54,29 @@ class ExperienceForm(FormattedModelForm):
         model=Experience
         exclude=['user']
         widgets = {
-            'start_date': widgets.DateInput(attrs={'type': 'date','class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
-            'end_date': widgets.DateInput(attrs={'type': 'date','class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
-            'experience':widgets.TextInput(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'})
+            'start_date': widgets.DateInput(attrs={'type': 'date','class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'end_date': widgets.DateInput(attrs={'type': 'date','class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+            'experience':widgets.TextInput(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'})
         }
 
-class PastJobsForm(FormattedModelForm):
-    class Meta:
-        model=PastJobs
-        exclude=['user']
-        widgets = {
-            'start_date': widgets.DateInput(attrs={'type': 'date','class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
-            'end_date': widgets.DateInput(attrs={'type': 'date','class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
-            'organization':widgets.Select(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
-            'designation':widgets.Select(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
-            'description':widgets.Textarea(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'})
-        }
+# class PastJobsForm(FormattedModelForm):
+#     class Meta:
+#         model=PastJobs
+#         exclude=['user']
+#         widgets = {
+#             'start_date': widgets.DateInput(attrs={'type': 'date','class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+#             'end_date': widgets.DateInput(attrs={'type': 'date','class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+#             'organization':widgets.Select(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+#             'designation':widgets.Select(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
+#             'description':widgets.Textarea(attrs={'class':'w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'})
+#         }
+
+class PastJobsForm(forms.Form):
+    organization=forms.CharField(max_length=100,widget=widgets.TextInput(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}))
+    designation=forms.CharField(max_length=100,widget=widgets.TextInput(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}))
+    description=forms.CharField(max_length=255,widget=widgets.Textarea(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}))
+    start_date=forms.DateField(label='Start Date',widget=widgets.DateInput(attrs={'type': 'date','class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}))
+    end_date=forms.DateField(label='End Date',widget=widgets.DateInput(attrs={'type': 'date','class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),required=False)
 
 class ProjectForm(FormattedModelForm):
     class Meta:

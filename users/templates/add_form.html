@@ -1,4 +1,4 @@
-<form method="POST" action="{% url 'add-experience'%}" class="add_experience mx-16 p-5 bg-white flex grid grid-cols-3" style="display: none;">
+<!--<form method="POST" action="{% url 'add-experience'%}" class="grid grid-cols-1 add_experience mx-16 p-5 bg-white flex grid grid-cols-3" style="display: none;">
     {% csrf_token%}
     {{ e_form.non_field_errors }}
     <div class="mr-5 mt-2">
@@ -21,38 +21,111 @@
     </div>
     <input type="submit">
 </form>
-<form method="POST" action="{% url 'add-job' %}" class="mx-16 add_job bg-white flex grid grid-cols-3" style="display: none;">
-    {% csrf_token%}
-    {{ j_form.non_field_errors }}
-    <div class="mr-5 mt-2">
-        {{ j_form.designation.errors }}
-        <label class="text-gray-400" for="{{ j_form.designation.id_for_label }}">Role</label><br>
-        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
-        {{j_form.designation}}
+-->
+    <div  class="mx-9 sm:ml-16 mr-16 lg:mr-64  add_experience mt-3" style="display: none;" >
+        <form id="exp" method="POST" action="{% url 'add-experience' %}" class="flex bg-white justify-start grid sm:grid-cols-3 xl:grid-cols-4 p-5">
+            {% csrf_token%}
+            {{ e_form.non_field_errors }}
+            <div class="mr-5 mt-2">
+                {{ e_form.experience.errors }}
+                <label class="text-gray-400" for="{{  e_form.experience.id_for_label }}">Role</label><br>
+                {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+                {{e_form.experience}}
+            </div>
+            <div class="mr-5 mt-2">
+                {{ e_form.start_date.errors }}
+                <label class="text-gray-400" for="{{ e_form.start_date.id_for_label }}">Start Date</label><br>
+                {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+                {{e_form.start_date}}
+            </div>
+            <div class="mr-5 mt-2">
+                {{ e_form.end_date.errors }}
+                <label class="text-gray-400" for="{{ e_form.end_date.id_for_label }}">Start Date</label><br>
+                {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
+                {{e_form.end_date}}
+            </div>
+            <div class="col"><button type="submit" name="submit" value="submit" class="bg-accent w-28 text-white rounded-md py-1 px-0.5 mt-9">Add</button></div>
+        </form>
     </div>
-    <div class="mr-5 mt-2">
-        {{ j_form.organization.errors }}
-        <label class="text-gray-400" for="{{ j_form.organization.id_for_label }}">Organization</label><br>
-        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
-        {{j_form.organization}}
+    <div  class="add_job bg-white mx-9 sm:ml-16 mr-16 lg:mr-64  mt-3 overflow-hidden">
+        <form method="POST" action="{% url 'add-job'%}" id="form1" class="flex justify-start grid md:grid-cols-3 xl:grid-cols-4 p-5">
+            {% csrf_token%}
+            {{ j_form.non_field_errors }}
+            <div class="mr-5 mt-2 ">
+                {{ j_form.designation.errors }}
+                <label class="text-gray-400" for="{{ j_form.designation.id_for_label }}">Role</label><br>
+                {{j_form.designation}}
+            </div>
+            <br class="sm:hidden">
+            <div class=" mr-5 mt-2">
+                {{ j_form.organization.errors }}
+                <label class="text-gray-400" for="{{ j_form.organization.id_for_label }}">Organization</label><br>
+                {{j_form.organization}}
+            </div><br class="sm:hidden">
+            <div class="mr-5 mt-2">
+                {{ j_form.start_date.errors }}
+                <label class="text-gray-400" for="{{ j_form.start_date.id_for_label }}">Start Date</label><br>
+                {{j_form.start_date}}
+            </div><br class="sm:hidden">
+            <div class="mr-5 mt-2">
+                {{ j_form.end_date.errors }}
+                <label class="text-gray-400" for="{{ j_form.end_date.id_for_label }}">End Date</label><br>
+                {{j_form.end_date}}
+            </div>
+            <div class=" mr-5 mt-2 col-span-2">
+                {{ j_form.description.errors }}
+                <label class="text-gray-400" for="{{ j_form.description.id_for_label }}">Description</label><br>
+                {{j_form.description}}
+            </div>
+            <div class="">
+                <button type="submit" name="submit" value="submit" class="bg-accent w-28 text-white rounded-md py-1 px-0.5 mt-7">Add</button>
+            </div>
+        </form>
     </div>
-    <div class="mr-5 mt-2">
-        {{ j_form.start_date.errors }}
-        <label class="text-gray-400" for="{{ j_form.start_date.id_for_label }}">Start Date</label><br>
-        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
-        {{j_form.start_date}}
-    </div>
-    <div class="mr-5 mt-2">
-        {{ j_form.end_date.errors }}
-        <label class="text-gray-400" for="{{ j_form.end_date.id_for_label }}">End Date</label><br>
-        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
-        {{j_form.end_date}}
-    </div>
-    <div class="mr-5 mt-2">
-        {{ j_form.description.errors }}
-        <label class="text-gray-400" for="{{ j_form.description.id_for_label }}">Description</label><br>
-        {% comment %} <input class="w-64 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" type="text" > {% endcomment %}
-        {{j_form.description}}
-    </div>
-    <input type="submit">
-</form>
+<script>
+$('#form1').on('submit', function(e){
+    e.preventDefault();
+    $.ajax({
+            type : "POST", 
+            url:"{% url 'add-job'%}",
+            data: {
+            designation: $('#id_designation').val(),
+            organization: $('#id_organization').val(),
+            description: $('#id_description').val(),
+            start_date: $('#id_start_date').val(),
+            end_date: $('#id_end_date').val(),
+            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+            dataType: "json",
+            },
+            cache: false,
+            success: function(data){
+            $('#form1')[0].reset();
+            alert("submission success") /* response message */
+            $("#overlay").css('display', 'none');
+            },
+            failure: function() {
+                alert("submission failed")
+            }
+        });
+    }); 
+    function submitform(e,formid){
+    e.preventDefault();
+    var frm = $(formid);
+
+    $.ajax({
+        type:'POST',
+        url:"{% url 'add-experience'%}",
+        data:frm.serialize(),
+        success:function(response){
+        $(formid)[0].reset();
+        alert('You Experience has been added')
+        $("#overlay").css('display', 'none');
+        },
+        error:function(response){
+            alert(response["responseJSON"]["error"]);
+        }
+    })
+}
+
+$('#exp').on('submit',(e)=>{submitform(e,'#exp')}) 
+</script>

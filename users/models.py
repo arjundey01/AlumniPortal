@@ -1,4 +1,4 @@
-from time import time
+from time import perf_counter, time
 from django.db import models
 from django.contrib.auth.models import User
 import re
@@ -102,8 +102,12 @@ class PastJobs(models.Model):
     def get_duration(self):
         duration={}
         # months = (self.end_date.year - self.start_date.year)*12+ (self.end_date.month - self.start_date.month)
-        duration["years"]=(self.end_date.year - self.start_date.year)
-        duration["months"]=(self.end_date.month - self.start_date.month)
+        if self.end_date:
+            duration["years"]=(self.end_date.year - self.start_date.year)
+            duration["months"]=(self.end_date.month - self.start_date.month)
+        else:
+            duration["years"]=(date.today().year - self.start_date.year)
+            duration["months"]=(date.today().month - self.start_date.month)
         return duration
 
     def get_start_date(self):

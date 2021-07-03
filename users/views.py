@@ -1,4 +1,7 @@
-from django.http.response import Http404
+from datetime import date
+from json.encoder import JSONEncoder
+import re
+from django.http.response import Http404, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, request
 from django.urls import reverse
@@ -13,6 +16,7 @@ from post.views import feed
 from groups.models import Group
 from .forms import *
 import json
+import operator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from fuzzywuzzy import fuzz
 
@@ -30,13 +34,14 @@ def sign_in(request):
     # Redirect to the Azure sign-in page
     return HttpResponseRedirect(sign_in_url)
 
+@login_required(login_url='/signin/')
 def details(request):
     context={'user':request.user}
     context['u_form']=UserUpdateForm(instance=request.user)
     context['e_form']=ExperienceForm()
-    context['edu_form']=EducationForm()
-    context['p_form']=ProjectForm()
     context['j_form']=PastJobsForm()
+    context['pro_form']=profileForm
+    print(request)
     return render(request, 'details.html',context)
 
 def callback(request):
@@ -58,7 +63,19 @@ def callback(request):
     login(request, User.objects.get(username=user['mail']))
     store_token(request, token)
     return HttpResponseRedirect(reverse('home'))
+def updateProfile(request):
+    pro_form=profileForm(request.POST or None, instance=get_object_or_404(Account,user=request.user))
 
+    if pro_form.is_valid():
+        p=pro_form.save(commit=False)
+        if operator.contains(p.email ,"alumni"):
+            p.is_alumni=True
+        p.save()
+        messages.success(request, 'Your information has been Updated!')
+        return JsonResponse({'succes':'saved'})
+    else:
+         return HttpResponseBadRequest
+    
 def signup_details(request):
     if request.user.is_authenticated:
         context={}
@@ -181,6 +198,17 @@ def update_account(request):
 
 @login_required(login_url='/signin/')
 def experience(request):
+    if request.is_ajax and request.method == 'POST':
+        e_form=ExperienceForm(request.POST)
+        if e_form.is_valid():
+            e=e_form.save(commit=False)
+            e.user=request.user.account
+            e.save()
+            messages.success(request, 'Your Experience has been Updated!')
+            return JsonResponse({'success':'Your experience has been added'})
+        else:
+            messages.error(request,"Some Error Occured!")
+            return JsonResponse({"error":e_form.errors},status=400)
     if request.method == 'POST':
         e_form=ExperienceForm(request.POST)
         if e_form.is_valid():
@@ -194,15 +222,29 @@ def experience(request):
 
 @login_required(login_url='/signin/')
 def pastjobs(request):
-    if request.method == 'POST':
-        j_form=PastJobsForm(request.POST)
-        if j_form.is_valid():
-            j=j_form.save(commit=False)
-            j.user=request.user.account
-            j.save()
-            messages.success(request, 'Your Past job has been Updated!')
-        else:
-            messages.error(request,"Some Error Occured!")
+    if request.is_ajax and request.method == 'POST':
+        try:
+            start_date=request.POST.get('start_date')
+            end_date=request.POST.get('end_date')
+            description=request.POST.get('description')
+            try:
+                organization=Organization.objects.get(name=request.POST.get('organization'))
+            except:
+                organization=Organization(name=request.POST.get('organization'))
+                organization.save()
+                organization=Organization.objects.get(name=request.POST.get('organization'))
+            try:
+                designation=Designation.objects.get(title=request.POST.get('designation'))
+            except Designation.DoesNotExist:
+                designation=Designation(title=request.POST.get('designation'))
+                designation.save()
+                designation=Designation.objects.get(title=request.POST.get('designation'))
+            newjob=PastJobs(user=request.user.account,organization=organization,designation=designation,description=description,start_date=start_date)
+            newjob.save()
+            response = {'msg':'Your form has been submitted successfully'}
+            return JsonResponse(response)
+        except:
+            return HttpResponseBadRequest
     return redirect('/account/'+request.user.username)
 
 @login_required(login_url='/signin/')
@@ -262,17 +304,27 @@ def update_ex(request, pk):
     return redirect('/account/'+request.user.username+'#tab-experience')
 
 @login_required(login_url='/signin/')
-def update_job(request, pk):
-    if request.method == 'POST':
-        j_form=PastJobsForm(request.POST, instance=get_object_or_404(Experience, pk=pk))
-        if j_form.is_valid():
-
-            j=j_form.save(commit=False)
-            j.user=request.user.account
-            j.save()
-            messages.success(request, 'Your job has been Updated!')
-        else:
-            messages.error(request,"Some Error Occured!")
+def update_job(request):
+    if request.method == 'PUT':
+        # instance=get_object_or_404(PastJobs, pk=request.PUT.get('id'))
+        # instance.delete()
+        start_date=request.PUT.get('start_date')
+        end_date=request.PUT.get('end_date')
+        description=request.PUT.get('description')
+        try:
+            organization=Organization.objects.get(name=request.PUT.get('organization'))
+        except:
+            organization=Organization(name=request.PUT.get('organization'))
+            organization.save()
+            organization=Organization.objects.get(name=request.PUR.get('organization'))
+        try:
+            designation=Designation.objects.get(title=request.PUT.get('designation'))
+        except Designation.DoesNotExist:
+            designation=Designation(title=request.PUT.get('designation'))
+            designation.save()
+            designation=Designation.objects.get(title=request.PUT.get('designation'))
+        newjob=PastJobs(user=request.user.account,organization=organization,designation=designation,description=description,start_date=start_date,end_date=end_date)
+        newjob.save()
         return redirect('/account/'+request.user.username)
     return Http404
 
