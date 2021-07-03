@@ -1,17 +1,38 @@
-let curr_index = 1;
-let donotload = false;
-let firstload = true;
-let username;
-let csrf_token = ""
+let curr_index_faq = 1;
+let donotload_faq = false;
+let firstload_faq = true;
+let username_faq;
+let csrf_token_faq = ""
 
 $(document).ready(function () {
-  csrf_token = $("#csrf_token").text();
+  csrf_token_faq = $("#faq_csrf_token").text();
   load_question(0);
+
+  $(".create-question").click(function(e) {
+    $('#overlay').css('display','flex');
+    $(".faq-ask").css("display", "flex");
+  });
 
   $("#ask_button").click(function (e) {
     e.preventDefault();
     if($("#question-text").val().length === 0) alert("Sorry, the question can't be empty!");
-    else { 
+    else {
+      console.log("Came here");
+      $("#question_form").submit(function(eventObj) {
+        console.log("Came here 1");
+      let tag;
+        $('.faq-feed-tag').each((ind,ele)=>{
+          if(ele.textContent.length) {
+            tag = $(ele).attr('data-id');
+          }
+        });
+        console.log(tag);
+        $("<input />").attr("type", "hidden")
+            .attr("name", "tag")
+            .attr("value", tag)
+            .appendTo("#question_form");
+          return true;
+      });
       $("#question_form").submit();
     }
   });
@@ -19,14 +40,15 @@ $(document).ready(function () {
 
 let load_question = function (index) {
   let tags = [];
-  $('.feed-tag').each((ind,ele)=>{
-      if(ele.textContent.length)
-          tags.push(ele.textContent);
-  });
+  $('.faq-feed-tag').each((ind,ele)=>{
+      if(ele.textContent.length) {
+        tags.push(ele.textContent);
+      }
+    });
   $.ajax({
     type: "POST",
     url: "/faq/load-question/" + index,
-    data: {'tags': JSON.stringify(tags), 'csrfmiddlewaretoken': csrf_token },
+    data: {'tags': JSON.stringify(tags), 'csrfmiddlewaretoken': csrf_token_faq },
     dataType: "json",
     success: function (data) {
       for(let question of data) {
@@ -42,7 +64,7 @@ let load_question = function (index) {
         // modify the data for .question-content and .question-author within the clone node
         $(".question-content", question_clone).html(question.content);
         $(".question-author", question_clone).html(question.author.name);
-        $(".question-author", question_clone).attr("href", `../account/${question.author.username}`);
+        $(".question-author", question_clone).attr("href", `../account/${question.author.username_faq}`);
         $(".question-details", question_clone).attr("href", `${question.id}/`);
         if(Object.keys(question.answers).length != 0) {
           // clone node of subtree of the answer template
@@ -61,11 +83,11 @@ let load_question = function (index) {
         $("#question-container").append(question_clone);
       }
 
-      donotload = false;
-      firstload = false; // tells that initial posts have been loaded.
+      donotload_faq = false;
+      firstload_faq = false; // tells that initial posts have been loaded.
     },
     error: function (data) {
-        if(data.responseJSON.error === 'No more posts' && firstload){
+        if(data.responseJSON.error === 'No more posts' && firstload_faq){
             $('#no-post').css('display','flex');
         }else{
             console.log(data.responseJSON.error);
@@ -76,9 +98,9 @@ let load_question = function (index) {
 
 $(window).scroll(function() {
     //console.log($(window).scrollTop(),$(document).height() , $(window).height())
-    if ($(window).scrollTop() > $(document).height() - $(window).height() - 50 && !donotload) {
-        load_question(curr_index);
-        curr_index += 1;
-        donotload = true;
+    if ($(window).scrollTop() > $(document).height() - $(window).height() - 50 && !donotload_faq) {
+        load_question(curr_index_faq);
+        curr_index_faq += 1;
+        donotload_faq = true;
     }
 });
