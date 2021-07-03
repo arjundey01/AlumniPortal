@@ -20,6 +20,10 @@ def chat_other_name(value, arg):
 
     return name
 
+@register.filter(name='first_word')
+def first_word(value):
+    return value.split(' ')[0]
+
 @register.filter(name='chat_other_img')
 def chat_other_img(value, arg):
     url = None

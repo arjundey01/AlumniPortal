@@ -31,7 +31,7 @@
                     <p class="text-lg text-gray-400 ml-5">Home</p>
                 </a>
             </li>
-            <li class="{% if request.resolver_match.app_name == 'events' %}tab-active{% endif %} mt-1.5">
+            <!-- <li class="{% if request.resolver_match.app_name == 'events' %}tab-active{% endif %} mt-1.5">
                 <a href="" class="flex items-center justify-start">
                     <div class="tab-indicator h-12 w-0 mr-7 bg-accent rounded-tr-lg rounded-br-lg"></div>
                     <div class='tab-icon-wrapper flex items-center justify-center w-12 h-12'>
@@ -41,7 +41,7 @@
                     </div>
                     <p class="text-lg text-gray-400 ml-5">Events</p>
                 </a>
-            </li>
+            </li> -->
             <li class="{% if request.resolver_match.app_name == 'faq' %}tab-active{% endif %} mt-1.5">
                 <a href="/faq/" class="flex items-center justify-start">
                     <div class="tab-indicator h-12 w-0 mr-7 bg-accent rounded-tr-lg rounded-br-lg"></div>
@@ -69,26 +69,34 @@
     </div>
 
     <div id='main'>
-        <div id="header" class="sticky top-0 flex items-center justify-start bg-white h-20 pt-1.5">
+        <div id="header" class="sticky top-0 flex items-center justify-between bg-white h-20 pt-1.5">
             {% include "search_box.html" %}
-            <div class="w-7 sm:w-1/12 md:w-3/12"></div>
-            <div id="header-options" class="w-1/6 flex justify-around space-x-2 items-center lg:ml-14 lg:mr-7">
-                <a href="{% url 'chats' %}" class="relative">
-                    <img src="/static/img/chat.svg" alt="">
-                    <div class="icon-tag absolute rounded-full h-1.5 w-1.5 top-0.5 right-0.5"></div>
-                </a>
-                <a href="" class="relative">
-                    <img src="/static/img/bell.svg" alt="">
-                    <div class="icon-tag absolute rounded-full h-1.5 w-1.5 top-0.5 right-0.5 icon-tag-active"></div>
-                </a>
-            </div>
-            <div id="header-account" class="ml-5 sm:ml-8 md:ml-10 overflow-visible relative">
-                <div id="header-profile" class="cursor-pointer">
-                    <img src="{{user.account.profile_img_url}}" alt="" class="rounded-full object-cover p-0.5">
+            <div class="flex mr-4 sm:mr-10 md:28">
+                <div id="header-options" class="flex justify-around space-x-2 items-center ml-4 mr-4 md:mr-14">
+                    <div id="conv-button" class="relative cursor-pointer">
+                        <img src="/static/img/chat.svg" alt="">
+                        <div class="icon-tag absolute rounded-full h-1.5 w-1.5 top-0.5 right-0.5"></div>
+                    </div>
+                    <!-- <a href="" class="relative">
+                        <img src="/static/img/bell.svg" alt="">
+                        <div class="icon-tag absolute rounded-full h-1.5 w-1.5 top-0.5 right-0.5 icon-tag-active"></div>
+                    </a> -->
                 </div>
-                <div id="header-acc-opt" class="bg-white absolute top-14 right-0 shadow-lg w-32 right-0 px-1 py-1 border-2 border-gray-100 border-solid hidden">
-                    <a class="block text-sm text-gray-500 hover:bg-gray-100 py-2 px-1" href="{% url 'account' user.username %}">My Account</a>
-                    <a class="block text-sm text-gray-500 hover:bg-gray-100 py-2 px-1" href="{% url 'signout' %}">Sign Out</a>
+                <div id="header-account" class="ml-5 sm:ml-8 md:ml-10 overflow-visible relative flex items-center justify-center">
+                    <div id="header-profile" class="cursor-pointer">
+                        <img src="{{user.account.profile_img_url}}" alt="" class="rounded-full object-cover p-0.5">
+                    </div>
+                    <p class="text-gray-600 mx-4 hidden sm:block">{{user.account.name}}</p>
+                    <div id="header-acc-opt" class="bg-white absolute top-14 left-0 shadow-lg w-32 right-0 px-1 py-1 border-2 border-gray-100 border-solid hidden">
+                        <a class="block text-sm text-gray-500 hover:bg-gray-100 py-2 px-1 flex items-center" href="{% url 'account' user.username %}">
+                            <img src="/static/img/profile-icon.svg" class="h-4">
+                            <p class="ml-2">My Account</p>
+                        </a>
+                        <a class="block text-sm text-gray-500 hover:bg-gray-100 py-2 px-1 flex items-center" href="{% url 'signout' %}">
+                            <img src="/static/img/signout-icon.svg" class="h-4">
+                            <p class="ml-2">Sign Out</p>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -103,6 +111,10 @@
         </div>  
     </div>
 
+    <div class="conv-popup fixed w-screen sm:w-80 bg-white overflow-y-scroll shadow-lg">
+        {% include "conv-popup.html" %}
+    </div>
+    
     <div id="sidebar-btn" data-toggle='off' class="fixed rounded-full w-12 h-12 flex justify-center items-center bg-black hover:bg-black-400 cursor-pointer">
         <img src="/static/img/burger.svg" alt="">
     </div>

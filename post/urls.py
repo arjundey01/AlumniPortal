@@ -6,7 +6,7 @@ app_name='post'
 
 urlpatterns=[
     path('create-post/', views.create_post ,name='create_post'),
-    path('delete/<pk>/', views.delete_post ,name='post_delete'),
+    path('delete/', csrf_exempt(views.delete_post) ,name='post_delete'),
     path('update/<pk>/', views.update_post ,name='post_update'),
     path('detail/<pk>', views.post_details, name='post_detail'),
     path('load-feed/<index>',views.load_feed),

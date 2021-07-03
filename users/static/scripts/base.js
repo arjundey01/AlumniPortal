@@ -70,6 +70,10 @@ $(document).ready(()=>{
         $('#header-acc-opt').toggleClass('hidden');
     });
 
+    $('#conv-button').on('click', function(e){
+        $('.conv-popup').toggleClass('conv-popup-opened');
+    });
+
     let vh = window.innerHeight;
     console.log(vh);
     document.documentElement.style.setProperty('--vh', `${vh}px`);

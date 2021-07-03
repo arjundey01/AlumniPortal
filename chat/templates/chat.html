@@ -66,9 +66,9 @@
     <div class="chatbox-footer py-2 sm:py-5 flex items-center px-2 sm:px-10 border-t-2 border-solid border-gray-100">
         <div class="rounded-lg border-2 border-gray-200 flex flex-grow items-center border-solid p-3 min-w-0">
             <input type="text" class="text-lg flex-grow min-w-0 focus:outline-none bg-transparent flex-shrink" id="chatbox-input" placeholder="Write something here...">
-            <svg width="26" height="26" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-20 cursor-pointer flex-shrink-0">
+            <!-- <svg width="26" height="26" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-20 cursor-pointer flex-shrink-0">
                 <path d="M18.5 9.91553L10.3446 17.9086C9.3455 18.8878 7.99043 19.4379 6.57749 19.4379C5.16455 19.4379 3.80948 18.8878 2.81039 17.9086C1.81129 16.9294 1.25 15.6013 1.25 14.2165C1.25 12.8317 1.81129 11.5036 2.81039 10.5244L10.9658 2.53127C11.6319 1.87846 12.5352 1.51172 13.4772 1.51172C14.4192 1.51172 15.3225 1.87846 15.9886 2.53127C16.6547 3.18408 17.0289 4.06948 17.0289 4.99269C17.0289 5.9159 16.6547 6.8013 15.9886 7.45411L7.82432 15.4472C7.49129 15.7736 7.0396 15.957 6.56862 15.957C6.09764 15.957 5.64595 15.7736 5.31291 15.4472C4.97988 15.1208 4.79279 14.6781 4.79279 14.2165C4.79279 13.7549 4.97988 13.3122 5.31291 12.9858L12.8471 5.61022" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>                
+            </svg>                 -->
         </div>
         <div id="chatbox-send" class="ml-2 sm:ml-5 cursor-pointer">
             <svg width="56" height="56" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -130,7 +130,7 @@
                     <p class="text-md font-medium">{{chat|chat_other_name:user}}</p>
                     <span class="text-sm text-gray-400 overflow-ellipsis overflow-hidden whitespace-nowrap w-full">
                         {% if chat.last_msg.username != user.username %}
-                            {{chat|chat_other_name:user}}
+                            {{chat|chat_other_name:user|first_word}}
                         {% else %}
                             You
                         {% endif %}

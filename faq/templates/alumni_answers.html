@@ -6,7 +6,7 @@
             </svg>
             <p class="text-md font-medium ml-2">Answers from Alumni</p>
         </div>
-        <p class="text-accent text-sm">View More</p>
+        <a href="{% url 'faq:faq' %}" class="text-accent text-sm">View More</a>
     </div>
 
     <div id="target" class="mt-10">
@@ -14,7 +14,7 @@
     </div>
 
     <template id="popular-questions">
-        <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-5 accordion-entry-collapsed">
+        <div class="accordion-entry w-full border-b-2 border-solid border-gray-200 my-2 accordion-entry-collapsed">
             <div class="accordion-question flex justify-between items-center p-2 cursor-pointer">
                 <p class="question-content"> </p>
                 <button class="accordion-expand w-5 h-5 focus:outline-none"><img src="/static/img/down-arrow.svg" alt=""></button>

@@ -1,0 +1,49 @@
+<section class="text-lg w-full pt-2 flex flex-col">
+    <p class="font-medium my-2 sm:my-4 ml-4">Messages</p>
+    <div id="conv-popup-conv-wrp" class="w-full overflow-scroll mt-2 sm:mt-4">
+    </div>
+    <p id="conv-popup-error-msg" class="justify-self-center text-gray-500 mt-4 text-center font-light w-full px-4"></p>
+    <template id="conv-tmp">
+        <div>
+            <a href="" class="conv relative flex items-center py-4 px-3 border-gray-200 border-b-2">
+                <img src="" class="w-12 h-12 rounded-full object-cover mx-2">
+                <div class="conv-text overflow-hidden flex flex-col justify-center">
+                    <p class="text-md leading-4"></p>
+                    <span class="text-sm text-gray-400 mt-0.5 overflow-hidden whitespace-nowrap w-full">
+                    </span>
+                </div>
+                <div class="absolute right-4 top-0 bg-gradient-to-r from-transparent to-white w-10 h-full"></div>
+            </a>
+        </div>
+    </template>
+</section>
+
+{% block scripts %}
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url:'/chat/get-convs/',
+                dataType: 'json',
+                success: (data)=>{
+                    data.forEach((conv,ind) => {
+                        const tmp = $('#conv-tmp')[0];
+                        const p = tmp.content.cloneNode(true);
+                        $('a',p).attr('href',conv.url);
+                        $('img',p).attr('src',conv.img);
+                        $('.conv-text p',p).text(conv.title);
+                        $('.conv-text span',p).text(conv.last);
+                        if(ind + 1 == data.length)
+                            $('a',p).removeClass('border-b-2');
+                        $('#conv-popup-conv-wrp').append(p);
+                    });
+                    if(!data.length)
+                        $('#conv-popup-error-msg').text("No conversations yet")
+                },
+                error: (err)=>{
+                    console.log("shit");
+                    $('#conv-popup-error-msg').text("Could not load coversations :(")
+                }
+            })
+        })
+    </script>
+{% endblock %}

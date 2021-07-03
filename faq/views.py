@@ -25,7 +25,7 @@ def create_question(request):
             new_question = question_form.save(commit=False)
             new_question.author = request.user.account
             new_question.save()
-            return redirect('faq')
+            return redirect('/faq/')
         else:
             ##################################################
             ##################################################

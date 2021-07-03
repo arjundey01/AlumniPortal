@@ -9,6 +9,7 @@ from .forms import PostForm, CommentForm
 from django.views.generic.detail import DetailView
 from users.models import Account
 from groups.models import Group
+from time import sleep
 # Create your views here.
 
 def feed(request):
@@ -62,16 +63,16 @@ def update_post(request, pk):
         return render(request, 'alumni_response/post_update.html', context)
 
 
-def delete_post(request,pk):
+def delete_post(request):
     if request.user.is_authenticated:
-        try:
-            post=Post.objects.get(pk=pk)
+        if request.method == 'POST':
+            post=get_object_or_404(Post,pk=request.POST.get('id'))
+            if post.author!=request.user.account:
+                return HttpResponse('forbidden', status=403)
             post.delete()
             return HttpResponse('success')
-        except Post.DoesNotExist:
-            return HttpResponse('doesNotExist',status=500)
-    else:
-        return HttpResponse('notLoggedIn',status=500)
+        return HttpResponse('badRequest', status=400)
+    return HttpResponse('notLoggedIn',status=500)
 
 import json
 from urllib.parse import unquote

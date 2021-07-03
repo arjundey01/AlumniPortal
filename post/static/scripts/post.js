@@ -50,7 +50,8 @@ function parseHTML(data) {
         });
     return str;
 }
-var load_posts = function(index) {
+
+function load_posts(index) {
     let tags = [];
     $('.feed-tag').each((ind,ele)=>{
         if(ele.textContent.length)
@@ -86,6 +87,14 @@ var load_posts = function(index) {
                 $('.comment-button', p).on('click', function(){
                     showcomment(this);
                 } );
+                if(username == post.author.username){
+                    $('.post-options-button', p).removeClass('hidden');
+                    $('.post-options-button', p).on('click', function(){
+                        $('.post-options',this.parentElement).toggleClass('hidden');
+                    } );
+                    $('.post-delete', p).attr('data-id',post.id);
+                    $('.post-delete', p).on('click',deletePost);
+                }
                 $('.comment-button', p).attr('data-post-id', post.id);
                 $('#feed').append(p);
                 donotload = false;
@@ -103,7 +112,26 @@ var load_posts = function(index) {
     })
 }
 
-var showcomment=function(ele){
+function deletePost(e){
+    const id = $(this).attr('data-id');
+    const post = $(this).parents().eq(4);
+    post.css('opacity','0.6');
+    $(this).parent().toggleClass('hidden');
+    $.ajax({
+        type: 'POST',
+        url: '/post/delete/',
+        data: {id:id},
+        success: (data)=>{
+            console.log('Post deleted!');
+            post.remove();
+        },
+        error: (err)=>{
+            post.css('opacity','1');
+        }
+    })
+}
+
+function showcomment(ele){
     var id= ele.getAttribute("data-post-id");
     $("#comment-form-submit").attr('data-post-id', id);
     $("#overlay").css("display", "flex");

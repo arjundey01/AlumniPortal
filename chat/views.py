@@ -1,6 +1,7 @@
 from django.db import reset_queries
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 import json
 from datetime import datetime,timedelta,timezone
 from django.utils import tree
@@ -11,6 +12,31 @@ import hashlib
 def correct_tz(dt):
     dt=dt.replace(tzinfo=timezone(timedelta(hours=-6,minutes=30)))
     return dt
+
+def get_convs_util(user):
+    convs=[]
+    for conv in user.account.chats.all():
+        if conv.last_msg:
+            convs.append(conv)
+    convs.sort(key = lambda x:x.age)
+    return convs
+
+def get_convs(request):
+    if request.user.is_authenticated:
+        convs = get_convs_util(request.user)
+        res = []
+        for conv in convs:
+            print(conv.last_msg['username'], request.user.username)
+            ele = {}
+            other = list(filter(lambda x:x.user.username!=request.user.username,conv.members.all()))[0]
+            ele['url'] = reverse('chatroom',args=[conv.group_name])
+            ele['img'] = other.profile_img_url
+            ele['title'] = other.name
+            ele['last'] = 'You' if conv.last_msg['username'] == request.user.username else request.user.account.name
+            ele['last'] += ': ' + conv.last_msg['text']
+            res.append(ele)
+        return HttpResponse(json.dumps(res), status=200)
+    return HttpResponse('forbidden', status=403)
 
 def chats(request):
     if request.user.is_authenticated:
@@ -46,13 +72,9 @@ def chatroom(request,room_name):
                     context['data'].append({'date':time2.strftime("%b. %d, %Y"),'time':data[i].get('time')})
                 context['data'].append(data[i])
 
-            convs=[]
-            for conv in request.user.account.chats.all():
-                if conv.last_msg:
-                    convs.append(conv)
-
-            convs.sort(key = lambda x:x.age)
-            context['convs']=convs
+           
+            context['convs']=get_convs_util(request.user)
+            
             for member in chat.members.all():
                 context['dp_urls'][member.user.username]=member.profile_img_url
         except Chats.DoesNotExist:
