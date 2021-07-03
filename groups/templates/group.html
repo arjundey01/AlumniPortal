@@ -32,7 +32,7 @@
             </div>
             <div class="col-span-6 justify-self-end justify-around">
             <button class="create-post text-sm text-accent bg-accent-mid py-2 px-5 lg:mr-6 mr-1"><img src="/static/img/pencil.svg" class="pencil w-4 h-4 mr-1 inline">&nbsp;Create post</button>
-            <button class="text-sm text-accent bg-accent-mid py-2 px-5 "><img src="/static/img/information.svg" class="w-4 h-4 mr-1 inline">&nbsp;Ask Question</button>
+            <button class="create-question text-sm text-accent bg-accent-mid py-2 px-5 "><img src="/static/img/information.svg" class="w-4 h-4 mr-1 inline">&nbsp;Ask Question</button>
             </div>
         </div>
     </div>
@@ -53,7 +53,10 @@
     {% include "group_members.html" %}
 </div>
 
-<div data-tab="questions" class="group-tab-content hidden"></div>
+<div data-tab="questions" class="group-tab-content hidden">
+    {% include "faq-content.html" %}
+    <script class='faq-feed-tag' data-id="{{group.id}}" type='text'>{{group.title}}</script>
+</div>
 
 {% endblock %}
 
@@ -64,6 +67,7 @@
 {% block overlay %}
     {% include "post_create.html" %}
     {% include "comment.html" %}
+    {% include "faq_create.html" %}
 {% endblock%}
 
 {% block scripts %}

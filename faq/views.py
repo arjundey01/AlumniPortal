@@ -25,7 +25,10 @@ def create_question(request):
             new_question = question_form.save(commit=False)
             new_question.author = request.user.account
             new_question.save()
-            return redirect('faq')
+            if request.POST.get("tag"):
+                new_question.tags.add(request.POST.get("tag"))
+                new_question.save()
+            return redirect('faq:faq')
         else:
             ##################################################
             ##################################################
