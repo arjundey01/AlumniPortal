@@ -7,35 +7,6 @@ let csrf_token_faq = ""
 $(document).ready(function () {
   csrf_token_faq = $("#faq_csrf_token").text();
   load_question(0);
-
-  $(".create-question").click(function(e) {
-    $('#overlay').css('display','flex');
-    $(".faq-ask").css("display", "flex");
-  });
-
-  $("#ask_button").click(function (e) {
-    e.preventDefault();
-    if($("#question-text").val().length === 0) alert("Sorry, the question can't be empty!");
-    else {
-      console.log("Came here");
-      $("#question_form").submit(function(eventObj) {
-        console.log("Came here 1");
-      let tag;
-        $('.faq-feed-tag').each((ind,ele)=>{
-          if(ele.textContent.length) {
-            tag = $(ele).attr('data-id');
-          }
-        });
-        console.log(tag);
-        $("<input />").attr("type", "hidden")
-            .attr("name", "tag")
-            .attr("value", tag)
-            .appendTo("#question_form");
-          return true;
-      });
-      $("#question_form").submit();
-    }
-  });
 });
 
 let load_question = function (index) {
@@ -65,7 +36,7 @@ let load_question = function (index) {
         $(".question-content", question_clone).html(question.content);
         $(".question-author", question_clone).html(question.author.name);
         $(".question-author", question_clone).attr("href", `../account/${question.author.username_faq}`);
-        $(".question-details", question_clone).attr("href", `${question.id}/`);
+        $(".question-details", question_clone).attr("href", `/faq/${question.id}/`);
         if(Object.keys(question.answers).length != 0) {
           // clone node of subtree of the answer template
           let answer_clone = $("#answer-template").contents().clone(true);

@@ -11,20 +11,22 @@
 
 <template id="question-template">
     <div class="faq rounded w-full bg-white py-4 px-3 shadow-lg my-10">
-        <div class="faq-header w-full px-3 md:py-3 overflow-auto flex justify-between items-center">
-            <div class="flex justify-start flex-col">
+        <div class="faq-header w-full px-3 md:py-3 overflow-auto flex justify-between">
+            <div class="flex justify-start flex-col w-full">
                 <p class="question-content faq-question text-lg md:text-xl mt-1"></p>
-                <div class="flex items-center">
-                    <div class="text-sm text-gray-400">Posted by &nbsp;</div>
-                    <a class="question-author faq-author text-accent text-sm" href=""></a>
+                <div class="flex items-center justify-between mt-2">
+                    <div class="text-sm text-gray-400">Posted by &nbsp;
+                        <a class="question-author faq-author text-accent text-sm" href=""></a>
+                    </div>
+                    <a class="question-details text-accent text-sm text-right" href="">View Details</a>
                 </div>
             </div>
-            <div class="float-right flex flex-col items-end">
-                <a class="question-details text-accent text-md text-right" href="">View Details</a>
-            </div>
+            <!-- <div class="float-right flex flex-col items-end flex-shrink-0">
+            </div> -->
         </div>
         <div class="faq-answers py-4 flex flex-col items-center pt-0">
-            <p class="text-gray-400 text-sm w-full ml-5">Answers:-</p>
+            <!-- <p class="faq-no-ans text-gray-400 font-light my-3 w-full text-center hidden">No Answers</p> -->
+            <!-- <p class="text-gray-400 text-sm w-full ml-5">Answers:-</p> -->
             <div class="answer-container px-3">
                 
             </div>
@@ -33,7 +35,7 @@
 </template>
 
 <template id="answer-template">
-    <div class="w-full border-b-2 border-solid border-gray-200">
+    <div class="w-full">
         <div class="flex justify-between items-center py-3 px-3">
             <div class="flex items-center justify-start">
                 <div class="rounded-full h-12 w-12 overflow-hidden flex items-center justify-center flex-shrink-0">

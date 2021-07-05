@@ -53,7 +53,7 @@
     {% include "group_members.html" %}
 </div>
 
-<div data-tab="questions" class="group-tab-content hidden">
+<div data-tab="questions" class="group-tab-content w-11/12 mx-auto hidden">
     {% include "faq-content.html" %}
     <script class='faq-feed-tag' data-id="{{group.id}}" type='text'>{{group.title}}</script>
 </div>
@@ -72,15 +72,18 @@
 
 {% block scripts %}
 <script>
-
+    $(document).ready(function(){
         $('.group-tab').on('click', function(e){
             let tabName = $(this).attr('data-tab');
-            console.log(tabName);
+            location.hash=tabName;
             $('.group-tab-content').addClass('hidden');
             $(`.group-tab-content[data-tab=${tabName}]`).removeClass('hidden');
             $('.group-tab').removeClass('group-tab-active');
             $(`.group-tab[data-tab=${tabName}]`).addClass('group-tab-active');
         });
-    
+
+        if(location.hash)
+            $(`.group-tab[data-tab=${location.hash.slice(1)}]`).click();
+    });
 </script>
 {% endblock %}
