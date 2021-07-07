@@ -1,213 +1,226 @@
 {% extends "base.html" %}
 {% block head%}
-    <style>
-      #content{
-        width:75%;
-        padding-left: 3.5%;
-        padding-top: 8px;
-      }
-      .bg-custom{
-        background: rgba(108, 120, 152, 0.5);
-      }
-      .custom-button{
-        background:#4150D7;
-        color:#ffffff;
-      }
-      .font-blue{
-    color:#4150D7;
-    }
-    @media(max-width:1024px){
-      #content{
-        width:100%;
-        padding-left: 3.5%;
-        padding-top: 8px;
-        padding-right:3.5%;
-      }
-    }
-    </style>
-{% endblock%}
-{% block content %}
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="/static/stylesheets/style-profile.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+<style>
+  #right-pane{
+      width: 25%;
+      padding: 8px 1.5%;
+  }
+
+  @media (min-width: 992px){
+      #content{
+          width: 75%;
+      }
+  }
+
+  @media (min-width: 1336px){
+      #right-pane{
+          width: calc(0.25 * (100% - 325px));
+          padding-left: 0;
+      }
+  }
+</style>
+{% endblock%}
+
+{% block content %}
 <div>
-  <div class="h-52 w-full bg-custom mt-6 grid grid-rows-1 items-stretch grid-flow-col ">
-      <div class="col justify-self-end mt-5 hidden">  
-        <button class="bg-white rounded  h-9 w-36"><img src="/static/img/upload.svg" alt="" class="w-9 h-5 inline"><span class="mr-3">Share Profile</span></button>
-        <button class="bg-white rounded mr-1.5  h-9 w-9 justify-self-end"><img src="/static/img/dots-vertical.svg" alt="" class="w-9 h-5"></button>
+  <div class="h-52 w-full bg-custom mt-6 grid grid-rows-1 items-stretch grid-flow-col relative">
+    <img src="/static/img/profile-page-bg.jpeg" class="w-full h-full object-cover" alt="">
+    <div class="col justify-self-end mt-5 hidden">
+      <button class="bg-white rounded  h-9 w-36"><img src="/static/img/upload.svg" alt="" class="w-9 h-5 inline"><span
+          class="mr-3">Share Profile</span></button>
+      <button class="bg-white rounded mr-1.5  h-9 w-9 justify-self-end"><img src="/static/img/dots-vertical.svg" alt=""
+          class="w-9 h-5"></button>
+    </div>
+  </div>
+  <div class="bg-white px-5 sm:px-8 pb-10" style="min-height: 200px;">
+    <div class="flex flex-wrap relative">
+      <img src="{{curr_user.profile_img_url}}" class="rounded-full object-cover h-32 w-32 -mt-14 border-8 bg-white border-white z-10 flex-shrink-0">
+      <div class="flex-grow flex justify-between items-stretch pt-5 flex-wrap">
+        
+        <div class="ml-5">
+          <p class="font-medium text-xl">{{curr_user.name}}</p>
+          <div class="flex mt-2">
+            <img src="/static/img/iitg.svg" class="h-8 w-8 object-contain">
+            <div class="mt-0.5 ml-2">
+              <p class="text-sm leading-4">{{curr_user.branch}}</p>
+              <p class="text-gray-400 text-xs">{{curr_user.start_year}}-{{curr_user.graduation_year}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col justify-between items-center">
+          {% if curr_user.is_alumni %}
+          <div class="flex items-center ml-6 mt-3 sm:ml-0 sm:mt-0">
+            <img src="/static/img/work-icon.svg" class="w-6 h-6 sm:w-4 sm:h-4 mr-2">         
+            <p class="text-sm ml-1 sm:ml-0">{{curr_user.designation.title}} | {{curr_user.organization.name}}</p>
+          </div>
+          {% endif %}
+          {% if not curr_user in user.account.following and curr_user != user.account %}
+          <div class="bg-accent px-7 py-1 text-white rounded cursor-pointer absolute sm:static top-3 right-0">Follow</div>
+          {% elif curr_user == user.account %}
+          <a href="/details/" class="bg-accent px-7 py-1 text-white rounded cursor-pointer absolute sm:static top-3 right-0">Edit Profile</a>
+          {% endif %}
+        </div>
       </div>
+
     </div>
-    <div class="grid grid-rows-2 sm:grid-rows-2  grid-flow-col w-full bg-white  px-5 pt-5 pb-9 overflow-visible">
-        <div class="grid sm:row-span-1 grid-cols-12">
-            <div class="col-span-12 sm:col-span-3 xl:col-span-2 -mt-14 ">
-                <img src="{{curr_user.profile_img_url}}" class="rounded-full object-cover h-32 w-32 inline sm:absolute border-8 bg-white border-white">
-            </div>
-            <div class="col-span-12 sm:col-span-6 xl:col-span-7">               
-                <div class=" font-medium text-xl mb-1">{{curr_user.name }}</div>
-                {% if curr_user.is_alumni%}
-                <img src="/static/img/iitg.svg" class="rounded-full inline h-8"><span class="text-xs font-medium">{{curr_user.branch}}<span>
-                <span class="text-xs font-light">{{curr_user.start_year}}-{{curr_user.graduation_year}}</span>
-                {% else %}
-                <div class="text-xs font-medium">{{curr_user.branch}} | {{curr_user.current_year}} Year</div>
-                {% endif %}
-            </div>  
-            <div class="col-span-12 sm:col-span-3 flex justify-start sm:justify-end hidden sm:block">               
-              {% if user == curr_user.user %}
-               <button onclick="editing()" class="custom-button rounded p-1 text-sm font-normal h-8 w-32 md:w-44 justify-self-end">Edit Profile</button>
-              {% else %}
-               <button class="custom-button rounded p-1 text-sm font-normal h-8 w-44 justify-self-end">Follow</button>
-              {% endif%}
-            </div>
-        </div>
-        <div class="grid mt-2 sm:mt-5">
-                <div class="col">
-                <div class="text-lg font-medium mb-1">About</div>
-                <div class="text-sm">{{curr_user.description}} </div>
-        </div>
-        <div class="col-span-12 sm:col-span-3 flex justify-start sm:justify-end block sm:hidden">               
-              {% if user == curr_user.user %}
-               <button onclick="editing()" class="custom-button rounded p-1 text-sm font-normal h-8 w-32 md:w-44 justify-self-end">Edit Profile</button>
-              {% else %}
-               <button class="custom-button rounded p-1 text-sm font-normal h-8 w-44 justify-self-end">Follow</button>
-              {% endif%}
-            </div>
+    
+    <div class="mt-10">
+      <p class="text-xl font-medium">About</p>
+      <p class="font-light mt-3">{{curr_user.description}}</p>
     </div>
-</div>
-<div  class="container">
+
+  </div>
+<div class="container">
   <!--experience-->
   <div id="#tab-experience" class=" bg-white p-5 mt-5">
 
     <!--heading-->
     <div class="text-lg font-medium">
-        <span >Experience</span>
-       <span>
-       {% if user == curr_user.user %}
-          <button id="new_experience" val="show">
-            <img class="h-2 inline" src="/static/img/add.svg" alt="+">
-          </button>
+      <span>Experience</span>
+      <span>
+        {% if user == curr_user.user %}
+        <button id="new_experience" val="show">
+          <img class="h-5 inline" src="/static/img/add.svg" alt="+">
+        </button>
         {% endif %}
-        </span>
+      </span>
     </div>
     <!--content-->
-    <div class="text-lg ">
-        <ul class="grid grid-cols-1 sm:grid-cols-3">
-          {% for experience in experiences %}
-          <li class="user-experience grid grid-cols-12 mt-3 {% if forloop.counter > 3%}hidden{% endif %}" value="{{experience.id}}">
-            <img src="/static/img/company.svg" class="rounded-full inline h-16 col-span-3">
-            <div class="col-span-9">
-            <p data-id="exp{{experience.id}}"class=" user-experience text-base font-medium"> {{experience.experience}}</p> 
+    <div class="text-lg mt-3">
+      <ul class="flex flex-wrap gap-6">
+        {% for experience in experiences %}
+        <li class="user-experience sm:max-w-xxs flex items-center {% if forloop.counter > 3%}hidden{% endif %}"
+          value="{{experience.id}}">
+          <img src="/static/img/company.svg" class="rounded-full inline h-16 col-span-3">
+          <div class="ml-2">
+            <p data-id="exp{{experience.id}}" class="user-experience text-base font-medium mt-2"> {{experience.experience}}
+            </p>
             <div data-id="exstart{{experience.id}}" class="hidden">{{experience.get_start_date|date:"y-m-d"}}</div>
             <div data-id="exend{{experience.id}}" class="hidden">{{experience.get_end_date|date:"d-m-y" }}</div>
-            <span class="user-experience text-xs"> 
-              {{experience.get_start_date|date:"M Y" }}-
-              {% if  experience.get_end_date %}
-              {{experience.get_end_date|date:"M Y" }}
-              {% else %} Present
+            <div class="flex items-center">
+              <span class="user-experience text-xs">
+                {{experience.get_start_date|date:"M Y" }}-
+                {% if experience.get_end_date %}
+                {{experience.get_end_date|date:"M Y" }}
+                {% else %} Present
+                {% endif %}
+              </span>
+              {% if user == curr_user.user %}
+              <button class="mx-2" data-type="experience" data-delete-id="{{ experience.id }}">
+                <i style="font-size:16px" class="fa fa-trash-o"></i>
+              </button>
+              <button data-update-id="{{ experience.id }}">
+                <i style="font-size:16px" class="fa fa-pencil"></i>
+              </button>
               {% endif %}
-            </span>
-            </div> 
-           {% if user == curr_user.user %}
-            <button class="btn btn-danger btn-sm del-exp-btn" data-type="experience" data-delete-id="{{ experience.id }}" >
-              <i style="font-size:12px" class="fa fa-trash-o"></i>
-            </button>
-            <button class="edit btn btn-secondary btn-sm" data-update-id="{{ experience.id }}">
-              <i style="font-size:12px" class="fa fa-pencil"></i>
-            </button>
-            {% endif %} 
-           </li>
-          {% endfor %}
-          {% if experiences|length > 3 %}
-            <a id="user-exp" class="text-accent text-xs mt-5">SHOW ALL({{experiences|length|add:-3}})</a>
-          {% endif %}
-        </ul>
-    </div> 
+            </div>
+          </div>
+          
+        </li>
+        {% endfor %}
+        {% if experiences|length > 3 %}
+        <a id="user-exp" class="text-accent text-xs mt-5">SHOW ALL({{experiences|length|add:-3}})</a>
+        {% endif %}
+      </ul>
+    </div>
 
   </div>
-<!--Past jobs-->
+  <!--Past jobs-->
   <div class=" bg-white p-5 mt-5">
     <!--heading-->
     <div class="text-lg h-11  font-medium">
-        <span >Past Jobs</span>
-        <span>{% if user == curr_user.user %}
-              <button id="new_job" val="show">
-                <img class="h-2 inline" src="/static/img/add.svg" alt="+">
-              </button>
-              {% endif %}
-        </span> 
+      <span>Past Jobs</span>
+      <span>{% if user == curr_user.user %}
+        <button id="new_job" val="show">
+          <img class="h-5 inline" src="/static/img/add.svg" alt="+">
+        </button>
+        {% endif %}
+      </span>
     </div>
     <!--content-->
     <div class="text-lg ">
-        <ul>
+      <ul>
 
-          {% for job in jobs %}
-          <li class="user-jobs grid grid-cols-12 mb-3 {% if forloop.counter > 3%}hidden{% endif %} ">
+        {% for job in jobs %}
+        <li class="user-jobs grid grid-cols-12 mb-3 {% if forloop.counter > 3%}hidden{% endif %} ">
           <img src="/static/img/company.svg" class="rounded-full inline h-16 col-span-1">
           <div class="col-span-11 pl-3">
-                <div data-id="org{{ job.id }}" class="hidden">{{job.organization.name}}</div>
-                <div id="title" data-id="title{{ job.id }}" class="user-job text-base font-medium">
-                    {{job.designation.title}}
-                </div> 
-                <div data-id="start{{ job.id }}" class="hidden">{{job.get_start_date|date:"y-m-d"}}</div>
-                <div data-id="end{{ job.id }}" class="hidden">{{job.get_end_date|date:"d-m-y" }}</div>
-                <div data-id="date{{ job.id }}" class="user-job text-xs font-normal"> 
-                    {{job.get_start_date|date:"M Y" }}-
-                    {% if  job.get_end_date %}
-                    {{job.get_end_date|date:"M Y" }}&nbsp;
-                    {% else %} Present
-                    {% endif %}
-                    <span class="ml-2 font-blue">
-                    {% if job.get_duration.months %}
-                    {{job.get_duration.months}}months
-                    {% endif %}
-                    &nbsp;
-                    {% if job.get_duration.years %}
-                    {{job.get_duration.years}}years</span>
-                    {% endif %}
-                </div> 
-                <div data-id="description{{ job.id }}" class="text-sm">{{ job.description }}</div>
+            <div data-id="org{{ job.id }}" class="hidden">{{job.organization.name}}</div>
+            <div id="title" data-id="title{{ job.id }}" class="user-job text-base font-medium">
+              {{job.designation.title}}
+            </div>
+            <div data-id="start{{ job.id }}" class="hidden">{{job.get_start_date|date:"y-m-d"}}</div>
+            <div data-id="end{{ job.id }}" class="hidden">{{job.get_end_date|date:"d-m-y" }}</div>
+            <div data-id="date{{ job.id }}" class="user-job text-xs font-normal flex items-center mt-0.5">
+              {{job.get_start_date|date:"M Y" }}-
+              {% if job.get_end_date %}
+              {{job.get_end_date|date:"M Y" }}&nbsp;
+              {% else %} Present
+              {% endif %}
+              <span class="ml-2 text-accent">
+                {% if job.get_duration.months %}
+                {{job.get_duration.months}}months
+                {% endif %}
+                &nbsp;
+                {% if job.get_duration.years %}
+                  {{job.get_duration.years}}years
+                {% endif %}
+              </span>
+
+              {% if user == curr_user.user %}
+              <button class="mx-2" data-type="PastJobs" data-delete-id="{{ job.id }}">
+                <i style="font-size:16px" class="fa fa-trash-o"></i>
+              </button>
+              <button data-update-id="{{ job.id }}">
+                <i style="font-size:16px" class="fa fa-pencil"></i>
+              </button>
+              {% endif %}
+              
+            </div>
+            <div data-id="description{{ job.id }}" class="text-sm">{{ job.description }}</div>
           </div>
-            {% if user == curr_user.user %}
-            <button class="btn btn-danger btn-sm del-job-btn" data-type="PastJobs" data-delete-id="{{ job.id }}" >
-              <i style="font-size:12px" class="fa fa-trash-o"></i>
-            </button>
-            <button class="edit-job btn btn-secondary btn-sm" data-update-id="{{ job.id }}">
-              <i style="font-size:12px" class="fa fa-pencil"></i>
-            </button>
-            {% endif %} 
-           </li>
-          {% endfor %}
-        </ul>
-          {% if jobs|length > 3 %}
-            <a id="user-extrajob" class="text-accent text-xs mt-5">SHOW ALL({{jobs|length|add:-3}})</a>
-          {% endif %}
-    </div> 
-  </div>
-<!--Faq-->
-  <div class=" bg-white pt-5 pr-5 pb-5 mt-5 mb-10">
-    <!--heading-->
-    <div class="text-lg h-11  font-medium pl-5">
-        <span >Questions Answered</span>
+         
+        </li>
+        {% endfor %}
+      </ul>
+      {% if jobs|length > 3 %}
+      <a id="user-extrajob" class="text-accent text-xs mt-5">SHOW ALL({{jobs|length|add:-3}})</a>
+      {% endif %}
     </div>
-    <!--content-->
+  </div>
+  <!--Faq-->
+  <!-- <div class=" bg-white pt-5 pr-5 pb-5 mt-5 mb-10">
+
+    <div class="text-lg h-11  font-medium pl-5">
+      <span>Questions Answered</span>
+    </div>
+  
     <div class="text-lg ">
-        <div class="text-sm font-medium mb-3 pl-5">
+      <div class="text-sm font-medium mb-3 pl-5">
         {% lorem 1 %}
-        </div>
-        <div class="text-sm grid grid-cols-12">
+      </div>
+      <div class="text-sm grid grid-cols-12">
         <div class="col-span-1 pl-5"><img src="/static/img/Photo.png" class="rounded-full inline h-8"></div>
         <div class="col-span-11">{% lorem 1 %}</div>
-        </div>
-    </div> 
+      </div>
+    </div>
 
-  </div>
+  </div> -->
 </div>
 {% endblock %}
+
 {% block overlay %}
-  {% include 'add_form.html' %}
-  {% include 'update_forms.html' %}
-  
+{% include 'add_form.html' %}
+{% include 'update_forms.html' %}
 {% endblock %}
+
 {% block scripts %}
 <script src="/static/scripts/profile.js"></script>
 {% endblock %}

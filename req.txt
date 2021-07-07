@@ -2,7 +2,6 @@ django==3.1.7
 channels
 channels_redis
 djangorestframework
-django-editorjs
 pyaml
 requests
 msal

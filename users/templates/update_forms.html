@@ -80,7 +80,7 @@ $('#formedit').on('submit', function(e){
             description: $('#id_description').val(),
             start_date: $('#id_start_date').val(),
             end_date: $('#id_end_date').val(),
-            id:$('.update_job_form').attr('data-id')
+            id:$('.update_job_form').attr('data-id'),
             csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
             dataType: "json",
             },

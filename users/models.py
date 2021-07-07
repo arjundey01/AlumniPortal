@@ -39,17 +39,23 @@ class Account(models.Model):
     def __str__(self):
         return self.name
 
-class Experience(models.Model):
-    user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="experiences")
-    experience=models.CharField(max_length=100)
+class GenericExperience(models.Model):
+    description=models.CharField(default="",max_length=255)
     start_date=models.DateField(default=date.today)
     end_date=models.DateField(null=True, blank=True)
+
+    class Meta:
+        abstract = True
 
     def get_duration(self):
         duration={}
         # months = (self.end_date.year - self.start_date.year)*12+ (self.end_date.month - self.start_date.month)
-        duration["years"]=(self.end_date.year - self.start_date.year)
-        duration["months"]=(self.end_date.month - self.start_date.month)
+        if self.end_date:
+            duration["years"]=(self.end_date.year - self.start_date.year)
+            duration["months"]=(self.end_date.month - self.start_date.month)
+        else:
+            duration["years"]=(date.today().year - self.start_date.year)
+            duration["months"]=(date.today().month - self.start_date.month)
         return duration
 
     def get_start_date(self):
@@ -57,16 +63,15 @@ class Experience(models.Model):
             return self.start_date
         else:
             return date.today()
-
     def get_end_date(self):
         if(self.end_date):
             return self.end_date
         else:
             return False
-
-class Project(models.Model):
+class Project(GenericExperience):
     user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="projects")
     project=models.CharField(max_length=100)
+    team = models.ManyToManyField(Account, related_name='shared_project')
 
 class Education(models.Model):
     user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="educations")
@@ -91,32 +96,11 @@ class Designation(models.Model):
     def __str__(self):
         return self.title
 
-class PastJobs(models.Model):
+class PastJobs(GenericExperience):
     user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="jobs")
     organization=models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="jobs")
     designation=models.ForeignKey(Designation,on_delete=models.CASCADE, related_name="jobs")
-    description=models.CharField(default="NA",max_length=255)
-    start_date=models.DateField(default=date.today)
-    end_date=models.DateField(null=True, blank=True)
 
-    def get_duration(self):
-        duration={}
-        # months = (self.end_date.year - self.start_date.year)*12+ (self.end_date.month - self.start_date.month)
-        if self.end_date:
-            duration["years"]=(self.end_date.year - self.start_date.year)
-            duration["months"]=(self.end_date.month - self.start_date.month)
-        else:
-            duration["years"]=(date.today().year - self.start_date.year)
-            duration["months"]=(date.today().month - self.start_date.month)
-        return duration
-
-    def get_start_date(self):
-        if(self.start_date):
-            return self.start_date
-        else:
-            return date.today()
-    def get_end_date(self):
-        if(self.end_date):
-            return self.end_date
-        else:
-            return False
+class Experience(GenericExperience):
+    user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="experiences")
+    experience=models.CharField(max_length=100)

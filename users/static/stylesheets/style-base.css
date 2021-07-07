@@ -234,3 +234,9 @@ div[placeholder]:empty::before {
 .h-fullscreen{
     height: var(--vh);
 }
+
+@media (min-width: 640px){
+    .sm\:max-w-xxs{
+        max-width: 16rem;
+    }
+}

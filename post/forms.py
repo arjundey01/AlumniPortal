@@ -1,6 +1,5 @@
 from .models import Post, Comment
 from django import forms
-from django_editorjs import EditorJsField
 from groups.models import Group
 
 class PostForm(forms.ModelForm):

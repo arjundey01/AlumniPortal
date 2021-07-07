@@ -7,31 +7,31 @@
 
 {% block content %}
 <div>
-    <div class="h-52 w-full bg-bluegray mt-5 grid grid-rows-1 items-stretch grid-flow-col relative">
+    <div class="h-52 w-full bg-bluegray mt-5 relative">
         <img src="{{group.cover_image.url}}" class="w-full h-full object-cover" alt="">
-        <a href="/groups/" class="bg-white rounded absolute top-5 left-2 h-9 w-9 flex items-center justify-center hover:opacity-90"><img src="/static/img/arrow-left.svg" alt="" class="w-9 h-5"></a>
-        <button class="bg-white rounded absolute top-5 right-2 h-9 w-9 flex items-center justify-center"><img src="/static/img/dots-vertical.svg" alt="" class="w-9 h-5"></button>
+        <a href="/groups/" class="bg-white rounded absolute top-2 left-2 h-9 w-9 flex items-center justify-center hover:opacity-90"><img src="/static/img/arrow-left.svg" alt="" class="w-9 h-5"></a>
+        <button class="bg-white rounded absolute top-2 right-2 h-9 w-9 flex items-center justify-center"><img src="/static/img/dots-vertical.svg" alt="" class="w-9 h-5"></button>
     </div>
-    <div class="grid grid-rows-2 items-stretch grid-flow-col h-52 w-full bg-white px-9 pt-5 pb-9">
-        <div class="grid grid-cols-5">
-            <div class="col-span-2">               
-                <div class="text-2xl font-medium mb-1">{{group.title}}</div>
-                <div class="text-xs">{{group.member_count}} Members</div>
+    <div class="w-full bg-white px-4 sm:px-9 pt-5 pb-5 flex flex-col justify-between" style="min-height: 210px;">
+        <div class="flex flex-col md:flex-row">
+            <div style="min-width: 200px;">               
+                <div class="text-2xl font-medium mb-1">Design</div>
+                <div class="text-xs">2 Members</div>
             </div>
-            <div class="col-span-3">
-                <div class="text-lg font-medium mb-1">About</div>
-                <div class="text-sm">
+            <div class="flex-grow md:ml-5">
+                <div class="text-lg font-medium mb-1 hidden md:block">About</div>
+                <div class="text-sm mt-4 md:mt-0">
                 I'm more experienced in eCommerce web projects and mobile banking apps,but also like to work with creative projects, such as landing pages or unusual corporate websites.
                 </div>
             </div>
         </div>
-        <div class="grid grid-cols-12 mt-14">
-            <div class="col-span-6">
-                <img src="{{user.account.profile_img_url}}" class="rounded-full h-8 w-8 inline object-cover">
+        <div class="flex justify-between items-center mt-6">
+            <div class="hidden md:block">
+                <img src="/media/images/profile_imgs/arjundeyiitg.ac.in_144756544363.jpg" class="rounded-full h-8 w-8 inline object-cover">
                 <span class="w-4/5 ml-4 text-gray-300">Share something with the group</span>
             </div>
-            <div class="col-span-6 justify-self-end justify-around">
-            <button class="create-post text-sm text-accent bg-accent-mid py-2 px-5 lg:mr-6 mr-1"><img src="/static/img/pencil.svg" class="pencil w-4 h-4 mr-1 inline">&nbsp;Create post</button>
+            <div class="flex justify-between">
+            <button class="create-post text-sm text-accent bg-accent-mid py-2 px-5 lg:mr-6 mr-2"><img src="/static/img/pencil.svg" class="pencil w-4 h-4 mr-1 inline">&nbsp;Create post</button>
             <button class="create-question text-sm text-accent bg-accent-mid py-2 px-5 "><img src="/static/img/information.svg" class="w-4 h-4 mr-1 inline">&nbsp;Ask Question</button>
             </div>
         </div>
@@ -44,7 +44,7 @@
     <div class="group-tab cursor-pointer flex items-center justify-center text-lg text-accent" data-tab="questions">Questions</div>
 </div>
 
-<div data-tab="post" class="group-tab-content w-11/12 mx-auto">
+<div data-tab="post" class="group-tab-content w-full sm:w-11/12 mx-auto">
     {% include "posts.html" %}
     <script class='feed-tag' data-id="{{group.id}}" type='text'>{{group.title}}</script>
 </div>
@@ -53,7 +53,7 @@
     {% include "group_members.html" %}
 </div>
 
-<div data-tab="questions" class="group-tab-content w-11/12 mx-auto hidden">
+<div data-tab="questions" class="group-tab-content w-full sm:w-11/12 mx-auto hidden">
     {% include "faq-content.html" %}
     <script class='faq-feed-tag' data-id="{{group.id}}" type='text'>{{group.title}}</script>
 </div>
