@@ -145,7 +145,7 @@
 <div id="step2"class="hidden">
     <div  class="mx-9 sm:ml-16 mr-16 lg:mr-64  mt-3">
             <div class="text-xl font-accent">Club</div>
-            <form id="club" method="POST" action="{% url 'add-experience' %}" class="flex justify-start grid sm:grid-cols-3 xl:grid-cols-4">
+            <form id="club" method="POST" action="{% url 'experience' 'add' %}" class="flex justify-start grid sm:grid-cols-3 xl:grid-cols-4">
                 {% csrf_token%}
                 {{ e_form.non_field_errors }}
                 <div class="mr-5 mt-2">
@@ -171,7 +171,7 @@
     </div>
     <div  class="mx-9 sm:ml-16 mr-16 lg:mr-64  mt-3">
         <div class="text-xl font-accent">Fest</div>
-        <form id="fest" method="POST" action="{% url 'add-experience' %}" class="flex justify-start grid sm:grid-cols-3 xl:grid-cols-4">
+        <form id="fest" method="POST" action="{% url 'experience' 'add' %}" class="flex justify-start grid sm:grid-cols-3 xl:grid-cols-4">
             {% csrf_token%}
             {{ e_form.non_field_errors }}
             <div class="mr-5 mt-2">
@@ -281,7 +281,7 @@ $('#form1').on('submit', function(e){
 e.preventDefault();
 $.ajax({
         type : "POST", 
-        url: "{% url 'add-job' %}",
+        url: "{% url 'job' 'add' %}",
         data: {
         designation: $('#id_designation').val(),
         organization: $('#id_organization').val(),
@@ -306,7 +306,7 @@ $('#current').on('submit', function(e){
 e.preventDefault();
 $.ajax({
         type : "POST", 
-        url: "{% url 'add-job' %}",
+        url: "{% url 'job' 'add' %}",
         data: {
         designation: $("[id='id_designation']:eq(1)").val(),
         organization: $("[id='id_organization']:eq(1)").val(),
@@ -337,7 +337,7 @@ function submitform(e,formid){
 
     $.ajax({
         type:'POST',
-        url:"{% url 'add-experience'%}",
+        url:"{% url 'experience' 'add'%}",
         data:frm.serialize(),
         success:function(response){
         $(formid)[0].reset();

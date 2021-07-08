@@ -92,3 +92,6 @@ class ContactUpdateForm(FormattedModelForm):        #for updating info of the us
     class Meta:
          model = Contact                           
          fields = ['gmail','mobile','outlook','linkedin']
+
+class ImageUploadForm(forms.Form):
+    image = forms.ImageField()

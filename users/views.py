@@ -1,13 +1,13 @@
 from datetime import date
 from json.encoder import JSONEncoder
 import re
-from django.http.response import Http404, HttpResponseBadRequest, JsonResponse
+from django.http.response import Http404, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, request
 from django.urls import reverse
 from .auth_helper import get_sign_in_url, get_token_from_code, store_token, store_user, remove_user_and_token, get_token
 from .graph_helper import get_user
-from .models import Account, Contact
+from .models import Account, Contact, Institute
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib import messages
@@ -172,11 +172,6 @@ def profile(request, username):
             'jobs':jobs
         }
     if(request.user == user.user):
-        context['u_form']=UserUpdateForm(instance=request.user)
-        context['e_form']=ExperienceForm()
-        context['edu_form']=EducationForm()
-        context['p_form']=ProjectForm()
-        context['j_form']=PastJobsForm()
         if Contact.objects.filter(user=user).exists():
             context['ct_form']=ContactUpdateForm(instance=user.contact)
         else:
@@ -197,81 +192,99 @@ def update_account(request):
     return Http404
 
 @login_required(login_url='/signin/')
-def experience(request):
-    if request.is_ajax and request.method == 'POST':
-        e_form=ExperienceForm(request.POST)
-        if e_form.is_valid():
-            e=e_form.save(commit=False)
-            e.user=request.user.account
-            e.save()
-            messages.success(request, 'Your Experience has been Updated!')
-            return JsonResponse({'success':'Your experience has been added'})
-        else:
-            messages.error(request,"Some Error Occured!")
-            return JsonResponse({"error":e_form.errors},status=400)
+def experience(request, action):
+    if action == 'delete':
+        return delete_item(request, 'experience')
     if request.method == 'POST':
-        e_form=ExperienceForm(request.POST)
-        if e_form.is_valid():
-            e=e_form.save(commit=False)
-            e.user=request.user.account
-            e.save()
-            messages.success(request, 'Your Experience has been Updated!')
-        else:
-            messages.error(request,"Some Error Occured!")
-    return redirect('/account/'+request.user.username+'#tab-experience')
-
-@login_required(login_url='/signin/')
-def pastjobs(request):
-    if request.is_ajax and request.method == 'POST':
         try:
-            start_date=request.POST.get('start_date')
-            end_date=request.POST.get('end_date')
-            description=request.POST.get('description')
-            try:
-                organization=Organization.objects.get(name=request.POST.get('organization'))
-            except:
-                organization=Organization(name=request.POST.get('organization'))
-                organization.save()
-                organization=Organization.objects.get(name=request.POST.get('organization'))
-            try:
-                designation=Designation.objects.get(title=request.POST.get('designation'))
-            except Designation.DoesNotExist:
-                designation=Designation(title=request.POST.get('designation'))
-                designation.save()
-                designation=Designation.objects.get(title=request.POST.get('designation'))
-            newjob=PastJobs(user=request.user.account,organization=organization,designation=designation,description=description,start_date=start_date)
-            newjob.save()
-            response = {'msg':'Your form has been submitted successfully'}
-            return JsonResponse(response)
+            if action == 'add':
+                exp = Experience()
+                exp.user = request.user.account
+            else:
+                exp = get_object_or_404(Experience, pk=request.POST.get('pk'))
+            if request.POST.get('start_date')!='':
+                exp.start_date=request.POST.get('start_date')
+            if request.POST.get('end_date')!='':
+                exp.end_date=request.POST.get('end_date')
+            exp.description=request.POST.get('description')
+            exp.experience=request.POST.get('experience')
+            exp.organization, created =Organization.objects.get_or_create(name=request.POST.get('organization'))
+            exp.save()
+            return redirect('/account/'+request.user.username)
         except:
-            return HttpResponseBadRequest
-    return redirect('/account/'+request.user.username)
+            return HttpResponseBadRequest()  
+    return HttpResponseBadRequest()
 
 @login_required(login_url='/signin/')
-def project(request):
+def pastjobs(request, action):
+    if action == 'delete':
+        return delete_item(request, 'job')
     if request.method == 'POST':
-        p_form=ProjectForm(request.POST)
-        if p_form.is_valid():
-            p=p_form.save(commit=False)
-            p.user=request.user.account
-            p.save()
-            messages.success(request, 'Your Projects have been Updated!')
-        else:
-            messages.error(request,"Some Error Occured!")
-    return redirect('/account/'+request.user.username+'#tab-project')
+        try:
+            if action == 'add':
+                job = PastJobs()
+                job.user = request.user.account
+            else:
+                job = get_object_or_404(PastJobs, pk=request.POST.get('pk'))
+            if request.POST.get('start_date')!='':
+                job.start_date=request.POST.get('start_date')
+            if request.POST.get('end_date')!='':
+                job.end_date=request.POST.get('end_date')
+            job.description=request.POST.get('description')
+            job.organization, created =Organization.objects.get_or_create(name=request.POST.get('organization'))
+            job.designation, created=Designation.objects.get_or_create(title=request.POST.get('designation'))
+            job.save()
+            return redirect('/account/'+request.user.username)
+        except:
+            return HttpResponseBadRequest()  
+    return HttpResponseBadRequest()
 
 @login_required(login_url='/signin/')
-def education(request):
+def project(request, action):
+    if action == 'delete':
+        return delete_item(request, 'project')
     if request.method == 'POST':
-        edu_form=EducationForm(request.POST)
-        if edu_form.is_valid():
-            edu=edu_form.save(commit=False)
-            edu.user=request.user.account
+        try:
+            if action == 'add':
+                project = Project()
+                project.user = request.user.account
+            else:
+                project = get_object_or_404(Project, pk=request.POST.get('pk'))
+            if request.POST.get('start_date')!='':
+                project.start_date=request.POST.get('start_date')
+            if request.POST.get('end_date')!='':
+                project.end_date=request.POST.get('end_date')
+            project.description=request.POST.get('description')
+            project.project=request.POST.get('project')
+            project.save()
+            return redirect('/account/'+request.user.username)
+        except:
+            return HttpResponseBadRequest()  
+    return HttpResponseBadRequest()
+
+@login_required(login_url='/signin/')
+def education(request, action):
+    if action == 'delete':
+        return delete_item(request, 'education')
+    if request.method == 'POST':
+        try:
+            if action == 'add':
+                edu = Education()
+                edu.user = request.user.account
+            else:
+                edu = get_object_or_404(Education, pk=request.POST.get('pk'))
+            if request.POST.get('start_date')!='':
+                edu.start_date=request.POST.get('start_date')
+            if request.POST.get('end_date')!='':
+                edu.end_date=request.POST.get('end_date')
+            edu.description=request.POST.get('description')
+            edu.education=request.POST.get('education')
+            edu.institute, created =Institute.objects.get_or_create(name=request.POST.get('institute'))
             edu.save()
-            messages.success(request, 'Your Education has been Updated!')
-        else:
-            messages.error(request,"Some Error Occured!")
-        return redirect('/account/'+request.user.username+'#tab-education')
+            return redirect('/account/'+request.user.username)
+        except:
+            return HttpResponseBadRequest()  
+    return HttpResponseBadRequest()
 
 @login_required(login_url='/signin/')
 def update_contact(request):
@@ -292,103 +305,44 @@ def update_contact(request):
     return Http404
 
 @login_required(login_url='/signin/')
-def update_ex(request, pk):
-    e_form=ExperienceForm(request.POST or None, instance=get_object_or_404(Experience, pk=pk))
-    if e_form.is_valid():
-        e=e_form.save(commit=False)
-        e.user=request.user.account
-        e.save()
-        messages.success(request, 'Your experience has been Updated!')
-    else:
-        messages.error(request,"Some Error Occured!")
-    return redirect('/account/'+request.user.username+'#tab-experience')
-
-@login_required(login_url='/signin/')
-def update_job(request):
-    if request.method == 'PUT':
-        # instance=get_object_or_404(PastJobs, pk=request.PUT.get('id'))
-        # instance.delete()
-        start_date=request.PUT.get('start_date')
-        end_date=request.PUT.get('end_date')
-        description=request.PUT.get('description')
-        try:
-            organization=Organization.objects.get(name=request.PUT.get('organization'))
-        except:
-            organization=Organization(name=request.PUT.get('organization'))
-            organization.save()
-            organization=Organization.objects.get(name=request.PUR.get('organization'))
-        try:
-            designation=Designation.objects.get(title=request.PUT.get('designation'))
-        except Designation.DoesNotExist:
-            designation=Designation(title=request.PUT.get('designation'))
-            designation.save()
-            designation=Designation.objects.get(title=request.PUT.get('designation'))
-        newjob=PastJobs(user=request.user.account,organization=organization,designation=designation,description=description,start_date=start_date,end_date=end_date)
-        newjob.save()
-        return redirect('/account/'+request.user.username)
-    return Http404
-
-@login_required(login_url='/signin/')
-def update_p(request, pk):
-    if request.method == 'POST':
-        p_form=ProjectForm(request.POST, instance=get_object_or_404(Project, pk=pk))
-        if p_form.is_valid():
-
-            p=p_form.save(commit=False)
-            p.user=request.user.account
-            p.save()
-            messages.success(request, 'Your project has been Updated!')
-        else:
-            messages.error(request,"Some Error Occured!")
-        return redirect('/account/'+request.user.username+'#tab-projects')
-    return Http404
-
-@login_required(login_url='/signin/')
-def update_edu(request, pk):
-    if request.method == 'POST':
-        edu_form=EducationForm(request.POST, instance=get_object_or_404(Education, pk=pk))
-        if edu_form.is_valid():
-
-            edu=edu_form.save(commit=False)
-            edu.user=request.user.account
-            edu.save()
-            messages.success(request, 'Your education has been Updated!')
-        else:
-            messages.error(request,"Some Error Occured!")
-        return redirect('/account/'+request.user.username+'#tab-education')
-    return Http404
-
-@login_required(login_url='/signin/')
 def update_photo(request):
     if request.method == 'POST':
-        photo_form=SignupForm(request.POST, instance=get_object_or_404(Account, user=request.user))
-        if photo_form.is_valid():
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            request.user.account.profile_img = form.cleaned_data.get('image')
+            request.user.account.save()
+            return redirect('/account/'+request.user.username)
+    return HttpResponseBadRequest()
 
-            photo=photo_form.save(commit=False)
-            photo.save()
-            messages.success(request, 'Your profile image has been Updated!')
-        else:
-            messages.error(request,"Some Error Occured!")
-        return redirect('/account/')
-    return Http404
 
-@login_required(login_url='/signin/')
-def delete_item(request,type,pk):
-    if type == 'experience':
-        exp = get_object_or_404(Experience, pk=pk)
-        exp.delete()
-    elif type == 'project':
-        proj = get_object_or_404(Project, pk=pk)
-        proj.delete()
-    elif type == 'education':
-        edu = get_object_or_404(Education, pk=pk)
-        edu.delete()
-    elif type=='PastJobs':
-        job = get_object_or_404(PastJobs, pk=pk)
-        job.delete()
-    messages.success(request, 'The entry has been Deleted!')
+def delete_item(request, type):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+    if request.method=='POST':
+        pk = request.POST.get('pk')
+        if type == 'experience':
+            exp = get_object_or_404(Experience, pk=pk)
+            if exp.user != request.user.account:
+                return HttpResponseForbidden()
+            exp.delete()
+        elif type == 'project':
+            proj = get_object_or_404(Project, pk=pk)
+            if proj.user != request.user.account:
+                return HttpResponseForbidden()
+            proj.delete()
+        elif type == 'education':
+            edu = get_object_or_404(Education, pk=pk)
+            if edu.user != request.user.account:
+                return HttpResponseForbidden()
+            edu.delete()
+        elif type=='job':
+            job = get_object_or_404(PastJobs, pk=pk)
+            if job.user != request.user.account:
+                return HttpResponseForbidden()
+            job.delete()
+        return HttpResponse('success',status=200)
+    return HttpResponseBadRequest()
 
-    return redirect('/account/'+request.user.username+'#tab-'+type)
 
 
 def search(query, user):

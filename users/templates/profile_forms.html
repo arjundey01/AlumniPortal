@@ -1,0 +1,120 @@
+<div id="exp-form-area" class="profile-form-area bg-white md:rounded px-6 py-5 w-full md:w-3/5 lg:w-2/5 md:h-4/5 h-fullscreen flex flex-col" style="display:none;">
+    <div class="flex justify-between items-center">
+        <p class="text-xl">Experience</p>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer">
+            <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>   
+    </div>
+    <form action="" method="POST" class="flex-grow flex flex-col items-stretch" >
+        {%csrf_token%}
+        <input type="text" hidden name="pk">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="experience" placeholder="Title">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="organization" placeholder="Organization">
+        <div class="flex justify-around flex-wrap">
+            <div>
+                <p class="text-gray-500">Start Date:</p>
+                <input type="date" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="start_date">
+            </div>
+            <div>
+                <p class="text-gray-500">End Date:</p>
+                <input type="date" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="end_date">
+            </div>
+        </div>
+        <textarea name="description" class="profile-form-input bg-gray-100 rounded flex-grow resize-none my-2 px-4 py-2" placeholder="Description"></textarea>
+        <button type="submit" class="profile-form-submit px-5 py-1 text-white rounded bg-accent self-end mt-3"></button>
+    </form>
+    <input type="text" class="add-url" hidden readonly value="/account/experience/add/">
+    <input type="text" class="update-url" hidden readonly value="/account/experience/update/">
+</div>
+
+
+
+<div id="job-form-area" class="profile-form-area bg-white md:rounded px-6 py-5 w-full md:w-3/5 lg:w-2/5 md:h-4/5 h-fullscreen flex flex-col" style="display:none;">
+    <div class="flex justify-between items-center">
+        <p class="text-xl">Job</p>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer">
+            <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>   
+    </div>
+    <form action="" method="POST" class="flex-grow flex flex-col items-stretch" >
+        {%csrf_token%}
+        <input type="text" hidden name="pk">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="designation" placeholder="Designation">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="organization" placeholder="Organization">
+        <div class="flex justify-around flex-wrap">
+            <div>
+                <p class="text-gray-500">Start Date:</p>
+                <input type="date" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="start_date">
+            </div>
+            <div>
+                <p class="text-gray-500">End Date:</p>
+                <input type="date" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="end_date">
+            </div>
+        </div>
+        <textarea name="description" class="profile-form-input bg-gray-100 rounded flex-grow resize-none my-2 px-4 py-2" placeholder="Description"></textarea>
+        <button type="submit" class="profile-form-submit px-5 py-1 text-white rounded bg-accent self-end mt-3"></button>
+    </form>
+    <input type="text" class="add-url" hidden readonly value="/account/job/add/">
+    <input type="text" class="update-url" hidden readonly value="/account/job/update/">
+</div>
+
+
+
+<div id="project-form-area" class="profile-form-area bg-white md:rounded px-6 py-5 w-full md:w-3/5 lg:w-2/5 md:h-4/5 h-fullscreen flex flex-col" style="display:none;">
+    <div class="flex justify-between items-center">
+        <p class="text-xl">Project</p>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer">
+            <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>   
+    </div>
+    <form action="" method="POST" class="flex-grow flex flex-col items-stretch" >
+        {%csrf_token%}
+        <input type="text" hidden name="pk">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="project" placeholder="Title">
+        <div class="flex justify-around flex-wrap">
+            <div>
+                <p class="text-gray-500">Start Date:</p>
+                <input type="date" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="start_date">
+            </div>
+            <div>
+                <p class="text-gray-500">End Date:</p>
+                <input type="date" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="end_date">
+            </div>
+        </div>
+        <textarea name="description" class="profile-form-input bg-gray-100 rounded flex-grow resize-none my-2 px-4 py-2" placeholder="Description"></textarea>
+        <button type="submit" class="profile-form-submit px-5 py-1 text-white rounded bg-accent self-end mt-3"></button>
+    </form>
+    <input type="text" class="add-url" hidden readonly value="/account/project/add/">
+    <input type="text" class="update-url" hidden readonly value="/account/project/update/">
+</div>
+
+
+
+<div id="edu-form-area" class="profile-form-area bg-white md:rounded px-6 py-5 w-full md:w-3/5 lg:w-2/5 md:h-4/5 h-fullscreen flex flex-col" style="display:none;">
+    <div class="flex justify-between items-center">
+        <p class="text-xl">Education</p>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer">
+            <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>   
+    </div>
+    <form action="" method="POST" class="flex-grow flex flex-col items-stretch" >
+        {%csrf_token%}
+        <input type="text" hidden name="pk">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="education" placeholder="Title">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="intstitute" placeholder="Institute">
+        <div class="flex justify-around flex-wrap">
+            <div>
+                <p class="text-gray-500">Start Date:</p>
+                <input type="date" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="start_date">
+            </div>
+            <div>
+                <p class="text-gray-500">End Date:</p>
+                <input type="date" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="end_date">
+            </div>
+        </div>
+        <textarea name="description" class="profile-form-input bg-gray-100 rounded flex-grow resize-none my-2 px-4 py-2" placeholder="Description"></textarea>
+        <button type="submit" class="profile-form-submit px-5 py-1 text-white rounded bg-accent self-end mt-3"></button>
+    </form>
+    <input type="text" class="add-url" hidden readonly value="/account/education/add/">
+    <input type="text" class="update-url" hidden readonly value="/account/education/update/">
+</div>

@@ -41,7 +41,7 @@ class Account(models.Model):
 
 class GenericExperience(models.Model):
     description=models.CharField(default="",max_length=255)
-    start_date=models.DateField(default=date.today)
+    start_date=models.DateField(null=True, blank=True)
     end_date=models.DateField(null=True, blank=True)
 
     class Meta:
@@ -60,23 +60,17 @@ class GenericExperience(models.Model):
 
     def get_start_date(self):
         if(self.start_date):
-            return self.start_date
+            return self.start_date.strftime('%b %Y')
         else:
-            return date.today()
+            return ""
     def get_end_date(self):
         if(self.end_date):
-            return self.end_date
+            return self.end_date.strftime('%b %Y')
+        elif self.start_date:
+            return 'Present'
         else:
-            return False
-class Project(GenericExperience):
-    user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="projects")
-    project=models.CharField(max_length=100)
-    team = models.ManyToManyField(Account, related_name='shared_project')
-
-class Education(models.Model):
-    user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="educations")
-    education=models.CharField(max_length=100)
-    
+            return ""
+   
 class Contact(models.Model):
     user=models.OneToOneField(Account, on_delete=models.CASCADE, related_name="contact")
     gmail=models.EmailField(blank=True, null=True)
@@ -89,12 +83,18 @@ class Organization(models.Model):
 
     def __str__(self):
         return self.name
-
 class Designation(models.Model):
     title=models.CharField(max_length=150)
     
     def __str__(self):
         return self.title
+
+class Institute(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 
 class PastJobs(GenericExperience):
     user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="jobs")
@@ -104,3 +104,14 @@ class PastJobs(GenericExperience):
 class Experience(GenericExperience):
     user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="experiences")
     experience=models.CharField(max_length=100)
+    organization=models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True, related_name="experiences")
+
+class Project(GenericExperience):
+    user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="projects")
+    project=models.CharField(max_length=100)
+    team = models.ManyToManyField(Account, related_name='shared_project')
+
+class Education(GenericExperience):
+    user=models.ForeignKey(Account, on_delete=models.CASCADE, related_name="educations")
+    education=models.CharField(max_length=100)
+    institute=models.ForeignKey(Institute, on_delete=models.CASCADE, related_name="educations", null=True)
