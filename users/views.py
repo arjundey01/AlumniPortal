@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect, request
 from django.urls import reverse
 from .auth_helper import get_sign_in_url, get_token_from_code, store_token, store_user, remove_user_and_token, get_token
 from .graph_helper import get_user
-from .models import Account, Contact, Institute
+from .models import Account, Branch, Contact, Institute
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib import messages
@@ -36,13 +36,7 @@ def sign_in(request):
 
 @login_required(login_url='/signin/')
 def details(request):
-    context={'user':request.user}
-    context['u_form']=UserUpdateForm(instance=request.user)
-    context['e_form']=ExperienceForm()
-    context['j_form']=PastJobsForm()
-    context['pro_form']=profileForm
-    print(request)
-    return render(request, 'details.html',context)
+    return render(request, 'signup_form.html')
 
 def callback(request):
     # Get the state saved in session
@@ -59,33 +53,81 @@ def callback(request):
         account.name = user['displayName']
         account.email = user['mail']
         account.save()
-        return HttpResponseRedirect(reverse('details'))
+    else:
+        exs_user = User.objects.get(username = user['mail'])
+        account =  exs_user.account
+
     login(request, User.objects.get(username=user['mail']))
     store_token(request, token)
-    return HttpResponseRedirect(reverse('home'))
-def updateProfile(request):
-    pro_form=profileForm(request.POST or None, instance=get_object_or_404(Account,user=request.user))
-
-    if pro_form.is_valid():
-        p=pro_form.save(commit=False)
-        if operator.contains(p.email ,"alumni"):
-            p.is_alumni=True
-        p.save()
-        messages.success(request, 'Your information has been Updated!')
-        return JsonResponse({'succes':'saved'})
+    if account.signup_done:
+        return HttpResponseRedirect(reverse('home'))
     else:
-         return HttpResponseBadRequest
+        return HttpResponseRedirect(reverse('signup-details'))
+
+@login_required(login_url='/signin/')
+def update_profile(request):
+    print(request.POST)
+    if request.method == 'POST':
+        account = request.user.account
+        if request.POST.get('branch','')!='':
+            account.branch, created = Branch.objects.get_or_create(name=request.POST.get('branch')) 
+        if request.POST.get('organization','')!='':
+            account.organization, created = Organization.objects.get_or_create(name=request.POST.get('organization')) 
+        if request.POST.get('designation','')!='':
+            account.designation, created = Designation.objects.get_or_create(title=request.POST.get('designation')) 
+        account.start_year = request.POST.get('start_year')
+        account.graduation_year = request.POST.get('graduation_year')
+        account.description = request.POST.get('description')
+        account.save()
+        return redirect('/account/'+request.user.username)
+    return HttpResponseBadRequest()
     
 def signup_details(request):
-    if request.user.is_authenticated:
-        context={}
-        context['signup-form']=SignupForm()
-        return render(request,'signup-details.html',context)
-    else:
-        return HttpResponse('notLoggedIn',status=500)
+    if request.user.account.signup_done:
+        return redirect('/')
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            data = json.loads(request.POST.get('data'))
+            csrf = {'csrfmiddlewaretoken':request.POST.get('csrfmiddlewaretoken')}
+            print(data)
+            request.POST = {**csrf, **data.get('profile-form',{})}
+            resp = update_profile(request)
+            if resp.status_code != 200:
+                return resp
+
+            if data.get('curr-job-form',False):
+                request.POST = {**csrf, **data.get('curr-job-form')}
+                resp = pastjobs(request,'add')
+                if resp.status_code != 200:
+                    return resp
             
-def update_details(request):
-    pass
+            if data.get('past-job-form',False):
+                request.POST = {**csrf, **data.get('past-job-form')}
+                resp = pastjobs(request,'add')
+                if resp.status_code != 200:
+                    return resp
+            
+            if data.get('exp-form',False):
+                request.POST = {**csrf, **data.get('exp-form')}
+                resp = experience(request,'add')
+                if resp.status_code != 200:
+                    return resp
+
+            if data.get('project-form',False):
+                request.POST = {**csrf, **data.get('project-form')}
+                resp = project(request,'add')
+                if resp.status_code != 200:
+                    return resp
+
+            request.user.account.signup_done = True
+            request.user.account.save()
+
+            return HttpResponse('success')
+        else:
+            return HttpResponse('notLoggedIn',status=500)
+    else:
+        return render(request, 'signup_form.html')
+            
 
 def sign_out(request):
     # Clear out the user and token
@@ -159,17 +201,20 @@ def account(request):
 
 def profile(request, username):
     user=get_object_or_404(User, username=username).account
-    experiences=Experience.objects.all().filter(user=user)
-    projects=Project.objects.all().filter(user=user)
-    educations=Education.objects.all().filter(user=user)
-    jobs=PastJobs.objects.all().filter(user=user)
+    experiences=Experience.objects.all().filter(user=user).order_by('-start_date')
+    projects=Project.objects.all().filter(user=user).order_by('-start_date')
+    educations=Education.objects.all().filter(user=user).order_by('-start_date')
+    jobs=PastJobs.objects.all().filter(user=user).order_by('-start_date')
     # contact=get_object_or_404(Contact, user=request.user)
     context ={
             'curr_user': user,
             'experiences':experiences,
             'projects' :projects,
             'educations': educations,
-            'jobs':jobs
+            'jobs':jobs,
+            'organizations': [org.name for org in Organization.objects.all()],
+            'designations': [dsg.title for dsg in Designation.objects.all()],
+            'institutes': [ins.name for ins in Institute.objects.all()]
         }
     if(request.user == user.user):
         if Contact.objects.filter(user=user).exists():
@@ -179,17 +224,6 @@ def profile(request, username):
 
     return render(request, 'profile.html', context)
 
-@login_required(login_url='/signin/')
-def update_account(request):
-    if request.method == 'POST':
-        u_form=UserUpdateForm(request.POST, instance=request.user)
-        if u_form.is_valid() :
-            u_form.save()
-            messages.success(request, 'Your Account has been Updated!')
-        else:
-            messages.error(request,"Some Error Occured!")
-        return redirect('/account/'+request.user.username+'#tab-update')
-    return Http404
 
 @login_required(login_url='/signin/')
 def experience(request, action):

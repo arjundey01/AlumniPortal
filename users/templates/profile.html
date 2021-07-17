@@ -41,17 +41,24 @@
   <div class="bg-white px-5 sm:px-8 pb-10 mb-5" style="min-height: 200px;">
     <div class="flex flex-wrap relative">
 
-      <div class="h-32 w-32 -mt-14 bg-white z-10 rounded-full flex-shrink-0 relative overflow-hidden border-8 border-white border-solid">
-        <img src="{{curr_user.profile_img_url}}" class="user-profile-img object-cover rounded-full  h-full w-full">
-        <div id="profile-img-upload-progress" class="absolute w-0 h-full opacity-50 bg-black top-0 right-0"></div>
-        <div id="change-profile-img" class="flex flex-col items-center justify-center bg-black opacity-0 hover:opacity-50 absolute top-0 left-0 w-full h-full cursor-pointer">
-          <img src="/static/img/camera.svg" class="h-6 w-6" alt="">
-          <p class="-mt-1 text-gray-400 text-sm">Change</p>
+      <div class="flex flex-col items-center">
+        <div class="h-32 w-32 -mt-14 bg-white z-10 rounded-full flex-shrink-0 relative overflow-hidden border-8 border-white border-solid">
+          <img src="{{curr_user.profile_img_url}}" class="user-profile-img object-cover rounded-full  h-full w-full">
+          {% if curr_user.user == user %}
+          <div id="profile-img-upload-progress" class="absolute w-0 h-full opacity-50 bg-black top-0 right-0"></div>
+          <div id="change-profile-img" class="flex flex-col items-center justify-center bg-black opacity-0 hover:opacity-50 absolute top-0 left-0 w-full h-full cursor-pointer">
+            <img src="/static/img/camera.svg" class="h-6 w-6" alt="">
+            <p class="-mt-1 text-gray-400 text-sm">Change</p>
+          </div>
+          <form>
+            {%csrf_token%}
+            <input type="file" accept="image/*" name="image" id="profile-img-inp">
+          </form>
+          {% endif %}
         </div>
-        <form>
-          {%csrf_token%}
-          <input type="file" accept="image/*" name="image" id="profile-img-inp">
-        </form>
+        {% if curr_user.user == user %}
+        <p id="profile-img-change-status" class="text-gray-500 text-xs font-light text-center">Click to Change</p>
+        {% endif %}
       </div>
 
       <div class="flex-grow flex justify-between items-stretch pt-5 flex-wrap">
@@ -61,23 +68,27 @@
           <div class="flex mt-2">
             <img src="/static/img/iitg.svg" class="h-8 w-8 object-contain">
             <div class="mt-0.5 ml-2">
-              <p class="text-sm leading-4">{{curr_user.branch}}</p>
-              <p class="text-gray-400 text-xs">{{curr_user.start_year}}-{{curr_user.graduation_year}}</p>
+              <p class="text-sm leading-4" id="account--branch">{{curr_user.branch}}</p>
+              <p class="text-gray-400 text-xs">
+                <span id="account--start_year">{{curr_user.start_year}}</span>-<span id="account--graduation_year">{{curr_user.graduation_year}}</span>
+              </p>
             </div>
           </div>
         </div>
 
         <div class="flex flex-col justify-between items-center">
-          {% if curr_user.is_alumni %}
+       
           <div class="flex items-center ml-6 mt-3 sm:ml-0 sm:mt-0">
             <img src="/static/img/work-icon.svg" class="w-6 h-6 sm:w-4 sm:h-4 mr-2">         
-            <p class="text-sm ml-1 sm:ml-0">{{curr_user.designation.title}} | {{curr_user.organization.name}}</p>
+            <p class="text-sm ml-1 sm:ml-0">
+              <span id="account--designation">{{curr_user.designation.title}}</span> | <span id="account--organization">{{curr_user.organization.name}}</span>
+            </p>
           </div>
-          {% endif %}
+         
           {% if not curr_user in user.account.following and curr_user != user.account %}
           <div class="bg-accent px-7 py-1 text-white rounded cursor-pointer absolute sm:static top-3 right-0">Follow</div>
           {% elif curr_user == user.account %}
-          <a href="/details/" class="bg-accent px-7 py-1 text-white rounded cursor-pointer absolute sm:static top-3 right-0">Edit Profile</a>
+          <div data-type="account" class="update-entry bg-accent px-7 py-1 text-white rounded cursor-pointer absolute sm:static top-3 right-0" >Edit Profile</div>
           {% endif %}
         </div>
       </div>
@@ -86,22 +97,22 @@
     
     <div class="mt-10">
       <p class="text-xl font-medium">About</p>
-      <p class="font-light mt-3">{{curr_user.description}}</p>
+      <p class="font-light mt-3" id="account--description">{{curr_user.description}}</p>
     </div>
 
   </div>
 
 
   {% if curr_user.user == user or experiences|length %}
-  <div class="w-full rounded bg-white  my-5 py-4 px-4">
-    <div class="flex justify-between items-center">
+  <div class="w-full rounded bg-white  my-5 py-8 px-4">
+    <div class="flex items-center">
       <h2 class="text-xl ml-4 font-medium">Experience</h2>
       {% if curr_user.user == user%}
-      <img class="new-entry h-6 mr-4 cursor-pointer" src="/static/img/add.svg" data-type="exp" alt="+">
+      <img class="new-entry h-6 ml-3 cursor-pointer" src="/static/img/add.svg" data-type="exp" alt="+">
       {% endif %}
     </div>
     {% for exp in experiences%}
-    <div class="flex px-2 sm:px-10 mt-5">
+    <div class="flex px-2 sm:px-10 mt-8">
       <img src="/static/img/company.svg" class="h-14 w-14 rounded-full flex-shrink-0">
       <div class="flex-grow ml-4">
         <div class="flex justify-between items-center">
@@ -129,15 +140,15 @@
   {% endif %}
 
   {% if curr_user.user == user or jobs|length %}
-  <div class="w-full rounded bg-white  my-5 py-4 px-4">
-    <div class="flex justify-between items-center">
+  <div class="w-full rounded bg-white  my-5 py-8 px-4">
+    <div class="flex items-center">
       <h2 class="text-xl ml-4 font-medium">Jobs</h2>
       {% if curr_user.user == user%}
-      <img class="new-entry h-6 mr-4 cursor-pointer" src="/static/img/add.svg" data-type="job">
+      <img class="new-entry h-6 ml-3 cursor-pointer" src="/static/img/add.svg" data-type="job">
       {% endif %}
     </div>
     {% for job in jobs%}
-    <div class="flex px-2 sm:px-10 mt-5">
+    <div class="flex px-2 sm:px-10 mt-8">
       <img src="/static/img/company.svg" class="h-14 w-14 rounded-full flex-shrink-0">
       <div class="flex-grow ml-4">
         <div class="flex justify-between items-center">
@@ -165,15 +176,15 @@
   {% endif %}
   
   {% if curr_user.user == user or projects|length %}
-  <div class="w-full rounded bg-white  my-5 py-4 px-4">
-    <div class="flex justify-between items-center">
+  <div class="w-full rounded bg-white  my-5 py-8 px-4">
+    <div class="flex items-center">
       <h2 class="text-xl ml-4 font-medium">Projects</h2>
       {% if curr_user.user == user%}
-      <img class="new-entry h-6 mr-4 cursor-pointer" src="/static/img/add.svg" alt="+" data-type="project">
+      <img class="new-entry h-6 ml-3 cursor-pointer" src="/static/img/add.svg" alt="+" data-type="project">
       {% endif %}
     </div>
     {% for project in projects%}
-    <div class="flex px-2 sm:px-10 mt-5">
+    <div class="flex px-2 sm:px-10 mt-8">
       <img src="/static/img/company.svg" class="h-14 w-14 rounded-full flex-shrink-0">
       <div class="flex-grow ml-4">
         <div class="flex justify-between items-center">
@@ -200,15 +211,15 @@
   {% endif %}
   
   {% if curr_user.user == user or educations|length %}
-  <div class="w-full rounded bg-white  my-5 py-4 px-4">
-    <div class="flex justify-between items-center">
+  <div class="w-full rounded bg-white  my-5 py-8 px-4">
+    <div class="flex items-center">
       <h2 class="text-xl ml-4 font-medium">Education</h2>
       {% if curr_user.user == user%}
-      <img class="new-entry h-6 mr-4 cursor-pointer" src="/static/img/add.svg" alt="+" data-type="edu">
+      <img class="new-entry h-6 ml-3 cursor-pointer" src="/static/img/add.svg" alt="+" data-type="edu">
       {% endif %}
     </div>
     {% for edu in educations%}
-    <div class="flex px-2 sm:px-10 mt-5">
+    <div class="flex px-2 sm:px-10 mt-8">
       <img src="/static/img/company.svg" class="h-14 w-14 rounded-full flex-shrink-0">
       <div class="flex-grow ml-4">
         <div class="flex justify-between items-center">

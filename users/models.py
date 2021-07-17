@@ -15,16 +15,17 @@ class Account(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
     name=models.CharField(max_length=100)
     email=models.EmailField()
-    description=models.CharField(max_length=400, default="This is my description")
-    branch=models.CharField(max_length=100,default="")
+    description=models.CharField(max_length=400, null=True, blank=True)
+    branch=models.ForeignKey('Branch',related_name='students', on_delete=models.CASCADE, null=True, blank=True)
     start_year=models.IntegerField(default=2019)
     graduation_year=models.IntegerField(default=2023)
     following=models.ManyToManyField('Account',related_name='followers', blank=True)
     profile_img=models.ImageField(upload_to=profile_image_path,null=True, blank=True)
     last_active=models.DateTimeField(null=True,default=datetime.now)
-    organization=models.ForeignKey('Organization',related_name='employees', on_delete=models.CASCADE, null=True)
-    designation = models.ForeignKey('Designation',related_name='employees', on_delete=models.CASCADE, null=True)
+    organization=models.ForeignKey('Organization',related_name='employees', on_delete=models.CASCADE, blank=True, null=True)
+    designation = models.ForeignKey('Designation',related_name='employees', on_delete=models.CASCADE, blank=True, null=True)
     is_alumni = models.BooleanField(default=False)
+    signup_done = models.BooleanField(default=False)
     @property
     def profile_img_url(self):
         if self.profile_img:
@@ -88,6 +89,12 @@ class Designation(models.Model):
     
     def __str__(self):
         return self.title
+
+class Branch(models.Model):
+    name=models.CharField(max_length=150)
+    
+    def __str__(self):
+        return self.name
 
 class Institute(models.Model):
     name = models.CharField(max_length=100)

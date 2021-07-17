@@ -15,4 +15,5 @@ urlpatterns=[
     path('imageUpload/', csrf_exempt(views.upload_image_view)),
     path('comment/<pk>/', views.comment, name='comment'),
     path('load-comment/<id>', views.load_comment),
+    path('load-likes/<id>', views.load_likes),
 ]

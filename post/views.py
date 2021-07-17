@@ -236,3 +236,14 @@ def load_comment(request, id):
         comments.append(dic)
     print(comments)
     return HttpResponse(json.dumps(comments), status=200)
+
+
+def load_likes(request, id):
+    likes=[]
+    for like in get_object_or_404(Post, pk=id).likes.all():
+        dic={}
+        dic['author']=like.name
+        dic['username']=like.user.username
+        dic['profile_img']=like.profile_img_url
+        likes.append(dic)
+    return HttpResponse(json.dumps(likes), status=200)

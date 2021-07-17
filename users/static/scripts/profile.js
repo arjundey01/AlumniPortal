@@ -12,7 +12,7 @@ $(document).ready(function(){
     $('.update-entry').on('click',function(e){
         $('#overlay').css('display','flex');
         const type = $(this).attr('data-type');
-        const id = $(this).attr('data-id');
+        const id = $(this).attr('data-id')??'';
         const formarea = $(`#${type}-form-area`)[0];
         $(formarea).css('display','flex');
         $('form',formarea).attr('action', $('.update-url',formarea).val());
@@ -52,6 +52,7 @@ $(document).ready(function(){
         $('#profile-img-upload-progress').css('width','100%');
         const orgURL = $('.user-profile-img').attr('src');
         previewImage(this,'.user-profile-img');
+        $('#profile-img-change-status').text('Uploading...');
         $.ajax({
             xhr: function() {
                 var xhr = new window.XMLHttpRequest();
@@ -69,10 +70,14 @@ $(document).ready(function(){
             cache: false,
             contentType: false,
             processData: false,
+            success: (data)=>{
+                $('#profile-img-change-status').text('Click to Change');
+            },
             error: (data)=>{
                 console.log('Could not change profile image.');
                 $('.user-profile-img').attr('src',orgURL);
                 $('#profile-img-upload-progress').css('width','0');
+                $('#profile-img-change-status').text('Click to Change');
             }
         });
     })
@@ -84,4 +89,41 @@ $(document).ready(function(){
         }
         reader.readAsDataURL(inputImg.files[0]);
     }
+
+
+    $('.sugg-inp input').on('focus', function(){
+        $(this).parent().find('.sugg-inp-sugg-wrp').removeClass('hidden');
+    });
+    
+    $('.sugg-inp input').on('focusout', function(){
+        setTimeout(()=>{
+            $(this).parent().find('.sugg-inp-sugg-wrp').addClass('hidden');
+        },250);
+    });
+
+    $('.sugg-inp input').on('keyup', function(){
+        const suggs = $(this).parent().find('.sugg-inp-sugg');
+        const val = $(this).val();
+        if(val==""){
+            $(this).parent().find('.sugg-inp-msg').text('Click to Choose');
+            suggs.removeClass('hidden');
+            return;
+        }
+        let empty = true;
+        suggs.addClass('hidden');
+        suggs.each((ind,sugg)=>{
+            if($(sugg).text().startsWith(val)){
+                $(sugg).removeClass('hidden');
+                empty = false;
+            }
+        });
+        if(empty)
+            $(this).parent().find('.sugg-inp-msg').text('No results');
+        else
+            $(this).parent().find('.sugg-inp-msg').text('Click to Choose');
+    });
+
+    $('.sugg-inp-sugg').on('click', function(){
+        $(this).parents().eq(2).find('input').val($(this).text().trim());
+    });
 });
