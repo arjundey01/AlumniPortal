@@ -50,6 +50,15 @@
 {% block scripts %}
 <script src="/static/scripts/profile.js"></script>
 {% endblock %}
+
+<form method="POST" class="update_contact_form">
+  {%csrf_token%}
+  {{ ct_form.as_myformat }}
+  
+  {% if user == curr_user.user %}
+  <button class="btn btn-outline-info submit_update" type="submit">Submit</button> 
+  {% endif %}
+</form>
 {% comment %} <form method="POST" class="update_p_form" >
   {%csrf_token%}
   {{ p_form.as_myformat }}

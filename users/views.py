@@ -163,12 +163,16 @@ def profile(request, username):
     projects=Project.objects.all().filter(user=user)
     educations=Education.objects.all().filter(user=user)
     jobs=PastJobs.objects.all().filter(user=user)
-    # contact=get_object_or_404(Contact, user=request.user)
+    contact=Contact.objects.all().filter(user=user).first()
+    linkedin_username = contact.linkedin
+    username = linkedin_username.split("/")[-1]
     context ={
             'curr_user': user,
             'experiences':experiences,
             'projects' :projects,
             'educations': educations,
+            'contact': contact,
+            'username': username,
             'jobs':jobs
         }
     if(request.user == user.user):
@@ -281,7 +285,6 @@ def update_contact(request):
         else:
             ct_form=ContactUpdateForm(request.POST)
         if ct_form.is_valid():
-
             contact=ct_form.save(commit=False)
             contact.user=request.user.account
             contact.save()
