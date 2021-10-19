@@ -94,10 +94,57 @@
       </div>
 
     </div>
-    
-    <div class="mt-10">
-      <p class="text-xl font-medium">About</p>
-      <p class="font-light mt-3" id="account--description">{{curr_user.description}}</p>
+</div>
+<div  class="container">
+<!--Contact-->
+  <div class=" bg-white p-5 mt-5">
+    <!--heading-->
+    <div class="text-lg h-11  font-medium">
+        <span >Contact</span> 
+    </div>
+    <!--content-->
+    <div class="text-lg ">
+        <ul>
+          <li class="user-jobs flex flex-row justify-between mx-4 mb-1.5">
+            <div class="text-sm font-medium">Mobile No.</div>
+            <div class="text-sm">{{contact.mobile}}</div>
+          </li>
+          <li class="user-jobs flex flex-row justify-between mx-4 mb-1.5">
+            <div class="text-sm font-medium">Gmail</div>
+            <div class="text-sm">{{contact.gmail}}</div>
+          </li>
+          <li class="user-jobs flex flex-row justify-between mx-4 mb-1.5">
+            <div class="text-sm font-medium">Outlook</div>
+            <div class="text-sm">{{contact.outlook}}</div>
+          </li>
+          <li class="user-jobs flex flex-row justify-between mx-4 mb-1">
+            <div class="text-sm font-medium">Linkedin</div>
+            <a href="{{contact.linkedin}}"><div class="text-sm">{{username}}</div></a>
+          </li>
+            {% comment %} {% if user == curr_user.user %}
+            <button class="btn btn-danger btn-sm del-job-btn" data-type="PastJobs" data-delete-id="{{ job.id }}" >
+              <i style="font-size:12px" class="fa fa-trash-o"></i>
+            </button>
+            <button class="edit-job btn btn-secondary btn-sm" data-update-id="{{ job.id }}">
+              <i style="font-size:12px" class="fa fa-pencil"></i>
+            </button>
+            {% endif %}  {% endcomment %}
+        </ul>
+    </div> 
+  </div>
+    <!--experience-->
+  <div id="#tab-experience" class=" bg-white p-5 mt-5">
+
+    <!--heading-->
+    <div class="text-lg font-medium">
+        <span >Experience</span>
+       <span>
+       {% if user == curr_user.user %}
+          <button id="new_experience" val="show">
+            <img class="h-2 inline" src="/static/img/add.svg" alt="+">
+          </button>
+        {% endif %}
+        </span>
     </div>
 
   </div>

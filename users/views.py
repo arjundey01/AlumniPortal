@@ -201,20 +201,24 @@ def account(request):
 
 def profile(request, username):
     user=get_object_or_404(User, username=username).account
-    experiences=Experience.objects.all().filter(user=user).order_by('-start_date')
-    projects=Project.objects.all().filter(user=user).order_by('-start_date')
-    educations=Education.objects.all().filter(user=user).order_by('-start_date')
-    jobs=PastJobs.objects.all().filter(user=user).order_by('-start_date')
-    # contact=get_object_or_404(Contact, user=request.user)
+    experiences=Experience.objects.all().filter(user=user)
+    projects=Project.objects.all().filter(user=user)
+    educations=Education.objects.all().filter(user=user)
+    jobs=PastJobs.objects.all().filter(user=user)
+    contact=Contact.objects.all().filter(user=user).first()
+    linkedin_username = contact.linkedin
+    username = linkedin_username.split("/")[-1]
     context ={
             'curr_user': user,
             'experiences':experiences,
             'projects' :projects,
             'educations': educations,
-            'jobs':jobs,
             'organizations': [org.name for org in Organization.objects.all()],
             'designations': [dsg.title for dsg in Designation.objects.all()],
-            'institutes': [ins.name for ins in Institute.objects.all()]
+            'institutes': [ins.name for ins in Institute.objects.all()],
+            'contact': contact,
+            'username': username,
+            'jobs':jobs
         }
     if(request.user == user.user):
         if Contact.objects.filter(user=user).exists():
@@ -328,7 +332,6 @@ def update_contact(request):
         else:
             ct_form=ContactUpdateForm(request.POST)
         if ct_form.is_valid():
-
             contact=ct_form.save(commit=False)
             contact.user=request.user.account
             contact.save()
