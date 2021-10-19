@@ -96,58 +96,40 @@
     </div>
 </div>
 <div  class="container">
-<!--Contact-->
-  <div class=" bg-white p-5 mt-5">
-    <!--heading-->
-    <div class="text-lg h-11  font-medium">
-        <span >Contact</span> 
+
+  {% if curr_user.user == user %}
+  <div class="w-full rounded bg-white  my-5 py-8 px-4">
+    <div class="flex items-center mb-3">
+      <h2 class="text-xl mx-4 font-medium">Contact</h2>
+      {% if curr_user.user == user%}
+        <button class="update-entry" data-id="{{ contact.id }}" data-type="contact">
+          <i style="font-size:18px" class="fa fa-pencil"></i>
+        </button>
+      {% endif %}
     </div>
-    <!--content-->
     <div class="text-lg ">
         <ul>
-          <li class="user-jobs flex flex-row justify-between mx-4 mb-1.5">
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
             <div class="text-sm font-medium">Mobile No.</div>
-            <div class="text-sm">{{contact.mobile}}</div>
+            <div id="contact-{{contact.id}}-mobile" class="text-sm">{{contact.mobile}}</div>
           </li>
-          <li class="user-jobs flex flex-row justify-between mx-4 mb-1.5">
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
             <div class="text-sm font-medium">Gmail</div>
-            <div class="text-sm">{{contact.gmail}}</div>
+            <div id="contact-{{contact.id}}-gmail" class="text-sm">{{contact.gmail}}</div>
           </li>
-          <li class="user-jobs flex flex-row justify-between mx-4 mb-1.5">
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
             <div class="text-sm font-medium">Outlook</div>
-            <div class="text-sm">{{contact.outlook}}</div>
+            <div id="contact-{{contact.id}}-outlook" class="text-sm">{{contact.outlook}}</div>
           </li>
-          <li class="user-jobs flex flex-row justify-between mx-4 mb-1">
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1">
             <div class="text-sm font-medium">Linkedin</div>
-            <a href="{{contact.linkedin}}"><div class="text-sm">{{username}}</div></a>
+            <p id="contact-{{contact.id}}-linkedin" class="hidden">{{contact.linkedin}}</p>
+            <a target="_blank" href="{{contact.linkedin}}"><div class="text-sm">{{username}}</div></a>
           </li>
-            {% comment %} {% if user == curr_user.user %}
-            <button class="btn btn-danger btn-sm del-job-btn" data-type="PastJobs" data-delete-id="{{ job.id }}" >
-              <i style="font-size:12px" class="fa fa-trash-o"></i>
-            </button>
-            <button class="edit-job btn btn-secondary btn-sm" data-update-id="{{ job.id }}">
-              <i style="font-size:12px" class="fa fa-pencil"></i>
-            </button>
-            {% endif %}  {% endcomment %}
         </ul>
     </div> 
   </div>
-    <!--experience-->
-  <div id="#tab-experience" class=" bg-white p-5 mt-5">
-
-    <!--heading-->
-    <div class="text-lg font-medium">
-        <span >Experience</span>
-       <span>
-       {% if user == curr_user.user %}
-          <button id="new_experience" val="show">
-            <img class="h-2 inline" src="/static/img/add.svg" alt="+">
-          </button>
-        {% endif %}
-        </span>
-    </div>
-
-  </div>
+  {% endif %}
 
 
   {% if curr_user.user == user or experiences|length %}
@@ -179,7 +161,7 @@
         <div hidden id="exp-{{exp.id}}-start_date">{{exp.start_date|date:'Y-m-d'}}</div>
         <div hidden id="exp-{{exp.id}}-end_date">{{exp.end_date|date:'Y-m-d'}}</div>
         <p class="text-gray-400">{{exp.get_start_date}} - {{exp.get_end_date}}</p>
-        <p id="exp-{{exp.id}}-organization">{{exp.description}}</p>
+        <p id="exp-{{exp.id}}-description">{{exp.description}}</p>
       </div>
     </div>
     {% endfor %}
@@ -241,7 +223,7 @@
             <button class="delete-entry mx-3" data-url="{% url 'project' 'delete' %}" data-id="{{ project.id }}">
               <i style="font-size:18px" class="fa fa-trash-o"></i>
             </button>
-            <button class="update-entry" data-id="{{ project.id }}" data-type="project"">
+            <button class="update-entry" data-id="{{ project.id }}" data-type="project">
               <i style="font-size:18px" class="fa fa-pencil"></i>
             </button>
           </div>
