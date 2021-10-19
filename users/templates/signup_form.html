@@ -1,0 +1,371 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css' rel='stylesheet'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" ></script>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" ></script>
+  <link rel="stylesheet" href="{% static 'stylesheets/style-base.css' %}">
+  <title>Details</title>
+</head>
+<body>
+<div class="flex justify-center  mt-8 ">
+    <div>
+    <img class="h-28 sm:h-40 w-28 sm:w-40" src="{% static 'img/logo.svg' %}" alt="">
+    </div>
+</div>
+<div class="flex justify-between mt-9 mx-9 sm:mx-16 items-center flex-col sm:flex-row">
+    <div class="text-2xl text-blue-700 pt-1.5">Enter details</div>
+    <div class="flex gap-x-5 mt-4 sm:mt-0">
+        <div id="back-button" class="border-accent border-2 py-1 px-5 text-accent rounded cursor-pointer hidden">Back</div>
+        <div id="next-button" class="border-accent border-2 py-1 px-5 text-accent rounded cursor-pointer">Next</div>
+        <div id="finish-button" class="bg-accent py-1 px-5 text-white rounded cursor-pointer hidden" style="line-height: 1.7;">Finish</div>
+    </div>
+</div>
+<hr  class="mx-9 sm:mx-16 mt-4">
+
+
+<div id="form-step-0" class="form-step">
+    <div class="flex flex-col items-center">
+        <div  class="flex flex-col sm:flex-row items-center sm:items-start mt-10 w-full px-5 sm:px-16" enctype="multipart/form-data" style="max-width: 750px;">
+            
+            <div class="flex flex-col items-center">
+                <div class="h-28 w-28 flex-shrink-0 relative overflow-hidden rounded-full">
+                    <img src="{{user.account.profile_img_url}}" class="user-profile-img object-cover rounded-full  h-full w-full">
+                    <div id="profile-img-upload-progress" class="absolute w-0 h-full opacity-50 bg-black top-0 right-0"></div>
+                    <div id="change-profile-img" class="flex flex-col items-center justify-center bg-black opacity-0 hover:opacity-50 absolute top-0 left-0 w-full h-full cursor-pointer">
+                        <img src="/static/img/camera.svg" class="h-6 w-6" alt="">
+                        <p class="-mt-1 text-gray-400 text-sm">Change</p>
+                    </div>
+                    <form class="hidden">
+                    {%csrf_token%}
+                    <input type="file" accept="image/*" name="image" id="profile-img-inp">
+                    </form>
+                </div>
+                <p id="profile-img-change-status" class="text-gray-500 text-xs font-light text-center mt-2"> Click to Change</p>
+            </div>
+
+            <form id="profile-form" class="signup-form flex-grow sm:ml-10 self-stretch">
+                <p class="text-gray-600 text-lg">{{user.account.name}}</p>
+                <div class="mt-2">
+                    <p class="text-gray-400">Branch <span class="font-light text-xs">(required)</span> </p>
+                    <input type="text" name="branch" required class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                </div>
+                <div class="flex flex-wrap mt-5 gap-x-5 sm:gap-x-16">
+                    <div>
+                        <p class="text-gray-400">Start Year*</p>
+                        <input type="number" name="start_year" required min="1950" max="2050" class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded">
+                    </div>
+                    <div>
+                        <p class="text-gray-400">Graduation Year*</p>
+                        <input type="number" name="graduation_year" required min="1950" max="2050" class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded">
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <p class="text-gray-400">Description</p>      
+                    <textarea name="description" class="bg-accent-faded px-4 py-2 rounded w-full h-40 text-gray-500" style=""></textarea>
+                </div>
+            </form>     
+        </div>
+    </div>
+</div>
+
+
+<div id="form-step-1" class="form-step overflow-hidden hidden">
+    <div class="flex flex-col sm:flex-row w-full justify-around px-5 sm:px-20">
+        <div class="sm:px-10 mt-3 flex-1">
+            <div class="text-xl">Current Job <span class="text-gray-500 text-sm font-light">(Optional)</span></div>
+            <form id="curr-job-form" class="signup-form"  enctype="multipart/form-data">
+                <div class="mt-2">
+                    <p class="text-gray-400">Designation*</p>
+                    <input type="text" name="designation" required class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                </div>
+                <div class="mt-5">
+                    <p class="text-gray-400">Organization*</p>
+                    <input type="text" name="organization" required class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                </div>
+                <div class="mt-5">
+                    <p class="text-gray-400">Start Date</p>
+                    <input type="date" name="start_date" class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                </div>
+                <div class="mt-5">
+                    <p class="text-gray-400">Description</p>      
+                    <textarea name="description" class="bg-accent-faded px-4 py-2 rounded w-full h-40 text-gray-500" style=""></textarea>
+                </div>
+            </form>
+        </div>
+        <div  class="sm:px-10 mt-3 flex-1">
+            <div class="text-xl">Past Job <span class="text-gray-500 text-sm font-light">(Optional)</span></div>
+            <form id="past-job-form" class="signup-form" enctype="multipart/form-data">
+                <div class="mt-2">
+                    <p class="text-gray-400">Designation*</p>
+                    <input type="text" name="designation" required class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                </div>
+                <div class="mt-5">
+                    <p class="text-gray-400">Organization*</p>
+                    <input type="text" name="organization" required class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                </div>
+                <div class="flex flex-wrap justify-around">
+                    <div class="mt-5">
+                        <p class="text-gray-400">Start Date</p>
+                        <input type="date" name="start_date" placeholder="DD/MM/YYYY" class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full" >
+                    </div>
+                    <div class="mt-5">
+                        <p class="text-gray-400">End Date</p>
+                        <input type="date" name="end_date" class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <p class="text-gray-400">Description</p>      
+                    <textarea name="description" class="bg-accent-faded px-4 py-2 rounded w-full h-40 text-gray-500" style=""></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div id="form-step-2" class="form-step overflow-hidden hidden">
+    
+    <div class="flex flex-col sm:flex-row w-full justify-around px-5 sm:px-20">
+        <div class="sm:px-10 mt-3 flex-1">
+            <div class="text-xl">Experience <span class="text-gray-500 text-sm font-light">(Optional)</span></div>
+            <form id="exp-form" class="signup-form" enctype="multipart/form-data">
+                <div class="mt-2">
+                    <p class="text-gray-400">Title*</p>
+                    <input type="text" name="experience" required class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                </div>
+                <div class="mt-5">
+                    <p class="text-gray-400">Organization*</p>
+                    <input type="text" name="organization" required class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                </div>
+                <div class="flex flex-wrap justify-around">
+                    <div class="mt-5">
+                        <p class="text-gray-400">Start Date</p>
+                        <input type="date" name="start_date" placeholder="DD/MM/YYYY" class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full" >
+                    </div>
+                    <div class="mt-5">
+                        <p class="text-gray-400">End Date</p>
+                        <input type="date" name="end_date" class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <p class="text-gray-400">Description</p>      
+                    <textarea name="description" class="bg-accent-faded px-4 py-2 rounded w-full h-40 text-gray-500" style=""></textarea>
+                </div>
+            </form>
+        </div>
+        <div  class="sm:px-10 mt-3 flex-1">
+            <div class="text-xl">Project <span class="text-gray-500 text-sm font-light">(Optional)</span></div>
+            <form id="project-form" class="signup-form" enctype="multipart/form-data">
+                <div class="mt-2">
+                    <p class="text-gray-400">Title*</p>
+                    <input type="text" name="project" required class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                </div>
+                <div class="flex flex-wrap justify-around">
+                    <div class="mt-5">
+                        <p class="text-gray-400">Start Date</p>
+                        <input type="date" name="start_date" placeholder="DD/MM/YYYY" class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full" >
+                    </div>
+                    <div class="mt-5">
+                        <p class="text-gray-400">End Date</p>
+                        <input type="date" name="end_date" class="bg-accent-faded text-gray-500 px-3 py-1.5 rounded w-full">
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <p class="text-gray-400">Description</p>      
+                    <textarea name="description" class="bg-accent-faded px-4 py-2 rounded w-full h-40 text-gray-500" style=""></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<input type="text" id="csrf-token" readonly hidden value="{{csrf_token}}">
+
+<div class="mt-32 bg-footer h-40 md:h-72 flex items-end justify-center md:justify-between pb-10 px-10 md:px-20">
+    <div class="hidden md:flex flex-col items-center">
+      <img class="h-24 w-24" src="/static/img/alumni-portal-logo.svg" alt="">
+      <p class="text-white opacity-80 text-2xl mt-4">Alumni Portal</p>
+      <p class="text-white opacity-50 text-lg">IIT Guwahati</p>
+    </div>
+    
+    <div class="flex items-center justify-center flex-wrap">
+      <svg width="60" height="44" viewBox="0 0 35 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.16257 0H15.9061L8.79687 12.2355L10.8622 16.1841L20.3355 0H27.826L35 12.4L27.7436 25H18.9861L26.229 12.5234L24.0395 8.84902L14.5384 25H7.17172L0 12.2344L7.16257 0Z" fill="white" fill-opacity="0.7"></path>
+      </svg>
+      <p class="opacity-50 ml-4 sm:text-xl text-white"> Maintained by SWC | 2021</p>
+      
+      
+    </div>
+
+    <div class="hidden lg:flex justify-between w-60">
+      <div class="w-12 h-11 bg-white opacity-30 rounded-md"></div>
+      <div class="w-12 h-11 bg-white opacity-30 rounded-md"></div>
+      <div class="w-12 h-11 bg-white opacity-30 rounded-md"></div>
+    </div>
+      
+  </div>
+
+<script>
+    $('#finish-button').on('click', function(e){
+        const formData = {};
+        const data ={};
+        $('.signup-form').each((ind,form)=>{
+            if(!formEmpty(form)){
+                console.log(form.id, getFormData(form));
+                formData[form.id] =getFormData(form); 
+            }
+        })
+        if(formData['curr-job-form']){
+            formData['profile-form']['organization'] = formData['curr-job-form']['organization'];
+            formData['profile-form']['designation'] = formData['curr-job-form']['designation'];
+        }
+        data['csrfmiddlewaretoken'] = $('#csrf-token').val();
+        data['data'] = JSON.stringify(formData);
+        console.log(data);
+        $.ajax({
+            type : "POST", 
+            url: "/signup-details/",
+            data: data,
+            cache: false,
+            success: function(data){
+                window.location = '/';
+            },
+            error: function() {
+                alert("Something went wrong :(");
+            }
+        });
+    });    
+
+    function getFormData(form){
+        var unindexed_array = $(form).serializeArray();
+        var indexed_array = {};
+
+        $.map(unindexed_array, function(n, i){
+            indexed_array[n['name']] = n['value'];
+        });
+
+        return indexed_array;
+    }
+
+    function formEmpty(form){
+        return $('input,textarea',form).filter(function(ind){
+            if(this.value)return true;
+            return false;
+        }).length == 0;
+    }
+
+    let index = 0, prevIndex=0;
+
+    $('#next-button').on('click', function(){
+        prevIndex=index;
+        index++;
+        onIndexChange();
+    })
+
+    $('#back-button').on('click', function(){
+        prevIndex=index;
+        index--;
+        onIndexChange();
+    })
+
+    function onIndexChange(){
+        if(!validateStep()){
+            if(prevIndex == 0)
+                alert('Please fill the required fields.')
+            else
+                alert('Please fill the required fields if the form is non-empty.')
+            index=prevIndex;
+            return;
+        }
+        if(index==0)
+            $('#back-button').addClass('hidden');
+        else
+            $('#back-button').removeClass('hidden');
+        if(index==2){
+            $('#next-button').addClass('hidden');
+            $('#finish-button').removeClass('hidden');
+        }else{
+            $('#next-button').removeClass('hidden');
+            $('#finish-button').addClass('hidden');
+        }
+        $('.form-step').addClass('hidden');
+        $(`#form-step-${index}`).removeClass('hidden');
+    }
+
+    function validateStep(){
+        let valid = true;
+        if(prevIndex == 0){
+            $('.signup-form input', $(`#form-step-${prevIndex}`)[0]).each((ind,inp)=>{
+                if($(inp).prop('required') && !inp.value)
+                    valid=false;
+            })
+        }
+        else{
+            $('.signup-form', $(`#form-step-${prevIndex}`)[0]).each((ind,form)=>{
+                if(formEmpty(form))return;
+                $('input,textarea',form).each((ind,inp)=>{
+                    if($(inp).prop('required') && !inp.value)
+                        valid=false;
+                })
+            })
+        }
+        return valid;
+    }
+
+    $('#change-profile-img').on('click', function(e){
+        $('#profile-img-inp').click();
+    });
+
+    $('#profile-img-inp').on('input change', function(e){
+        if($(this).val()=="")return;
+        const formData = new FormData($(this).parent()[0]);
+        $('#profile-img-upload-progress').css('width','100%');
+        const orgURL = $('.user-profile-img').attr('src');
+        previewImage(this,'.user-profile-img');
+        $('#profile-img-change-status').text('Uploading...');
+        $.ajax({
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function(evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = (evt.loaded / evt.total) * 100;
+                        $('#profile-img-upload-progress').css('width',(100-percentComplete)+'%');
+                    }
+                }, false);
+                return xhr;
+            },
+            type: 'POST',
+            url: '/account/change-profile-img/',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: (data)=>{
+                $('#profile-img-change-status').text('Click to Change');
+            },
+            error: (data)=>{
+                console.log('Could not change profile image.');
+                $('.user-profile-img').attr('src',orgURL);
+                $('#profile-img-upload-progress').css('width','0');
+                $('#profile-img-change-status').text('Click to Change');
+            }
+        });
+    })
+
+    var previewImage= function(inputImg, prevImg){
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $(prevImg).attr('src', e.target.result);
+        }
+        reader.readAsDataURL(inputImg.files[0]);
+    }
+</script>
+</body>
+</html>
+     

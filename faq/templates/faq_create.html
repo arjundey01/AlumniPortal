@@ -1,8 +1,53 @@
-<div class="faq-ask rounded w-full bg-white py-7 px-5 shadow-lg my-5 flex justify-between items-center" style="display: none;">
-    <form id="question_form" action="{% url 'faq:create_question' %}" class="flex items-center flex-grow" method="POST">
+<div class="faq-ask bg-white md:rounded px-6 py-5 w-full md:w-3/5 lg:w-2/5 md:h-3/5 h-fullscreen flex flex-col" style="display: none;">
+    <div class="flex justify-between items-center">
+        <p class="text-xl">Ask a Question</p>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer">
+            <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>   
+    </div>
+    <div class="flex justify-between items-center mt-8">
+        <div class="flex items-center">
+            <img src="{{user.account.profile_img_url}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
+            <p class="text-md sm:text-xl ml-3">{{user.account.name}}</p>
+        </div>
+    </div>
+    <form id="question_form" action="{% url 'faq:create_question' %}" class="flex-grow mt-4" method="POST">
         {% csrf_token %}
-        <img class="h-5 w-5" src="/static/img/pencil.svg" alt="">
-        <input name="content" type="text" id="question-text" class="text-lg text-gray-600 ml-5 hidden md:block flex-grow" placeholder="Ask a Question" contenteditable>
+        <textarea id="question-text" name="content" class="text-lg w-full h-full h-20 flex-shrink-0 py-4 px-4 rounded-lg bg-gray-100 resize-none" placeholder="Write something here..." ></textarea>
     </form> 
-    <button id="ask_button" class="bg-accent py-1 px-4 text-white text-md rounded">Ask</button>
+    <button id="ask_button" class="bg-accent py-1 px-6 mt-4 text-white text-md rounded self-end">Ask</button>
 </div>
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $(".create-question").click(function(e) {
+                $('#overlay').css('display','flex');
+                $(".faq-ask").css("display", "flex");
+            });
+
+            $("#ask_button").click(function (e) {
+                e.preventDefault();
+                if($("#question-text").val().length === 0) 
+                    alert("Sorry, the question can't be empty!");
+                else {
+                    $("#question_form").submit(function(eventObj) {
+                        let tag;
+                        $('.faq-feed-tag').each((ind,ele)=>{
+                            if(ele.textContent.length) {
+                                tag = $(ele).attr('data-id');
+                                console.log(tag);
+                                $("<input />").attr("type", "hidden")
+                                    .attr("name", "tag")
+                                    .attr("value", tag)
+                                    .appendTo("#question_form");
+                            }
+                        });
+                        
+                    });
+                    $("#question_form").submit();
+                }
+            });
+        });
+    </script>
+{% endblock %}

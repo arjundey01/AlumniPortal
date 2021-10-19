@@ -2,7 +2,6 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import django_editorjs.fields
 
 
 class Migration(migrations.Migration):
@@ -19,7 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('datetime', models.DateTimeField(auto_now_add=True)),
-                ('content', django_editorjs.fields.EditorJsField(null=True)),
+                ('content', models.JSONField(default=dict)),
                 ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='posts', to='users.account')),
                 ('likes', models.ManyToManyField(related_name='liked_posts', to='users.Account')),
             ],

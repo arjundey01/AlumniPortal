@@ -32,7 +32,7 @@ def get_convs(request):
             ele['url'] = reverse('chatroom',args=[conv.group_name])
             ele['img'] = other.profile_img_url
             ele['title'] = other.name
-            ele['last'] = 'You' if conv.last_msg['username'] == request.user.username else request.user.account.name
+            ele['last'] = 'You' if conv.last_msg['username'] == request.user.username else other.name.split(' ')[0]
             ele['last'] += ': ' + conv.last_msg['text']
             res.append(ele)
         return HttpResponse(json.dumps(res), status=200)

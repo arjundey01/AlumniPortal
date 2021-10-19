@@ -1,71 +1,129 @@
-$(document).ready(()=>{
-    if(location.hash!=""){
-        var lt=location.hash.substring(1);
-        console.log(lt);
-        $(".nav-link[href='#"+lt+"']").click();
+$(document).ready(function(){
+    $('.new-entry').on('click',function(e){
+        $('#overlay').css('display','flex');
+        const formarea = $(`#${$(this).attr('data-type')}-form-area`)[0];
+        $(formarea).css('display','flex');
+        $('form',formarea).attr('action', $('.add-url',formarea).val());
+        $('input[name="pk"]', formarea).val("");
+        $('.profile-form-submit',formarea).text('Add');
+        $('form .profile-form-input',formarea).val("");
+    });
+
+    $('.update-entry').on('click',function(e){
+        $('#overlay').css('display','flex');
+        const type = $(this).attr('data-type');
+        const id = $(this).attr('data-id')??'';
+        const formarea = $(`#${type}-form-area`)[0];
+        $(formarea).css('display','flex');
+        $('form',formarea).attr('action', $('.update-url',formarea).val());
+        $('.profile-form-submit',formarea).text('Update');
+        $('input[name="pk"]', formarea).val(id);
+        $('form .profile-form-input',formarea).each((ind,inp)=>{
+            const val = $(`#${type}-${id}-${$(inp).attr('name')}`).text();
+            console.log($(inp).attr('name'),val);
+            if(val)
+                $(inp).val(val);
+        })
+    });
+
+    $('.delete-entry').on('click', function(e){
+        $(this).parents().eq(3).css('opacity','0.5');
+        $.ajax({
+            type:'POST',
+            url:$(this).attr('data-url'),
+            data:{'pk':$(this).attr('data-id'), 'csrfmiddlewaretoken':$('#csrf-token').val()},
+            success:(data)=>{
+                $(this).parents().eq(3).remove();
+            },
+            error:(err)=>{
+                console.log('Could not delete entry.');
+                $(this).parents().eq(3).css('opacity','1');
+            }
+        });
+    });
+
+    $('#change-profile-img').on('click', function(e){
+        $('#profile-img-inp').click();
+    });
+
+    $('#profile-img-inp').on('input change', function(e){
+        if($(this).val()=="")return;
+        const formData = new FormData($(this).parent()[0]);
+        $('#profile-img-upload-progress').css('width','100%');
+        const orgURL = $('.user-profile-img').attr('src');
+        previewImage(this,'.user-profile-img');
+        $('#profile-img-change-status').text('Uploading...');
+        $.ajax({
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function(evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = (evt.loaded / evt.total) * 100;
+                        $('#profile-img-upload-progress').css('width',(100-percentComplete)+'%');
+                    }
+                }, false);
+                return xhr;
+            },
+            type: 'POST',
+            url: '/account/change-profile-img/',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: (data)=>{
+                $('#profile-img-change-status').text('Click to Change');
+            },
+            error: (data)=>{
+                console.log('Could not change profile image.');
+                $('.user-profile-img').attr('src',orgURL);
+                $('#profile-img-upload-progress').css('width','0');
+                $('#profile-img-change-status').text('Click to Change');
+            }
+        });
+    })
+
+    var previewImage= function(inputImg, prevImg){
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $(prevImg).attr('src', e.target.result);
+        }
+        reader.readAsDataURL(inputImg.files[0]);
     }
-})
 
-$('#user-exp').on('click',function(e){
-    $('.user-experience').removeClass('hidden');
-    $(this).addClass('hidden');
-})
-$('#user-extrajob').on('click',function(e){
-    $('.user-jobs').removeClass('hidden');
-    $(this).addClass('hidden');
-}) 
 
-$("#new_job").click(function(){
-    $("#overlay").css('display', 'flex');
-    $(".add_experience").css('display','none');
-    $(".update_ex_form").css('display', 'none');
-    $(".update_job_form").css('display','none');
-    $(".add_job").css('display', 'flex');
-})
-$("#new_experience").click(function(){
-    $("#overlay").css('display','flex');
-    $(".add_experience").css('display','block');
-    $(".add_job").css('display', 'none');
-    $(".update_ex_form").css('display', 'none');
-    $(".update_job_form").css('display','none');
-}) 
-$(".edit").click(function(ele){
-    $("#overlay").css('display', 'flex');
-    $(".update_ex_form").css('display', 'block');
-    $(".update_job_form").css('display','none');
-    $(".add_experience").css('display','none');
-    $(".add_job").css('display', 'none');
-    $(".update_ex_form").attr('action', 'update/experience/'+ $(this).attr("data-update-id")+'/');
-    $(".update_ex_form #id_experience").val($(`p[data-id=exp${$(this).attr("data-update-id")}]`).text());
-    $(".update_ex_form #id_start_date").attr("placeholder",$(`div[data-id=exstart${$(this).attr("data-update-id")}]`).text());
-    $(".update_ex_form #id_end_date").attr("placeholder",$(`div[data-id=exend${$(this).attr("data-update-id")}]`).text());
-})
-$(".edit-job").click(function(ele){
-    $("#overlay").css('display', 'flex');
-    $(".update_ex_form").css('display', 'none');
-    $(".update_job_form").css('display','flex');
-    $(".add_experience").css('display','none');
-    $(".add_job").css('display', 'none');
-    $(".update_job_form").attr('action', 'update/job/'+ $(this).attr("data-update-id")+'/');
-    //$(".update_job_form input[type=text]").val($(".user-job", $(this).parent()).text());
-    $(".update_job_form #id_organization").val($(`div[data-id=org${$(this).attr("data-update-id")}]`).text());
-    $(".update_job_form #id_description").val($(`div[data-id=description${$(this).attr("data-update-id")}]`).text());
-    $(".update_job_form #id_designation").val($(`div[data-id=title${$(this).attr("data-update-id")}]`).text());
-    //$(".update_job_form #id_start_date").val($(`div[data-id=start${$(this).attr("data-update-id")}]`).text());
-    //$(".update_job_form #id_end_date").val($(`div[data-id=end${$(this).attr("data-update-id")}]`).text());
-    $(".update_job_form #id_end_date").attr("placeholder",$(`div[data-id=end${$(this).attr("data-update-id")}]`).text());
-    $(".update_job_form").attr("data-id",$(this).attr("data-update-id"))
-})
-$(".del-exp-btn").click(function(){
-let id = $(this).attr('data-delete-id');
-let type = $(this).attr('data-type');
-location.href = 'delete/' + type + '/' + id;
-})
-$(".del-job-btn").click(function(){
-    let id = $(this).attr('data-delete-id');
-    let type = $(this).attr('data-type');
-    location.href = 'delete/' + type + '/' + id;
-})
-editing=function(){
-    window.location.replace("http://localhost:8000/details/");
-}
+    $('.sugg-inp input').on('focus', function(){
+        $(this).parent().find('.sugg-inp-sugg-wrp').removeClass('hidden');
+    });
+    
+    $('.sugg-inp input').on('focusout', function(){
+        setTimeout(()=>{
+            $(this).parent().find('.sugg-inp-sugg-wrp').addClass('hidden');
+        },250);
+    });
+
+    $('.sugg-inp input').on('keyup', function(){
+        const suggs = $(this).parent().find('.sugg-inp-sugg');
+        const val = $(this).val();
+        if(val==""){
+            $(this).parent().find('.sugg-inp-msg').text('Click to Choose');
+            suggs.removeClass('hidden');
+            return;
+        }
+        let empty = true;
+        suggs.addClass('hidden');
+        suggs.each((ind,sugg)=>{
+            if($(sugg).text().startsWith(val)){
+                $(sugg).removeClass('hidden');
+                empty = false;
+            }
+        });
+        if(empty)
+            $(this).parent().find('.sugg-inp-msg').text('No results');
+        else
+            $(this).parent().find('.sugg-inp-msg').text('Click to Choose');
+    });
+
+    $('.sugg-inp-sugg').on('click', function(){
+        $(this).parents().eq(2).find('input').val($(this).text().trim());
+    });
+});

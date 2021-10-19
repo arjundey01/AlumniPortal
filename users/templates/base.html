@@ -69,7 +69,7 @@
     </div>
 
     <div id='main'>
-        <div id="header" class="sticky top-0 flex items-center justify-between bg-white h-20 pt-1.5">
+        <div id="header" class="sticky top-0 flex items-center justify-between bg-white h-20 pt-1.5 shadow-sm">
             {% include "search_box.html" %}
             <div class="flex mr-4 sm:mr-10 md:28">
                 <div id="header-options" class="flex justify-around space-x-2 items-center ml-4 mr-4 md:mr-14">
@@ -84,10 +84,10 @@
                 </div>
                 <div id="header-account" class="ml-5 sm:ml-8 md:ml-10 overflow-visible relative flex items-center justify-center">
                     <div id="header-profile" class="cursor-pointer">
-                        <img src="{{user.account.profile_img_url}}" alt="" class="rounded-full object-cover p-0.5">
+                        <img src="{{user.account.profile_img_url}}" alt="" class="user-profile-img rounded-full object-cover p-0.5">
                     </div>
                     <p class="text-gray-600 mx-4 hidden sm:block">{{user.account.name}}</p>
-                    <div id="header-acc-opt" class="bg-white absolute top-14 left-0 shadow-lg w-32 right-0 px-1 py-1 border-2 border-gray-100 border-solid hidden">
+                    <div id="header-acc-opt" class="bg-white absolute top-14 shadow-lg w-32 right-0 sm:left-0 px-1 py-1 border-2 border-gray-100 border-solid hidden">
                         <a class="block text-sm text-gray-500 hover:bg-gray-100 py-2 px-1 flex items-center" href="{% url 'account' user.username %}">
                             <img src="/static/img/profile-icon.svg" class="h-4">
                             <p class="ml-2">My Account</p>

@@ -2,7 +2,7 @@
     <p class="text-md">Groups you are part of:</p>
     <div class="mt-7 relative">
         {% for group in user.account.groups.all %}
-        <a href="/groups/{{group.id}}/" class="user-group cursor-pointer flex mt-5 items-stretch {%if forloop.counter > 3 %}hidden{%endif%}" 
+        <a href="{% url 'groups:group' group.id %}" class="user-group cursor-pointer flex mt-5 items-stretch {%if forloop.counter > 3 %}hidden{%endif%}" 
         style="height: 58px;">
             <img class="object-cover rounded-sm flex-shrink-0" style="width: 84px;" src="{{group.cover_image.url}}">
             <div class="ml-4 flex flex-col">

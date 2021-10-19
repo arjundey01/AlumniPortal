@@ -1,7 +1,5 @@
-from django.core.exceptions import ValidationError
 from users.models import Account
 from django.db import models
-from .editorjsmod import EditorJsFieldMod
 from groups.models import Group
 import datetime
 import json
@@ -10,26 +8,6 @@ class Post(models.Model):
     datetime=models.DateTimeField(auto_now_add=True)
     likes=models.ManyToManyField(Account,related_name='liked_posts')
     tags=models.ManyToManyField(Group, related_name='posts')
-    content_old=EditorJsFieldMod(
-        editorjs_config={
-            "tools":{
-                "Image":{
-                    "config":{
-                        "endpoints":{
-                            "byFile":'http://localhost:8000/post/feign-imageUpload/',
-                            "byUrl":'http://localhost:8000/post/feign-imageUpload/',
-                        },
-                        "additionalRequestHeaders":[{"Content-Type":'multipart/form-data'}]
-                    }
-                },
-                "Attaches":{
-                    "config":{
-                        "endpoint":'http://localhost:8000/post/feign-fileUpload/'
-                    }
-                }
-            },
-            "logLevel":"ERROR"
-        },null=True)
     content=models.JSONField(default=dict)
     @property
     def rev_priority(self):

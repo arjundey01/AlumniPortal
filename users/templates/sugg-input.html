@@ -1,0 +1,14 @@
+<div class="sugg-inp my-2 relative flex flex-col items-center {{style}}">
+    <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 w-full"  name="{{name}}" placeholder="{{placeholder}}" autocomplete="off">
+    <div class="sugg-inp-sugg-wrp absolute top-11 bg-white shadow-lg w-11/12 rounded px-2 py-4 border-2 border-gray-200 border-solid hidden">
+        <p class="sugg-inp-msg text-center text-sm mb-2 text-accent">Click to Choose</p>
+        <div class="overflow-y-scroll border-t-2 border-gray-100 border-solid" style="max-height: 200px;">
+        {% for sugg in sugg_list %}
+            <p class="sugg-inp-sugg px-2 py-2 hover:bg-gray-100 cursor-pointer text-center border-b-2 border-gray-100 border-solid">
+                {{sugg}}
+            </p>
+        {% endfor %}
+        </div>
+        <p class="text-center text-xs mx-5 text-gray-400 mt-2">Could not find what you're looking for. Don't worry we'll add your entry to the list.</p>
+    </div>
+</div>

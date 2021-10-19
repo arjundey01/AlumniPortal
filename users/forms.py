@@ -10,16 +10,6 @@ class SignupForm(forms.Form):
     profile_img=forms.ImageField(label='')
     phone=forms.CharField(max_length=13)
     location=forms.CharField(max_length=25)
-class profileForm(forms.ModelForm):
-    class Meta:
-         model = Account                           
-         fields = ['branch','description','graduation_year','profile_img']
-         widgets = {
-            'branch': widgets.TextInput(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
-            'graduation_year': widgets.NumberInput(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
-            'description':widgets.Textarea(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}),
-            'profile_img':widgets.FileInput(attrs={'class':'w-52 sm:w-full bg-accent-faded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'})
-        }
 
 class FormattedModelForm(forms.ModelForm):
     def as_myformat(self):
@@ -92,3 +82,6 @@ class ContactUpdateForm(FormattedModelForm):        #for updating info of the us
     class Meta:
          model = Contact                           
          fields = ['gmail','mobile','outlook','linkedin']
+
+class ImageUploadForm(forms.Form):
+    image = forms.ImageField()

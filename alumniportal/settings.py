@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'users',
     'post',
     'rest_framework',
-    'django_editorjs',
     'chat',
     'faq',
     'groups'
