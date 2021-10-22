@@ -96,7 +96,7 @@
     </div>
 </div>
 <div  class="container">
-
+  {% if curr_user.user == user or contact %}
   <div class="w-full rounded bg-white  my-5 py-8 px-4">
     <div class="flex items-center mb-3">
       <h2 class="text-xl mx-4 font-medium">Contact</h2>
@@ -136,7 +136,7 @@
         </ul>
     </div> 
   </div>
-
+  {% endif %}
 
   {% if curr_user.user == user or experiences|length %}
   <div class="w-full rounded bg-white  my-5 py-8 px-4">
@@ -264,7 +264,7 @@
             <button class="delete-entry mx-3" data-url="{% url 'education' 'delete' %}" data-id="{{ edu.id }}">
               <i style="font-size:18px" class="fa fa-trash-o"></i>
             </button>
-            <button class="update-entry" data-id="{{ edu.id }}" data-type="edu"">
+            <button class="update-entry" data-id="{{ edu.id }}" data-type="edu">
               <i style="font-size:18px" class="fa fa-pencil"></i>
             </button>
           </div>
