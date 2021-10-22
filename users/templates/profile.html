@@ -97,7 +97,6 @@
 </div>
 <div  class="container">
 
-  {% if curr_user.user == user %}
   <div class="w-full rounded bg-white  my-5 py-8 px-4">
     <div class="flex items-center mb-3">
       <h2 class="text-xl mx-4 font-medium">Contact</h2>
@@ -107,29 +106,28 @@
         </button>
       {% endif %}
     </div>
-    <div class="text-lg ">
+    <div>
         <ul>
           <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
-            <div class="text-sm font-medium">Mobile No.</div>
-            <div id="contact-{{contact.id}}-mobile" class="text-sm">{{contact.mobile}}</div>
+            <div class="text- font-medium">Mobile No.</div>
+            <div id="contact-{{contact.id}}-mobile" class="text-">{{contact.mobile}}</div>
           </li>
           <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
-            <div class="text-sm font-medium">Gmail</div>
-            <div id="contact-{{contact.id}}-gmail" class="text-sm">{{contact.gmail}}</div>
+            <div class="text- font-medium">Gmail</div>
+            <div id="contact-{{contact.id}}-gmail" class="text-">{{contact.gmail}}</div>
           </li>
           <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
-            <div class="text-sm font-medium">Outlook</div>
-            <div id="contact-{{contact.id}}-outlook" class="text-sm">{{contact.outlook}}</div>
+            <div class="text- font-medium">Outlook</div>
+            <div id="contact-{{contact.id}}-outlook" class="text-">{{contact.outlook}}</div>
           </li>
           <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1">
-            <div class="text-sm font-medium">Linkedin</div>
+            <div class="text- font-medium">Linkedin</div>
             <p id="contact-{{contact.id}}-linkedin" class="hidden">{{contact.linkedin}}</p>
-            <a target="_blank" href="{{contact.linkedin}}"><div class="text-sm">{{username}}</div></a>
+            <a target="_blank" href="{{contact.linkedin}}"><div class="text-">{{username}}</div></a>
           </li>
         </ul>
     </div> 
   </div>
-  {% endif %}
 
 
   {% if curr_user.user == user or experiences|length %}

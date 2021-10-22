@@ -206,8 +206,11 @@ def profile(request, username):
     educations=Education.objects.all().filter(user=user)
     jobs=PastJobs.objects.all().filter(user=user)
     contact=Contact.objects.all().filter(user=user).first()
-    linkedin_username = contact.linkedin
-    username = linkedin_username.split("/")[-1]
+    try:
+        linkedin_username = contact.linkedin
+        uname = linkedin_username.split("/")[-1]
+    except:
+        uname = ''
     context ={
             'curr_user': user,
             'experiences':experiences,
@@ -217,7 +220,7 @@ def profile(request, username):
             'designations': [dsg.title for dsg in Designation.objects.all()],
             'institutes': [ins.name for ins in Institute.objects.all()],
             'contact': contact,
-            'username': username,
+            'username': uname,
             'jobs':jobs
         }
     if(request.user == user.user):
