@@ -52,16 +52,20 @@
     <div class="flex flex-row">
       <div class="flex flex-col my-2 mx-3">
         <div class="flex flex-row mb-1">
-          <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer" fill="none" viewBox="0 0 24 24">
-            <path opacity="0.8" stroke-linecap="round" stroke="#CCCCCC" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-          </svg>
-          <p class="ml-1 text-sm text-gray-700 align-center">0</p>
+          <div class="upvote-btn" data-answer-id="{{ans.id}}" data-question-id="{{question.id}}">
+            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer" fill="none" viewBox="0 0 24 24">
+              <path opacity="0.8" stroke-linecap="round" stroke="#CCCCCC" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+            </svg>
+          </div>
+          <p class="ml-1 text-sm text-gray-700 align-center">1000</p>
         </div>
         <div class="flex flex-row mb-1">
-          <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer" fill="none" viewBox="0 0 24 24">
-            <path opacity="0.8" stroke-linecap="round" stroke="#CCCCCC" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-          <p class="ml-1 text-sm text-gray-700 align-center">0</p>
+          <div class="downvote-btn" data-answer-id="{{ans.id}}" data-question-id="{{question.id}}">
+            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer" fill="none" viewBox="0 0 24 24">
+              <path opacity="0.8" stroke-linecap="round" stroke="#CCCCCC" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+          <p class="ml-1 text-sm text-gray-700 align-center">500</p>
         </div>
         {% if request.user.account == ans.question.author %}
         {% if not ans.accepted %}
@@ -123,4 +127,7 @@
 
     });
   </script>
+<script id='csrf_token' type='text'>{{csrf_token}}</script>
+<script type="text" id="data-username">{{request.user.username}}</script>
+<script src="/static/scripts/q_detail.js"></script>
 {% endblock scripts %}

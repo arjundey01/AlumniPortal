@@ -36,7 +36,7 @@ let load_question = function (index) {
         $(".question-content", question_clone).html(question.content);
         $(".question-author", question_clone).html(question.author.name);
         $(".question-author", question_clone).attr("href", `../account/${question.author.username_faq}`);
-        $(".question-details", question_clone).attr("href", `/faq/${question.id}/`);
+        $(".question-details", question_clone).attr("href", `/faq/question/${question.id}/`);
         if(Object.keys(question.answers).length != 0) {
           // clone node of subtree of the answer template
           let answer_clone = $("#answer-template").contents().clone(true);

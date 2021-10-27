@@ -191,3 +191,41 @@ def get_best4(request):
     ##################################################
     ##################################################
     return HttpResponse("You aren't suppose to see this!")
+
+def upvote(request):
+    if request.method == 'GET':
+        ans_id = request.GET['answer_id']
+        if request.user.is_authenticated:
+            answer=Answer.objects.get(id=ans_id)
+            acc=request.user.account
+            if acc in answer.upvotes.all():
+                answer.upvotes.remove(acc)
+                msg="removed_upvote"
+            else:
+                answer.upvotes.add(acc)
+                msg="added_upvote"
+            answer.save()
+            return HttpResponse(msg,status=200)
+        else:
+            return HttpResponse("Not Logged in!", status=500)
+    else:
+        return HttpResponse("unsuccessful", status=500)
+
+def downvote(request):
+    if request.method == 'GET':
+        post_id = request.GET['answer_id']
+        if request.user.is_authenticated:
+            answer=Answer.objects.get(id=post_id)
+            acc=request.user.account
+            if acc in answer.downvotes.all():
+                answer.downvotes.remove(acc)
+                msg="removed_downvote"
+            else:
+                answer.upvotes.add(acc)
+                msg="added_downvote"
+            answer.save()
+            return HttpResponse(msg,status=200)
+        else:
+            return HttpResponse("Not Logged in!", status=500)
+    else:
+        return HttpResponse("unsuccessful", status=500)
