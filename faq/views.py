@@ -238,26 +238,19 @@ def downvote(request):
     else:
         return HttpResponse("unsuccessful", status=500)
 
-def is_upvoted(request , id):
-    if(request.method == "GET"):
-        ans_id = int(id)
+def accept_answer(request):
+    if request.method == "GET":
+        ans_id = request.GET['answer_id']
+        ques_id = request.GET['question_id']
         if request.user.is_authenticated:
             answer=Answer.objects.get(id=ans_id)
-            acc=request.user.account
-            if acc in answer.upvotes.all():
-                return HttpResponse("upvoted "+str(ans_id),status=200)
-            return HttpResponse("not_upvoted "+str(ans_id),status=200)
-        return HttpResponse("Not Logged in!", status=500)
-    return HttpResponse("unsuccessful", status=500)
-
-def is_downvoted(request , id):
-    if(request.method == "GET"):
-        ans_id = int(id)
-        if request.user.is_authenticated:
-            answer=Answer.objects.get(id=ans_id)
-            acc=request.user.account
-            if acc in answer.downvotes.all():
-                return HttpResponse("downvoted",status=200)
-            return HttpResponse("not_downvoted",status=200)
+            question=Question.objects.get(id=ques_id)
+            for item in question.answers.all():
+                if item.accepted:
+                    item.accepted = False
+                item.save()
+            answer.accepted = True
+            answer.save()
+            return HttpResponse("accepted_answer",status=200)
         return HttpResponse("Not Logged in!", status=500)
     return HttpResponse("unsuccessful", status=500)

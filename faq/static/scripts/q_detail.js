@@ -1,5 +1,6 @@
 let upvote_btns = document.getElementsByClassName("upvote-btn");
 let downvote_btns = document.getElementsByClassName("downvote-btn");
+let accept_btns = document.getElementsByClassName("accept-btn");
 
 for (var i = 0; i < upvote_btns.length; i++) {
   upvote_btns[i].addEventListener("click", function () {
@@ -78,6 +79,28 @@ for (var i = 0; i < downvote_btns.length; i++) {
       },
     });
   });
+}
+for (var i = 0; i < accept_btns.length; i++){
+  accept_btns[i].addEventListener("click", function() {
+    var ans_id,ques_id;
+    ans_id = $(this).attr("data-answer-id");
+    ques_id = $(this).attr("data-question-id");
+    $.ajax({
+      type: "GET",
+      url: "/faq/accept-answer/",
+      data: {
+        answer_id: ans_id,
+        question_id: ques_id,
+      },
+      success: function (data) {
+        if (data == "accepted_answer"){
+          window.location.reload();
+        } else {
+          alert(data);
+        }
+      }
+    })
+  })
 }
 
 

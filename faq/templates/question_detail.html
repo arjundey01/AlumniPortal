@@ -70,9 +70,11 @@
         {% if request.user.account == ans.question.author %}
         {% if not ans.accepted %}
         <div class="flex flex-row mb-1">
-          <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer" fill="none" viewBox="0 0 24 24">
-            <path opacity="0.5" stroke-linecap="round" stroke="#00FF00" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
+          <div class="accept-btn" data-answer-id="{{ans.id}}" data-question-id="{{question.id}}">
+            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer" fill="none" viewBox="0 0 24 24">
+              <path opacity="0.5" stroke-linecap="round" stroke="#00FF00" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
           <p class="ml-1 text-sm text-gray-700 align-center">Ok</p>
         </div>
         {% endif %}
