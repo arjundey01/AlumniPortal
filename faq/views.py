@@ -240,13 +240,13 @@ def downvote(request):
 
 def is_upvoted(request , id):
     if(request.method == "GET"):
-        ans_id = int(id);
+        ans_id = int(id)
         if request.user.is_authenticated:
             answer=Answer.objects.get(id=ans_id)
             acc=request.user.account
             if acc in answer.upvotes.all():
-                return HttpResponse("upvoted",status=200)
-            return HttpResponse("not_upvoted",status=200)
+                return HttpResponse("upvoted "+str(ans_id),status=200)
+            return HttpResponse("not_upvoted "+str(ans_id),status=200)
         return HttpResponse("Not Logged in!", status=500)
     return HttpResponse("unsuccessful", status=500)
 
