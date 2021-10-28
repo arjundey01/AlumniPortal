@@ -41,6 +41,13 @@ class Answer(models.Model):
     def rev_priority(self):
         if self.accepted:
             return 1
-        return 2 + 1 / (self.upvotes.count() or 1)
+        return 2 + 1 / (self.upvotes.all().count() or 1)
 
+    def upvote_count(self):
+        return self.upvotes.all().count()
+
+    def downvote_count(self):
+        return self.downvotes.all().count()
     
+
+

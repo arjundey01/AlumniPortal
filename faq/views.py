@@ -203,6 +203,10 @@ def upvote(request):
                 msg="removed_upvote"
             else:
                 answer.upvotes.add(acc)
+                if acc in answer.downvotes.all():
+                    answer.downvotes.remove(acc)
+                    msg="removed_downvote_and_added_upvote"
+                    return HttpResponse(msg,status=200)
                 msg="added_upvote"
             answer.save()
             return HttpResponse(msg,status=200)
@@ -213,15 +217,19 @@ def upvote(request):
 
 def downvote(request):
     if request.method == 'GET':
-        post_id = request.GET['answer_id']
+        ans_id = request.GET['answer_id']
         if request.user.is_authenticated:
-            answer=Answer.objects.get(id=post_id)
+            answer=Answer.objects.get(id=ans_id)
             acc=request.user.account
             if acc in answer.downvotes.all():
                 answer.downvotes.remove(acc)
                 msg="removed_downvote"
             else:
-                answer.upvotes.add(acc)
+                answer.downvotes.add(acc)
+                if acc in answer.upvotes.all():
+                    answer.upvotes.remove(acc)
+                    msg="removed_upvote_and_added_downvote"
+                    return HttpResponse(msg,status=200)
                 msg="added_downvote"
             answer.save()
             return HttpResponse(msg,status=200)
@@ -229,3 +237,27 @@ def downvote(request):
             return HttpResponse("Not Logged in!", status=500)
     else:
         return HttpResponse("unsuccessful", status=500)
+
+def is_upvoted(request , id):
+    if(request.method == "GET"):
+        ans_id = int(id);
+        if request.user.is_authenticated:
+            answer=Answer.objects.get(id=ans_id)
+            acc=request.user.account
+            if acc in answer.upvotes.all():
+                return HttpResponse("upvoted",status=200)
+            return HttpResponse("not_upvoted",status=200)
+        return HttpResponse("Not Logged in!", status=500)
+    return HttpResponse("unsuccessful", status=500)
+
+def is_downvoted(request , id):
+    if(request.method == "GET"):
+        ans_id = int(id)
+        if request.user.is_authenticated:
+            answer=Answer.objects.get(id=ans_id)
+            acc=request.user.account
+            if acc in answer.downvotes.all():
+                return HttpResponse("downvoted",status=200)
+            return HttpResponse("not_downvoted",status=200)
+        return HttpResponse("Not Logged in!", status=500)
+    return HttpResponse("unsuccessful", status=500)
