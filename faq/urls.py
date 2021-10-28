@@ -12,6 +12,6 @@ urlpatterns = [
     path('ans-from-alumni', views.get_best4, name='ans-from-alumni'),
     path('upvote/', views.upvote, name='upvote'),
     path('downvote/', views.downvote, name='downvote'),
-    path('is_upvoted/<id>', views.is_upvoted, name='upvoted'),
-    path('is_downvoted/<id>', views.is_downvoted, name='downvoted'),
+    path('is_upvoted/<id>/', views.is_upvoted, name='upvoted'),
+    path('is_downvoted/<id>/', views.is_downvoted, name='downvoted'),
 ]

@@ -84,41 +84,41 @@ for (var i = 0; i < downvote_btns.length; i++) {
 }
 let load_details = function(){
     for (var i = 0; i < downvote_btns.length; i++) {
-        var ans_id;
-        ans_id = downvote_btns[i].getAttribute("data-answer-id");
+        var downvote_id;
+        downvote_id = downvote_btns[i].getAttribute("data-answer-id");
         $.ajax({
           type: "GET",
-          url: "/faq/is_downvoted/"+ans_id,
+          url: "/faq/is_downvoted/"+downvote_id,
           success: function (data) {
               console.log(data);
             if (data == "downvoted") {
-              $("#downvote-btn-" + ans_id).addClass("svg-accent");
-              $("#downvote-value-" + ans_id).addClass("text-accent");
+              $("#downvote-btn-" + downvote_id).addClass("svg-accent");
+              $("#downvote-value-" + downvote_id).addClass("text-accent");
             }
           },
           error: function (data) {
             console.log(data);
           },
         });
-      }
-      for (var i = 0; i < upvote_btns.length; i++) {
-        var ans_id;
-        ans_id = upvote_btns[i].getAttribute("data-answer-id");
-        $.ajax({
-          type: "GET",
-          url: "/faq/is_upvoted/"+ans_id,
-          success: function (data) {
-            console.log(data);
-            if (data == "upvoted") {
-              $("#upvote-btn-" + ans_id).addClass("svg-accent");
-              $("#upvote-value-" + ans_id).addClass("text-accent");
-            }
-          },
-          error: function (data) {
-            console.log(data);
-          },
-        });
-      }
+    }
+    for (var i = 0; i < upvote_btns.length; i++) {
+      var upvote_id;
+      upvote_id = upvote_btns[i].getAttribute("data-answer-id");
+      $.ajax({
+        type: "GET",
+        url: "/faq/is_upvoted/"+upvote_id,
+        success: function (data) {
+          console.log(data,upvote_id);
+          if (data == "upvoted") {
+            $("#upvote-btn-" + upvote_id).addClass("svg-accent");
+            $("#upvote-value-" + upvote_id).addClass("text-accent");
+          }
+        },
+        error: function (data) {
+          console.log(data);
+        },
+      });
+    }
 }
 
 
