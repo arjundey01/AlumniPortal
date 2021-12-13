@@ -18,13 +18,14 @@
 
 
 <div id="search-alumni" class="search-tab-content rounded w-full bg-white py-4 px-8 shadow-lg my-10">
-    {% for res in results.alumni %}
-    <div class="flex justify-between items-center py-3">
-        <a href="{{res.url}}" class="flex items-center justify-start">
-            <img src="{{res.img}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
+    {% for res in filter.qs %}
+    {% if res.is_alumni %}
+    <div class="flex justify-between items-center py-3" data-gradyear="{{res.gradyear}}">
+        <a href="{{ res.url }}" class="flex items-center justify-start">
+            <img src="{{res.profile_img_url}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
             <div class="mx-3">
-                <p class="mt-1 leading-3">{{res.title}}</p>
-                <p class="text-xs mt-1">{{res.subtitle}}</p>
+                <p class="mt-1 leading-3">{{res.name}}</p>
+                <p class="text-xs mt-1">{{res.designation.title}}</p>
             </div>
         </a>
         <div>
@@ -35,6 +36,7 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
     {% empty %}
     <div class="flex text-lg text-gray-500 justify-center my-10">
         No Results 
@@ -44,13 +46,14 @@
 
 
 <div id="search-students" class="search-tab-content rounded w-full bg-white py-4 px-8 shadow-lg my-10 hidden">
-    {% for res in results.student %}
-    <div class="flex justify-between items-center py-3">
+    {% for res in filter.qs %}
+    {% if not res.is_alumni %}
+    <div class="flex justify-between items-center py-3" data-gradyear="{{res.gradyear}}">
         <a href="{{res.url}}" class="flex items-center justify-start">
-            <img src="{{res.img}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
+            <img src="{{res.profile_img_url}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
             <div class="mx-3">
-                <p class="mt-1 leading-3">{{res.title}}</p>
-                <p class="text-xs mt-1">{{res.subtitle}}</p>
+                <p class="mt-1 leading-3">{{res.name}}</p>
+                <p class="text-xs mt-1">{{res.designation.title}}</p>
             </div>
         </a>
         <div>
@@ -61,6 +64,7 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
     {% empty %}
     <div class="flex text-lg text-gray-500 justify-center my-10">
         No Results 
@@ -94,8 +98,22 @@
     {% endfor %}
 </div>
 {% endblock %}
+{% block right-pane %}
+<div class="flex bg-white mt-5 h-10 text-lg py-1 px-40">Filters</div>
+<div class="rounded w-full bg-white py-4 px-8 shadow-lg my-10">
+    <div class="block">
+        <span class="text-gray-700">Graduation year</span>
+        <form method="get" class="mt-2" id="filter-form">
+            <input type="text" name="query" id="filter-query" hidden>
+          {{filter.form}}
+          <button id="filter-submit">
+            Search
+          </button>
+        </form>
+      </div>
+</div>
 
-
+{% endblock %}
 {% block scripts %}
 <script>
     $('.search-tab').on('click', function(e){
@@ -103,6 +121,12 @@
         $(this).addClass('search-tab-active');
         $('.search-tab-content').addClass('hidden');
         $(`#search-${$(this).attr('data-id')}`).removeClass('hidden');
+    })
+    $('#filter-submit').on('click',function(e){
+        e.preventDefault();
+        $('#filter-query').val(sessionStorage.getItem('query'))
+        console.log($('#filter-query').val())
+        $('#filter-form').submit()
     })
 </script>
 {% endblock %}

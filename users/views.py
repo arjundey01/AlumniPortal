@@ -19,6 +19,7 @@ import json
 import operator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from fuzzywuzzy import fuzz
+from .filters import AccountFilter
 
 def home(request):
     if request.user.is_authenticated:
@@ -382,7 +383,7 @@ def delete_item(request, type):
 def search(query, user):
     res = {'group':[],'alumni':[],'student':[]}
     for group in Group.objects.all():
-        score = fuzz.partial_ratio(query, group.title)
+        score = fuzz.partial_ratio(query, group.title.lower())
         if score>50:
             ele={'title':group.title,'subtitle':str(group.member_count)+' members',
             'img':group.cover_image.url,'url':reverse('groups:group',args=[group.id]),'id':group.id,'match':score}
@@ -391,11 +392,11 @@ def search(query, user):
     for acc in Account.objects.all():
         if acc == user.account:
             continue
-        score = fuzz.partial_ratio(query, acc.name)
+        score = fuzz.partial_ratio(query, acc.name.lower())
         cat = 'alumni' if acc.is_alumni else 'student'
         if score>50:
             ele ={'title':acc.name,'subtitle':acc.designation.title,'img':acc.profile_img_url,
-            'url':reverse('account',args=[acc.user.username]),'username':acc.user.username,'match':score}
+            'url':reverse('account',args=[acc.user.username]),'username':acc.user.username,'match':score,'gradyear':acc.graduation_year}
             ele['followed']=user.account in acc.followers.all()
             res[cat].append(ele)
     res['group'].sort(key=lambda x:x.get('match'))
@@ -403,16 +404,59 @@ def search(query, user):
     res['student'].sort(key=lambda x:x.get('match'))
     return res
 
+def searchgroup(query,user):
+    res = {'group':[]}
+    for group in Group.objects.all():
+        score = fuzz.partial_ratio(query, group.title.lower())
+        if score>50:
+            ele={'title':group.title,'subtitle':str(group.member_count)+' members',
+            'img':group.cover_image.url,'url':reverse('groups:group',args=[group.id]),'id':group.id,'match':score}
+            ele['joined']=user.account in group.members.all()
+            res['group'].append(ele)
+    return res
+
+def searchAccount(query,user):
+    list_of_accounts = []
+    for acc in Account.objects.all():
+        if acc == user.account:
+            continue
+        score = fuzz.partial_ratio(query, acc.name.lower())
+        if score>50:
+            list_of_accounts.append(acc.id)
+    qs = Account.objects.filter(id__in=list_of_accounts)
+    return qs
+
+def new_search(request):
+    query = request.GET.get('query')
+    res = searchgroup(query.lower(), request.user)
+    qs = searchAccount(query.lower(), request.user)
+    account_filter = AccountFilter(request.GET,queryset=qs)
+    return render(request,"search_results.html",{"filter":account_filter,'results':res})
+
 def search_sugg(request):
     query = request.GET.get('query')
-    res = search(query, request.user)        
+    res = search(query.lower(), request.user)
     return HttpResponse(json.dumps({'query':query,'results':res}))
 
 
 def search_res(request):
     query = request.GET.get('query')
-    res = search(query, request.user)
+    res = search(query.lower(), request.user)
     return render(request, "search_results.html",{"results":res})
+
+
+# def filter_list(request):
+#     f = BranchFilter(request.GET, queryset = Branch.objects.all())
+#     return render(request, 'search_results.html', {'filter': f})
+
+def filter_list(request):
+    res = Account.objects.all()
+    f = AccountFilter(request.GET, queryset = res)
+    res = f.qs
+    print(res, "abcd")
+    context = {'filterData': res, 'filter': f}
+    return render(request, 'search_results.html', context)
+
 
 @login_required
 def suggestions(request):

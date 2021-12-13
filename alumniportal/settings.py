@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'chat',
     'faq',
     'groups',
-    'events'
+    'events',
+    'django_filters'
 ]
 
 MIDDLEWARE = [

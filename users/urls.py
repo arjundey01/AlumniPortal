@@ -30,7 +30,8 @@ urlpatterns = [
   path('account/change-profile-img/',views.update_photo, name="change-profile-img"),
 
   path('search-sugg/',views.search_sugg, name="search-sugg"),
-  path('search/',views.search_res,name="search"),
+  path('search/',views.new_search,name="search"),
+  # path('search/',views.filter_list,name="filter"),
 
   path('get-suggestions/',views.suggestions, name = 'suggestions')
 
