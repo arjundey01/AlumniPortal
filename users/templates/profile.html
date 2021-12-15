@@ -94,14 +94,49 @@
       </div>
 
     </div>
-    
-    <div class="mt-10">
-      <p class="text-xl font-medium">About</p>
-      <p class="font-light mt-3" id="account--description">{{curr_user.description}}</p>
+</div>
+<div  class="container">
+  {% if curr_user.user == user or contact %}
+  <div class="w-full rounded bg-white  my-5 py-8 px-4">
+    <div class="flex items-center mb-3">
+      <h2 class="text-xl mx-4 font-medium">Contact</h2>
+      {% if curr_user.user == user%}
+        <button class="update-entry" data-id="{{ contact.id }}" data-type="contact">
+          <i style="font-size:18px" class="fa fa-pencil"></i>
+        </button>
+      {% endif %}
     </div>
-
+    <div>
+        <ul>
+        {% if contact.mobile %}
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
+            <div class="text- font-medium">Mobile No.</div>
+            <div id="contact-{{contact.id}}-mobile" class="text-">{{contact.mobile}}</div>
+          </li>
+          {% endif %}
+          {% if contact.gmail %}
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
+            <div class="text- font-medium">Gmail</div>
+            <div id="contact-{{contact.id}}-gmail" class="text-">{{contact.gmail}}</div>
+          </li>
+          {% if contact.outlook %}
+          {% endif %}
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
+            <div class="text- font-medium">Outlook</div>
+            <div id="contact-{{contact.id}}-outlook" class="text-">{{contact.outlook}}</div>
+          </li>
+          {% if contact.linkedin %}
+          {% endif %}
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1">
+            <div class="text- font-medium">Linkedin</div>
+            <p id="contact-{{contact.id}}-linkedin" class="hidden">{{contact.linkedin}}</p>
+            <a target="_blank" href="{{contact.linkedin}}"><div class="text-">{{username}}</div></a>
+          </li>
+          {% endif %}
+        </ul>
+    </div> 
   </div>
-
+  {% endif %}
 
   {% if curr_user.user == user or experiences|length %}
   <div class="w-full rounded bg-white  my-5 py-8 px-4">
@@ -132,7 +167,7 @@
         <div hidden id="exp-{{exp.id}}-start_date">{{exp.start_date|date:'Y-m-d'}}</div>
         <div hidden id="exp-{{exp.id}}-end_date">{{exp.end_date|date:'Y-m-d'}}</div>
         <p class="text-gray-400">{{exp.get_start_date}} - {{exp.get_end_date}}</p>
-        <p id="exp-{{exp.id}}-organization">{{exp.description}}</p>
+        <p id="exp-{{exp.id}}-description">{{exp.description}}</p>
       </div>
     </div>
     {% endfor %}
@@ -194,7 +229,7 @@
             <button class="delete-entry mx-3" data-url="{% url 'project' 'delete' %}" data-id="{{ project.id }}">
               <i style="font-size:18px" class="fa fa-trash-o"></i>
             </button>
-            <button class="update-entry" data-id="{{ project.id }}" data-type="project"">
+            <button class="update-entry" data-id="{{ project.id }}" data-type="project">
               <i style="font-size:18px" class="fa fa-pencil"></i>
             </button>
           </div>
@@ -229,7 +264,7 @@
             <button class="delete-entry mx-3" data-url="{% url 'education' 'delete' %}" data-id="{{ edu.id }}">
               <i style="font-size:18px" class="fa fa-trash-o"></i>
             </button>
-            <button class="update-entry" data-id="{{ edu.id }}" data-type="edu"">
+            <button class="update-entry" data-id="{{ edu.id }}" data-type="edu">
               <i style="font-size:18px" class="fa fa-pencil"></i>
             </button>
           </div>

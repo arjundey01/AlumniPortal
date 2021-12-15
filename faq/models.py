@@ -29,7 +29,8 @@ class Answer(models.Model):
     author = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
     posted_on = models.DateTimeField(auto_now_add=True)
-    upvotes = models.IntegerField(default=0)
+    upvotes = models.ManyToManyField(Account,related_name='upvoted_answer')
+    downvotes = models.ManyToManyField(Account,related_name='downvoted_answer')
     accepted = models.BooleanField(default=False)
     content = models.TextField(blank=False)
 
@@ -40,4 +41,13 @@ class Answer(models.Model):
     def rev_priority(self):
         if self.accepted:
             return 1
-        return 2 + 1 / (self.upvotes or 1)
+        return 2 + 1 / (self.upvotes.all().count() or 1)
+
+    def upvote_count(self):
+        return self.upvotes.all().count()
+
+    def downvote_count(self):
+        return self.downvotes.all().count()
+    
+
+

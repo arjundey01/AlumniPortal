@@ -28,6 +28,7 @@ urlpatterns = [
   path('account/education/<action>/', views.education, name='education'),
   path('account/job/<action>/', views.pastjobs, name='job'),
   path('account/change-profile-img/',views.update_photo, name="change-profile-img"),
+  path('account/contact/update/',views.update_contact, name="update-contact"),
 
   path('search-sugg/',views.search_sugg, name="search-sugg"),
   path('search/',views.search_res,name="search"),
