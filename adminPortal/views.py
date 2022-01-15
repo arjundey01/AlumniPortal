@@ -1,5 +1,6 @@
 from django.http.response import JsonResponse
 from django.shortcuts import render
+from groups.models import Group
 from users.models import Account
 from post.models import Post
 from django.urls import reverse
@@ -47,6 +48,23 @@ def posts(request):
         return render(request,'allposts.html',context)
     return HttpResponseNotFound("Page Not Found")
 
+def groups(request):
+    if request.user.is_staff:
+        res = [];
+        for group in Group.objects.all():
+            ele={'title':group.title,'subtitle':str(group.member_count)+' members',
+            'img':'','url':reverse('groups:group',args=[group.id]),'id':group.id}
+            ele['joined']=request.user.account in group.members.all()
+            if group.cover_image:
+                ele['img']=group.cover_image.url
+            res.append(ele)
+        context = {
+            'active_tab':'groups',
+            'groups':res,
+        }
+        return render(request,'allgroups.html',context)
+    return HttpResponseNotFound("Page Not Found")
+
 def delete_account(request,id):
     if request.user.is_staff:
         try:
@@ -63,4 +81,13 @@ def delete_post(request,id):
             return JsonResponse({"message":"deleted the post","status":200})
         except:
             return JsonResponse({"message":"unable to delete this post","status":200})
+    return HttpResponseNotFound("Page Not Found")
+
+def delete_group(request,id):
+    if request.user.is_staff:
+        try:
+            Group.objects.get(id=id).delete()
+            return JsonResponse({"message":"deleted the group","status":200})
+        except:
+            return JsonResponse({"message":"unable to delete this group","status":200})
     return HttpResponseNotFound("Page Not Found")
