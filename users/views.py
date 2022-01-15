@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from post.views import feed
+from post.views import feed,individualfeed
 from groups.models import Group
 from .forms import *
 import json
@@ -23,6 +23,11 @@ from fuzzywuzzy import fuzz
 def home(request):
     if request.user.is_authenticated:
         return feed(request)
+    return render(request, 'home.html')
+
+def detail(request,id):
+    if request.user.is_authenticated:
+        return individualfeed(request,id)
     return render(request, 'home.html')
 
 
