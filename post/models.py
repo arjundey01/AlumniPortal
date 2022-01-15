@@ -9,6 +9,7 @@ class Post(models.Model):
     likes=models.ManyToManyField(Account,related_name='liked_posts')
     tags=models.ManyToManyField(Group, related_name='posts')
     content=models.JSONField(default=dict)
+    reports=models.ManyToManyField(Account,related_name='reported_posts',blank=True)
     @property
     def rev_priority(self):
         age=(datetime.datetime.now()-self.datetime).total_seconds()//(3600*24)

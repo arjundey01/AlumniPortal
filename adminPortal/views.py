@@ -38,9 +38,11 @@ def posts(request):
         for post in Post.objects.all():
             ele ={'author':post.author.name,'time':post.datetime,
             'authorURL':reverse('account',args=[post.author.user.username]),
+            'report':post.reports.all().count(),
             'url':'/post-detail/'+ str(post.id),'likes':post.likes.all().count(),'id':post.id}
             res.append(ele)
             res.sort(key=lambda x: x.get('time'), reverse=True)
+            res.sort(key=lambda x: x.get('report'), reverse=True)
         context = {
             'active_tab':'posts',
             'posts':res,
