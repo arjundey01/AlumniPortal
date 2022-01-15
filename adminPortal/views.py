@@ -37,7 +37,7 @@ def posts(request):
         for post in Post.objects.all():
             ele ={'author':post.author.name,'time':post.datetime,
             'authorURL':reverse('account',args=[post.author.user.username]),
-            'url':'/admin/posts','likes':post.likes.all().count(),'id':post.id}
+            'url':'/post-detail/'+ str(post.id),'likes':post.likes.all().count(),'id':post.id}
             res.append(ele)
             res.sort(key=lambda x: x.get('time'), reverse=True)
         context = {

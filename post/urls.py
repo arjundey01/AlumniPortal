@@ -10,6 +10,7 @@ urlpatterns=[
     path('update/<pk>/', views.update_post ,name='post_update'),
     path('detail/<pk>', views.post_details, name='post_detail'),
     path('load-feed/<index>',views.load_feed),
+    path('load-post/<id>',views.individual_post),
     path('like-post/',views.like_post, name='like-post'),
     path('fileUpload/', csrf_exempt(views.upload_file_view)),
     path('imageUpload/', csrf_exempt(views.upload_image_view)),
