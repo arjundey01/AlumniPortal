@@ -22,11 +22,15 @@
             </a>
             <div class="float-right flex flex-col items-end">
                 <div class="relative overflow-visible ">
-                    <img src="/static/img/more.svg" alt="" class="post-options-button cursor-pointer h-5 w-5 hidden">
+                    <img src="/static/img/more.svg" alt="" class="post-options-button cursor-pointer h-5 w-5">
                     <div class="post-options bg-white absolute top-6 right-0 shadow-lg w-32 right-0 px-1 py-1 border-2 border-gray-100 border-solid hidden">
-                        <div class="post-delete block text-sm text-gray-500 hover:bg-gray-100 py-2 px-1 flex items-center cursor-pointer" href="#">
+                        <div class="post-delete hidden text-sm text-gray-500 hover:bg-gray-100 py-2 px-1 flex items-center cursor-pointer" href="#">
                             <img src="/static/img/delete.svg" class="h-4 -mt-0.5">
                             <p class="ml-2">Delete</p>
+                        </div>
+                        <div class="post-report block text-sm text-gray-500 hover:bg-gray-100 py-2 px-1 flex items-center cursor-pointer" href="#">
+                            <img src="/static/img/innfo.svg" class="h-4 -mt-0.5">
+                            <p class="ml-2">Report</p>
                         </div>
                     </div>
                 </div>
@@ -75,6 +79,6 @@
 <script id='post-id' type='text' data-id={{id}}></script>
 <script src="/static/scripts/individual_post.js"></script>
 {% else %}
-<script src="/static/scripts/post.js"></script>
+<script src="/static/scripts/post.js?version=1"></script>
 {% endif %}
 {% endblock %}

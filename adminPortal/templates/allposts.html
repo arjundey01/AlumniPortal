@@ -14,10 +14,11 @@
             <table class="min-w-full bg-white">
                 <thead class="bg-gray-800 text-white">
                     <tr>
-                        <th class="w-1/4 text-left py-3 px-4 uppercase font-semibold text-sm">Author</th>
-                        <th class="w-1/4 text-left py-3 px-4 uppercase font-semibold text-sm">Posted at</th>
-                        <th class="w-1/4 text-left py-3 px-4 uppercase font-semibold text-sm">Likes</th>
-                        <th class="w-1/4 text-left py-3 px-4 uppercase font-semibold text-sm">Actions</th>
+                        <th class="w-1/5 text-left py-3 px-4 uppercase font-semibold text-sm">Author</th>
+                        <th class="w-1/5 text-left py-3 px-4 uppercase font-semibold text-sm">Posted at</th>
+                        <th class="w-1/5 text-left py-3 px-4 uppercase font-semibold text-sm">Likes</th>
+                        <th class="w-1/5 text-left py-3 px-4 uppercase font-semibold text-sm">Reports</th>
+                        <th class="w-1/5 text-left py-3 px-4 uppercase font-semibold text-sm">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700">
@@ -27,10 +28,11 @@
                         {% else %}
                         <tr class="bg-gray-200">
                         {% endif %}
-                            <td class="w-1/4 text-left py-3 px-4"><a href="{{post.authorURL}}" target="_blank">{{post.author}}</a></td>
-                            <td class="w-1/4 text-left py-3 px-4">{{post.time}}</td>
-                            <td class="w-1/4 text-left py-3 px-4">{{post.likes}}</td>
-                            <td class="w-1/4 text-left py-3 px-4 flex flex-row gap-4">
+                            <td class="w-1/5 text-left py-3 px-4"><a href="{{post.authorURL}}" target="_blank">{{post.author}}</a></td>
+                            <td class="w-1/5 text-left py-3 px-4">{{post.time}}</td>
+                            <td class="w-1/5 text-left py-3 px-4">{{post.likes}}</td>
+                            <td class="w-1/5 text-left py-3 px-4">{{post.report}}</td>
+                            <td class="w-1/5 text-left py-3 px-4 flex flex-row gap-4">
                                 <a target="_blank" href="{{post.url}}" class="w-20 h-8 rounded-md bg-blue-500 text-lg text-white self-center px-4">View</a>
                                 <div
                                 data-post-id="{{post.id}}"

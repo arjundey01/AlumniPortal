@@ -90,11 +90,14 @@ function load_posts(index) {
                 $('.post-likes', p).on('click', function(){
                     showLikes(this);
                 } );
+                $('.post-options-button', p).removeClass('hidden');
+                $('.post-options-button', p).on('click', function(){
+                    $('.post-options',this.parentElement).toggleClass('hidden');
+                } );
+                $('.post-report', p).on('click',reportPost);
+                $('.post-report', p).attr('data-id',post.id);
                 if(username == post.author.username){
-                    $('.post-options-button', p).removeClass('hidden');
-                    $('.post-options-button', p).on('click', function(){
-                        $('.post-options',this.parentElement).toggleClass('hidden');
-                    } );
+                    $('.post-delete', p).removeClass('hidden');
                     $('.post-delete', p).attr('data-id',post.id);
                     $('.post-delete', p).on('click',deletePost);
                 }
@@ -128,6 +131,25 @@ function deletePost(e){
         success: (data)=>{
             console.log('Post deleted!');
             post.remove();
+        },
+        error: (err)=>{
+            post.css('opacity','1');
+        }
+    })
+}
+function reportPost(e){
+    const idd = $(this).attr('data-id');
+    console.log(idd);
+    const post = $(this).parents().eq(4);
+    post.css('opacity','0.6');
+    $(this).parent().toggleClass('hidden');
+    $.ajax({
+        type: 'POST',
+        url: '/post/report/',
+        data: {id:idd},
+        success: (data)=>{
+            console.log('Post Reported!');
+            post.css('opacity','1');
         },
         error: (err)=>{
             post.css('opacity','1');

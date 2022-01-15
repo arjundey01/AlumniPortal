@@ -78,6 +78,19 @@ def delete_post(request):
         return HttpResponse('badRequest', status=400)
     return HttpResponse('notLoggedIn',status=500)
 
+def report_post(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            post=get_object_or_404(Post,pk=request.POST.get('id'))
+            if request.user.account in post.reports.all():
+                return HttpResponse('success')
+            else:
+                post.reports.add(request.user.account)
+                post.save()
+            return HttpResponse('success')
+        return HttpResponse('badRequest', status=400)
+    return HttpResponse('notLoggedIn',status=500)
+
 import json
 from urllib.parse import unquote
 def upload_image_view(request):
