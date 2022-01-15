@@ -6,4 +6,6 @@ urlpatterns = [
     path('', index),
     path('accounts/', accounts),
     path('posts/', posts),
+    path('accounts/delete/<id>', delete_account),
+    path('posts/delete/<id>', delete_post),
 ]

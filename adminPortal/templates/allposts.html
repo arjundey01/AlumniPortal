@@ -27,12 +27,17 @@
                         {% else %}
                         <tr class="bg-gray-200">
                         {% endif %}
-                            <td class="w-1/4 text-left py-3 px-4"><a href="{{post.authorURL}}">{{post.author}}</a></td>
+                            <td class="w-1/4 text-left py-3 px-4"><a href="{{post.authorURL}}" target="_blank">{{post.author}}</a></td>
                             <td class="w-1/4 text-left py-3 px-4">{{post.time}}</td>
                             <td class="w-1/4 text-left py-3 px-4">{{post.likes}}</td>
                             <td class="w-1/4 text-left py-3 px-4 flex flex-row gap-4">
                                 <a href="{{post.url}}" class="w-20 h-8 rounded-md bg-blue-500 text-lg text-white self-center px-4">View</a>
-                                <a href="{{post.url}}" class="w-20 h-8 rounded-md bg-red-500 text-lg text-white self-center px-4">Delete</a>
+                                <div
+                                data-post-id="{{post.id}}"
+                                data-post-name="{{post.author}}"
+                                class="delete-post-btn w-20 h-8 rounded-md bg-red-500 text-lg text-white self-center px-4 cursor-pointer"
+                                >Delete</div
+                            >
                             </td>
                         </tr>
                     {% endfor %}
@@ -41,4 +46,7 @@
         </div>
     </div>
 </main>
+{% endblock %}
+{% block scripts %}
+<script src="/static/scripts/account.js"></script>
 {% endblock %}

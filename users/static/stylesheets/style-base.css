@@ -193,6 +193,16 @@ body{
     fill: white;
 }
 
+.svg-accent-u path{
+    stroke:#60E354;
+    fill: white;
+}
+
+.svg-accent-d path{
+    stroke:#e35954;
+    fill: white;
+}
+
 .svg-accent-inv path{
     stroke: white;
     fill: #4150D7;
