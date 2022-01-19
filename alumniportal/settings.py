@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'chat',
     'faq',
     'groups',
-    'adminPortal'
+    'adminPortal',
+    'events'
 ]
 
 MIDDLEWARE = [
