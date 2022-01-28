@@ -1,0 +1,30 @@
+#date{
+
+    /* font-weight: 500; */
+    /* font-size: 11px;
+    line-height: 17px; */
+    background: #4150D7;
+    /* color: white; */
+    
+    /* margin-top: 25px;
+    margin-bottom: 12px;
+    padding: 2px; */
+    
+    }
+    
+    #time{
+    /* font-size: 11px;
+    font-weight: 500;
+    line-height: 17px; */
+    /* letter-spacing: 0em;
+    text-align: left; */
+    background: #FF87A4;
+    /* color: white; */
+    
+    /* padding: 2px; */
+    
+    }
+
+.video{
+    width: 40px;
+}

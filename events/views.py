@@ -7,3 +7,9 @@ def events(request):
         'events': Event.objects.all()
     }
     return render(request, 'events.html', context)
+
+def eventPage(request):
+    context = {
+        
+    }
+    return render(request, 'eventpage.html', context)

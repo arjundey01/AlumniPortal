@@ -98,22 +98,7 @@
     {% endfor %}
 </div>
 {% endblock %}
-{% block right-pane %}
-<div class="flex bg-white mt-5 h-10 text-lg py-1 px-40">Filters</div>
-<div class="rounded w-full bg-white py-4 px-8 shadow-lg my-10">
-    <div class="block">
-        <span class="text-gray-700">Graduation year</span>
-        <form method="get" class="mt-2" id="filter-form">
-            <input type="text" name="query" id="filter-query" hidden>
-          {{filter.form}}
-          <button id="filter-submit">
-            Search
-          </button>
-        </form>
-      </div>
-</div>
 
-{% endblock %}
 {% block scripts %}
 <script>
     $('.search-tab').on('click', function(e){

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Alumni Talk</title>
+<link rel="stylesheet" href="/static/stylesheets/style-eventpage.css">
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col">
+    <div class="h-52 w-full bg-bluegray mt-5 relative">
+        <img src="../static/images/yellow.png" class="w-full h-full object-cover" alt="">
+        <a href="/groups/" class="bg-white rounded absolute top-6 left-6 h-9 w-9 flex items-center justify-center hover:opacity-90"><img src="/static/img/arrow-left.svg" alt="" class="w-9 h-5"></a>
+        <button class="bg-white rounded absolute top-6 right-6 h-9 w-9 flex items-center justify-center"><img src="../static/images/star.png" alt="" class="w5 h-5"></button>
+        <button class="bg-white rounded absolute top-6 right-20 h-9 w-9 flex items-center justify-center"><img src="../static/images/save.png" alt="" class="w-5 h-5"></button>
+    </div>
+    <div class="w-full bg-white px-4 sm:px-9 pt-5 pb-5 flex flex-col" style="min-height: 210px;">
+        <div class="flex flex-row justify-left">
+            <div class="flex flex-row">
+                    <div class="flex flex-col mb-3 m-2 items-start">             
+                        <div class="text-2xl font-bold mb-1 m-1">Alumni Talk</div>
+                        <div id="count" class="flex text-xs mt-2"> <img class="eyepic m-0.5 h-3 m-1" src="../static/images/Icon.png"> 23 people are interested</div>
+                    </div>
+                    <div class="flex flex-col justify-between ml-4 m-2">    
+                        <div id="date" class="rounded text-center text-white font-medium h-6 p-1 px-5 m-2 text-xs">  23/04/2022  </div>
+                        <div id="time" class="rounded text-center text-white font-medium h-6 p-1 px-5 m-2 mb-2 text-xs">8:30 PM IST </div>     
+                    </div>       
+            </div>
+         
+
+        </div>
+            
+        
+        <div class="text-sm mt-4 md:mt-0">
+        ligna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        ojects, such as landing pages or unusual corporate websites.
+        </div>
+    </div>
+    <div class="w-full bg-white px-4 sm:px-9 pt-5 mt-4 pb-5 flex flex-col justify-between" style="min-height: 210px;">
+        <div class="mb-4 font-bold"> Speakers </div>
+        <div class="flex flex-row flex-wrap justify-left">
+            <div class="flex flex-col mx-3 text-center">
+                <img src="../static/images/Icon4.png" class="p-4" alt="">
+                <div class="text-sm font-semibold">Bhavyesh Prajapat</div>
+                <div class="text-sm font-light">Designer</div>
+            </div>
+            <div class="flex flex-col mx-3 text-center">
+                <img src="../static/images/Icon4.png" class="p-4" alt="">
+                <div class="text-sm font-semibold">Bhavyesh Prajapat</div>
+                <div class="text-sm font-light">Designer</div>
+            </div>
+            <div class="flex flex-col mx-3 text-center">
+                <img src="../static/images/Icon4.png" class="p-4" alt="">
+                <div class="text-sm font-semibold">Bhavyesh Prajapat</div>
+                <div class="text-sm font-light">Designer</div>
+            </div>
+            <div class="flex flex-col mx-3 text-center">
+                <img src="../static/images/Icon4.png" class="p-4" alt="">
+                <div class="text-sm font-semibold">Bhavyesh Prajapat</div>
+                <div class="text-sm font-light">Designer</div>
+            </div>
+        </div>
+    </div>
+    <div class="w-full bg-white px-4 sm:px-9 pt-5 mt-4 pb-5 flex flex-col justify-between" style="min-height: 210px;">
+        <div class="mb-6 font-bold"> Snippets from past </div>
+        <!-- <div class="flex flex-row">
+            <div class="flex flex-col w-20 mx-3 text-center">
+                <div class="bg-blue-200">xyz</div>
+                <div class="text-sm font-semibold">“698695683043098” 
+            </div>
+            <div class="flex flex-col w-20 mx-3 text-center">
+                <div class="bg-blue-200"></div>
+                <div class="text-sm font-semibold">“698695683043098” 
+            </div>
+            <div class="flex flex-col w-20 mx-3 text-center">
+                <div class="bg-blue-200"></div>
+                <div class="text-sm font-semibold">“The story of life is quicker than the wink of an eye, the story of love is hello and goodbye until we meet again.” 
+            </div>
+            <div class="flex flex-col w-20 mx-3 text-center">
+                <div class="bg-blue-200"></div>
+                <div class="text-sm font-semibold">“The story of life is quicker than the wink of an eye, the story of love is hello and goodbye until we meet again.” 
+            </div> -->
+            <div class="flex flex-row flex-wrap justify-center md:justify-left">
+                
+                
+                <div class="mx-2 w-48 mb-3">
+                    <div class=" h-26">
+                        <div class="relative" style="padding-top: 56.25%">
+                        <iframe src="https://www.youtube.com/embed/xvmrJ1QaN9g" class="absolute inset-0 w-full h-full" frameborder="0" …></iframe>
+                        </div>
+                    </div>
+                    <div class="text-xs font-semibold mt-2 m-1">“The story of life is quicker than the wink of an eye, the story of love is hello and goodbye until we meet again.”</div>
+                </div>
+                <div class="mx-2 w-48 mb-3">
+                    <div class=" h-26">
+                        <div class="relative" style="padding-top: 56.25%">
+                        <iframe src="https://www.youtube.com/embed/xvmrJ1QaN9g" class="absolute inset-0 w-full h-full" frameborder="0" …></iframe>
+                        </div>
+                    </div>
+                    <div class="text-xs font-semibold mt-2 m-1">“The story of life is quicker than the wink of an eye, the story of love is hello and goodbye until we meet again.”</div>
+                </div>
+                <div class="mx-2 w-48 mb-3">
+                    <div class=" h-26">
+                        <div class="relative" style="padding-top: 56.25%">
+                        <iframe src="https://www.youtube.com/embed/xvmrJ1QaN9g" class="absolute inset-0 w-full h-full" frameborder="0" …></iframe>
+                        </div>
+                    </div>
+                    <div class="text-xs font-semibold mt-2 m-1">“The story of life is quicker than the wink of an eye, the story of love is hello and goodbye until we meet again.”</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
