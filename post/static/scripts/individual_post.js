@@ -52,19 +52,13 @@ function parseHTML(data) {
 }
 
 function load_posts(index) {
-    let tags = [];
-    $('.feed-tag').each((ind,ele)=>{
-        if(ele.textContent.length)
-            tags.push(ele.textContent);
-    });
     $.ajax({
-        url: '/post/load-feed/' + index,
+        url: '/post/load-post/' + index,
         dataType: 'json',
-        type: 'POST',
-        data: {'tags': JSON.stringify(tags), 'csrfmiddlewaretoken':csrf_token},
+        type: 'GET',
+        data: {},
         success: function(data) {
             Array.prototype.forEach.call(data, (post) => {
-                console.log(post);
                 var temp = document.getElementById("post-template");
                 var p = temp.content.cloneNode(true);
                 p.id = 'post-' + post.id;
@@ -90,14 +84,11 @@ function load_posts(index) {
                 $('.post-likes', p).on('click', function(){
                     showLikes(this);
                 } );
-                $('.post-options-button', p).removeClass('hidden');
-                $('.post-options-button', p).on('click', function(){
-                    $('.post-options',this.parentElement).toggleClass('hidden');
-                } );
-                $('.post-report', p).on('click',reportPost);
-                $('.post-report', p).attr('data-id',post.id);
                 if(username == post.author.username){
-                    $('.post-delete', p).removeClass('hidden');
+                    $('.post-options-button', p).removeClass('hidden');
+                    $('.post-options-button', p).on('click', function(){
+                        $('.post-options',this.parentElement).toggleClass('hidden');
+                    } );
                     $('.post-delete', p).attr('data-id',post.id);
                     $('.post-delete', p).on('click',deletePost);
                 }
@@ -137,25 +128,6 @@ function deletePost(e){
         }
     })
 }
-function reportPost(e){
-    const idd = $(this).attr('data-id');
-    console.log(idd);
-    const post = $(this).parents().eq(4);
-    post.css('opacity','0.6');
-    $(this).parent().toggleClass('hidden');
-    $.ajax({
-        type: 'POST',
-        url: '/post/report/',
-        data: {id:idd},
-        success: (data)=>{
-            console.log('Post Reported!');
-            post.css('opacity','1');
-        },
-        error: (err)=>{
-            post.css('opacity','1');
-        }
-    })
-}
 
 function showcomment(ele){
     var id= ele.getAttribute("data-post-id");
@@ -178,7 +150,9 @@ function showLikes(ele){
 
 $(document).ready(function() {
     csrf_token = $('#csrf_token').text();
-    load_posts(0);
+    var id = $('#post-id').attr("data-id")
+    console.log("post-id",id)
+    load_posts(id);
     username = document.getElementById('data-username').textContent;
     $(".hehe").click(function(){
         $(".comment-box").css("display", "none");
@@ -247,16 +221,6 @@ function initLikes(ele) {
         })
     });
 }
-
-$(window).scroll(function() {
-    //console.log($(window).scrollTop(),$(document).height() , $(window).height())
-    if ($(window).scrollTop() > $(document).height() - $(window).height() - 50 && !donotload) {
-        load_posts(curr_index);
-        curr_index += 1;
-        donotload = true;
-    }
-});
-
 
 var load_comment = function(ele) {
     var id= ele.getAttribute("data-post-id");

@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'chat',
     'faq',
-    'groups'
+    'groups',
+    'adminPortal',
+    'events'
 ]
 
 MIDDLEWARE = [

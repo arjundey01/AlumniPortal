@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/stylesheets/style-events.css">
+{% endblock %}
+
+{% block content %} 
+<div id="total" class="flex flex-col p-5"></div>
+<div id="navbar" class="absolute w-4/6 md:ml-5 ml-5 flex flex-row flex-wrap bg-white justify-start items-center">
+    <div class="w-6/12 text-black text-xl font-semibold pl-3">Events</div>
+    <div id="options" class=" pr-12 text-gray-500 text-sm flex flex-row justify-end items-center">
+        <div class="md:m-3 ml-3 m-2">All</div>
+        <div class="md:m-3 m-2">Upcoming</div>
+        <div class="md:m-3 m-2">Saved</div>
+        <div class="md:m-3 m-2">Interested</div>
+    </div>
+</div>
+
+<div id="container" class="absolute flex w-4/5 h-4/5 mt-20 lg:mt-12 flex-row flex-wrap justify-start">
+{% for event in events%}
+
+<div id="inner-container" class="rounded m-5 flex flex-col items-center bg-white" >
+    <div id="upperflex" class="w-full h-2/5">
+        <div id="date" class="rounded-r text-center text-white font-medium mt-6 mb-3 p-1 pl-2 text-xs">{{event.event_date}}</div>
+        <div id="time" class="rounded-r text-center text-white font-medium p-1 pl-2 text-xs">{{event.event_time}}</div>
+    </div>
+    <div id="middleflex" class="w-full h-3/6 p-2">
+        <div id="count" class="flex text-xs"> <img class="eyepic m-0.5" src="../static/images/Icon.png"> 23 people are interested</div>
+        <div id="title" class="font-semibold mt-2 mb-2 text-lg">{{event.title}}</div>
+        <div id="description" class="text-justify text-xs" >{{event.content|truncatechars_html:140}}</div>
+    </div>
+    <div id="bottomflex" class="flex flex-row justify-left items-center w-full">
+        <div class="m-2 flex items-center text-sm"> <img class="btmicon m-2" src="../static/images/Icon2.png"> Save</div>
+        <div class="m-2 flex items-center text-sm"><img class="btmicon m-2" src="../static/images/icon3.png"> Interested</div>
+    </div>
+    
+
+</div>
+  
+{%endfor%}
+</div>
+</div>
+{%endblock%}
+
+
+<h2>{{event.event_date}}</h2>
+<h2>{{event.event_time}}</h2>
+<h1>{{event.title}}</h1>
+<p>{{event.content|truncatechars:50}}</p>
+<hr>

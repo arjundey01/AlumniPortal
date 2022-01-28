@@ -53,7 +53,7 @@
       <div class="flex flex-col my-2 mx-3">
         <div class="flex flex-row mb-1">
           <div class="upvote-btn" data-answer-id="{{ans.id}}">
-            <svg id="upvote-btn-{{ans.id}}" width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer {% if request.user.account in ans.upvotes.all %}svg-accent{% endif %}" fill="none" viewBox="0 0 24 24">
+            <svg id="upvote-btn-{{ans.id}}" width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer {% if request.user.account in ans.upvotes.all %}svg-accent-u{% endif %}" fill="none" viewBox="0 0 24 24">
               <path opacity="0.8" stroke-linecap="round" stroke="#CCCCCC" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
             </svg>
           </div>
@@ -61,7 +61,7 @@
         </div>
         <div class="flex flex-row mb-1">
           <div class="downvote-btn" data-answer-id="{{ans.id}}">
-            <svg id="downvote-btn-{{ans.id}}" width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer {% if request.user.account in ans.downvotes.all %}svg-accent{% endif %}" fill="none" viewBox="0 0 24 24">
+            <svg id="downvote-btn-{{ans.id}}" width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer {% if request.user.account in ans.downvotes.all %}svg-accent-d{% endif %}" fill="none" viewBox="0 0 24 24">
               <path opacity="0.8" stroke-linecap="round" stroke="#CCCCCC" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </div>
