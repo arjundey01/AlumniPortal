@@ -18,6 +18,10 @@ def feed(request):
         groups[group.title]=group.id
     return render(request,'feed.html',{'postform': PostForm, 'tags':json.dumps(groups)})
 
+def individualfeed(request,id):
+    groups = {}
+    return render(request,'feed.html',{'postform': PostForm, 'tags':json.dumps(groups),'id':id})
+
 def create_post(request):
     if request.method=='POST':
         next = request.GET.get('next')
@@ -70,6 +74,19 @@ def delete_post(request):
             if post.author!=request.user.account:
                 return HttpResponse('forbidden', status=403)
             post.delete()
+            return HttpResponse('success')
+        return HttpResponse('badRequest', status=400)
+    return HttpResponse('notLoggedIn',status=500)
+
+def report_post(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            post=get_object_or_404(Post,pk=request.POST.get('id'))
+            if request.user.account in post.reports.all():
+                return HttpResponse('success')
+            else:
+                post.reports.add(request.user.account)
+                post.save()
             return HttpResponse('success')
         return HttpResponse('badRequest', status=400)
     return HttpResponse('notLoggedIn',status=500)
@@ -203,6 +220,14 @@ def load_feed(request,index):
     else:
         return HttpResponse(json.dumps({'error':'No more posts'}),status=500)
 
+def individual_post(request,id):
+    id=int(id)
+    user=request.user
+    if not user.is_authenticated:
+        return HttpResponse(json.dumps({'error':'Not Logged In'}),status=401)
+    post = Post.objects.get(id=id)
+    data=PostSerializer(post).data
+    return HttpResponse(json.dumps(data),status=200)
 
 
 

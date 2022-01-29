@@ -122,6 +122,25 @@
 </div>
 
 
+<div id="contact-form-area" class="profile-form-area bg-white md:rounded px-6 py-5 w-full md:w-3/5 lg:w-2/5 md:h-3/5 h-fullscreen flex flex-col" style="display:none;">
+    <div class="flex justify-between items-center">
+        <p class="text-xl pl-2">Contact Details</p>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer">
+            <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>   
+    </div>
+    <form action="" method="POST" class="flex-grow flex flex-col items-stretch mt-4 text-gray-700 font-light" >
+        {%csrf_token%}
+        <input type="text" hidden name="pk">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="mobile" placeholder="Mobile Number">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="gmail" placeholder="Email ID">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="outlook" placeholder="Outlook ID">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2"  name="linkedin" placeholder="Linkedin's Profile URL">
+        <button type="submit" class="profile-form-submit px-5 py-1 text-white rounded bg-accent self-end mt-3"></button>
+    </form>
+    <input type="text" class="update-url" hidden readonly value="/account/contact/update/">
+</div>
+
 <div id="account-form-area" class="profile-form-area bg-white md:rounded px-6 py-5 w-full md:w-3/5 lg:w-2/5 md:h-4/5 h-fullscreen flex flex-col" style="display:none;">
     <div class="flex justify-between items-center">
         <p class="text-xl pl-2">{{user.account.name}}</p>

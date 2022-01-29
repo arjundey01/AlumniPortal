@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
   # /
   path('', views.home, name='home'),
+  path('post-detail/<id>', views.detail, name='postdetail'),
   # TEMPORARY
   path('signin', views.sign_in, name='signin'),
   path('signout', views.sign_out, name='signout'),
@@ -28,6 +29,7 @@ urlpatterns = [
   path('account/education/<action>/', views.education, name='education'),
   path('account/job/<action>/', views.pastjobs, name='job'),
   path('account/change-profile-img/',views.update_photo, name="change-profile-img"),
+  path('account/contact/update/',views.update_contact, name="update-contact"),
 
   path('search-sugg/',views.search_sugg, name="search-sugg"),
   path('search/',views.new_search,name="search"),

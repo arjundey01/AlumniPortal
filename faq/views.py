@@ -191,3 +191,66 @@ def get_best4(request):
     ##################################################
     ##################################################
     return HttpResponse("You aren't suppose to see this!")
+
+def upvote(request):
+    if request.method == 'GET':
+        ans_id = request.GET['answer_id']
+        if request.user.is_authenticated:
+            answer=Answer.objects.get(id=ans_id)
+            acc=request.user.account
+            if acc in answer.upvotes.all():
+                answer.upvotes.remove(acc)
+                msg="removed_upvote"
+            else:
+                answer.upvotes.add(acc)
+                if acc in answer.downvotes.all():
+                    answer.downvotes.remove(acc)
+                    msg="removed_downvote_and_added_upvote"
+                    return HttpResponse(msg,status=200)
+                msg="added_upvote"
+            answer.save()
+            return HttpResponse(msg,status=200)
+        else:
+            return HttpResponse("Not Logged in!", status=500)
+    else:
+        return HttpResponse("unsuccessful", status=500)
+
+def downvote(request):
+    if request.method == 'GET':
+        ans_id = request.GET['answer_id']
+        if request.user.is_authenticated:
+            answer=Answer.objects.get(id=ans_id)
+            acc=request.user.account
+            if acc in answer.downvotes.all():
+                answer.downvotes.remove(acc)
+                msg="removed_downvote"
+            else:
+                answer.downvotes.add(acc)
+                if acc in answer.upvotes.all():
+                    answer.upvotes.remove(acc)
+                    msg="removed_upvote_and_added_downvote"
+                    return HttpResponse(msg,status=200)
+                msg="added_downvote"
+            answer.save()
+            return HttpResponse(msg,status=200)
+        else:
+            return HttpResponse("Not Logged in!", status=500)
+    else:
+        return HttpResponse("unsuccessful", status=500)
+
+def accept_answer(request):
+    if request.method == "GET":
+        ans_id = request.GET['answer_id']
+        ques_id = request.GET['question_id']
+        if request.user.is_authenticated:
+            answer=Answer.objects.get(id=ans_id)
+            question=Question.objects.get(id=ques_id)
+            for item in question.answers.all():
+                if item.accepted:
+                    item.accepted = False
+                item.save()
+            answer.accepted = True
+            answer.save()
+            return HttpResponse("accepted_answer",status=200)
+        return HttpResponse("Not Logged in!", status=500)
+    return HttpResponse("unsuccessful", status=500)

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'groups',
     'events',
     'django_filters'
+    'adminPortal',
 ]
 
 MIDDLEWARE = [

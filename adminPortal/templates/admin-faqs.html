@@ -1,0 +1,53 @@
+{% extends 'admin-base.html' %}
+
+
+
+{% block body %}
+<main class="w-full flex-grow p-6">
+    <h1 class="text-2xl text-black mt-10">FAQs</h1>
+
+    <div class="w-full mt-6">
+        <div class="bg-white overflow-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th class="w-1/6 text-left py-3 px-4 uppercase font-semibold text-sm">Author</th>
+                        <th class="w-1/6 text-left py-3 px-4 uppercase font-semibold text-sm">Posted at</th>
+                        <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Question</th>
+                        <th class="w-1/6 text-left py-3 px-4 uppercase font-semibold text-sm">Reports</th>
+                        <th class="w-1/6 text-left py-3 px-4 uppercase font-semibold text-sm">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    {% for faq in faqs %}
+                        {% if forloop.counter0|divisibleby:2 %}
+                        <tr>
+                        {% else %}
+                        <tr class="bg-gray-200">
+                        {% endif %}
+                            <td class="w-1/6 text-left py-3 px-4"><a href="{{faq.authorURL}}" target="_blank">{{faq.author.name}}</a></td>
+                            <td class="w-1/6 text-left py-3 px-4">{{faq.posted_on}}</td>
+                            <td class="w-1/3 text-left py-3 px-4">{{faq.content}}</td>
+                            <td class="w-1/6 text-left py-3 px-4">{{faq.reports}}</td>
+                            <td class="w-1/6 text-left py-3 px-4 flex flex-row gap-4">
+                                <a class="cursor-pointer w-20 h-8 rounded-md bg-blue-500 text-lg text-white self-center px-4" href='/faq/question/{{faq.id}}/'>View</a>
+                                <div
+                                data-faq-id="{{faq.id}}"
+                                class="delete-faq-btn w-20 h-8 rounded-md bg-red-500 text-lg text-white self-center px-4 cursor-pointer">Delete</div
+                            >
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+<script src="/static/scripts/account.js"></script>
+{% endblock %}
