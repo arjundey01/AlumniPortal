@@ -1,11 +1,9 @@
-{% extends 'basic.html' %} {% block body %}
+{% extends 'admin-base.html' %}
+{% block body %}
 <main class="w-full flex-grow p-6">
-  <h1 class="text-3xl text-black pb-6">Accounts</h1>
+  <h1 class="text-2xl text-black mt-10">Accounts</h1>
 
-  <div class="w-full mt-12">
-    <p class="text-xl pb-3 flex items-center">
-      <i class="fas fa-list mr-3"></i> Latest Reports
-    </p>
+  <div class="w-full mt-6">
     <div class="bg-white overflow-auto">
       <table class="min-w-full bg-white">
         <thead class="bg-gray-800 text-white">
@@ -33,14 +31,17 @@
           </tr>
         </thead>
         <tbody class="text-gray-700">
-          {% for user in acc %} {% if forloop.counter0|divisibleby:2 %}
+          {% for user in acc %} 
+          {% if forloop.counter0|divisibleby:2 %}
           <tr>
-            {% else %}
-
+          {% else %}
           <tr class="bg-gray-200">
-            {% endif %}
-            <td class="w-1/4 text-left pt-2 px-4">
-              <img src="{{user.img}}" alt="" class="w-8 h-8 rounded-md" />
+          {% endif %}
+            <td class="w-1/4 text-left px-4 items-center align-middle">
+              <div class="flex items-center">
+                <img src="{{user.img}}" alt="" class="w-10 h-10 rounded-full object-cover" />
+                <p class="text-sm mx-3">{{user.username}}</p>
+              </div>
             </td>
             <td class="w-1/4 text-left self-center py-3 px-4">
               {{user.title}}

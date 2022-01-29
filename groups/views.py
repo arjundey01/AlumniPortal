@@ -19,10 +19,15 @@ def create_group(request):
     if not request.user.is_authenticated:
         return HttpResponse('Unauthorized', status=401)
     if request.method == 'POST':
-        form = GroupForm(request.POST, request.FILES)
+        if request.GET.get('id',None)!=None:
+            group_obj = get_object_or_404(Group,id=request.GET.get('id'))
+            form = GroupForm(request.POST, request.FILES, instance=group_obj)
+        else:
+            form = GroupForm(request.POST, request.FILES)
+
         if form.is_valid():
             form.save()
-            return redirect('/groups/')
+            return redirect('/admin/groups/')
     return HttpResponse('Bad Request',status=400)
 
 def delete_group(request,id):

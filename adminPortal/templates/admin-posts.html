@@ -1,0 +1,97 @@
+{% extends 'admin-base.html' %}
+
+
+
+{% block body %}
+<main class="w-full flex-grow p-6">
+    <h1 class="text-2xl text-black mt-10">Posts</h1>
+
+    <div class="w-full mt-6">
+        <div class="bg-white overflow-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th class="w-1/5 text-left py-3 px-4 uppercase font-semibold text-sm">Author</th>
+                        <th class="w-1/5 text-left py-3 px-4 uppercase font-semibold text-sm">Posted at</th>
+                        <th class="w-1/6 text-left py-3 px-4 uppercase font-semibold text-sm">Likes</th>
+                        <th class="w-1/6 text-left py-3 px-4 uppercase font-semibold text-sm">Comments</th>
+                        <th class="w-1/6 text-left py-3 px-4 uppercase font-semibold text-sm">Reports</th>
+                        <th class="w-1/5 text-left py-3 px-4 uppercase font-semibold text-sm">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    {% for post in posts %}
+                        {% if forloop.counter0|divisibleby:2 %}
+                        <tr>
+                        {% else %}
+                        <tr class="bg-gray-200">
+                        {% endif %}
+                            <td class="w-1/5 text-left py-3 px-4"><a href="{{post.authorURL}}" target="_blank">{{post.author}}</a></td>
+                            <td class="w-1/5 text-left py-3 px-4">{{post.time}}</td>
+                            <td class="w-1/6 text-left py-3 px-4">{{post.likes}}</td>
+                            <td class="w-1/6 text-left py-3 px-4">{{post.comments}}</td>
+                            <td class="w-1/6 text-left py-3 px-4">{{post.report}}</td>
+                            <td class="w-1/5 text-left py-3 px-4 flex flex-row gap-4">
+                                <p class="view-post cursor-pointer w-20 h-8 rounded-md bg-blue-500 text-lg text-white self-center px-4" data-id="{{post.id}}">View</p>
+                                <div
+                                data-post-id="{{post.id}}"
+                                data-post-name="{{post.author}}"
+                                class="delete-post-btn w-20 h-8 rounded-md bg-red-500 text-lg text-white self-center px-4 cursor-pointer"
+                                >Delete</div
+                            >
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<template id="post-template">
+    <div class="post rounded w-full bg-white py-1 sm:py-3 px-1 md:px-5 shadow-lg my-5">
+        <div class="post-header w-full px-3 py-1.5 md:py-2.5 overflow-auto flex justify-between overflow-visible">
+            <a class="post-author flex items-center justify-start">
+                <img class="post-author-img rounded-full object-cover h-12 sm:h-14 w-12 sm:w-14 flex-shrink-0" src="" alt="">
+                <div class="mx-4">
+                    <p class="post-author-name text-md sm:text-md leading-4 font-medium mt-1">John Doe</p>
+                    <p class="post-author-desg text-xs text-gray-600">Associate Project Manager | Google</p>
+                </div>
+            </a>
+            <div class="float-right flex flex-col items-end">
+                <p class="post-date text-xs text-gray-400 mt-1 text-right">57 minutes ago</p>
+            </div>
+        </div>
+        <div class="post-content py-4 flex flex-col items-center pt-0">
+
+        </div>
+        <div class="post-footer w-full flex p-1 sm:p-3 justify-end items-center flex-col lg:flex-row">
+            <div class="post-stats mt-3 lg:mt-0 mb-2 lg:mb-0">
+                <p class="text-xs text-gray-400 font-light">
+                    <span class="post-likes cursor-pointer"><span class="like-count"></span> Likes</span> | <span class="comment-count"></span> Comments
+                </p>
+            </div>
+        </div>
+    </div>
+</template>
+{% endblock %}
+
+{% block overlay %}
+<div id="post-view" class="bg-white md:rounded px-6 py-5 w-full md:w-3/5 lg:w-2/5 md:h-4/5 h-fullscreen flex flex-col">
+    <div class="flex justify-between items-center">
+        <p class="post-view-name text-xl"></p>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer">
+            <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>   
+    </div>
+    <div id="post-view-container" class="overflow-y-scroll">
+
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block scripts %}
+<script src="/static/scripts/account.js"></script>
+{% endblock %}

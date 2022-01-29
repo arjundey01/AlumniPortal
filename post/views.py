@@ -224,13 +224,10 @@ def individual_post(request,id):
     id=int(id)
     user=request.user
     if not user.is_authenticated:
-        return HttpResponse(json.dumps({'error':'Not Logged In'}),status=500)
-    posts=[]
+        return HttpResponse(json.dumps({'error':'Not Logged In'}),status=401)
     post = Post.objects.get(id=id)
     data=PostSerializer(post).data
-    data['is_liked']=user.account in post.likes.all()
-    posts.append(data)
-    return HttpResponse(json.dumps(posts),status=200)
+    return HttpResponse(json.dumps(data),status=200)
 
 
 

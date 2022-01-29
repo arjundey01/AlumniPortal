@@ -5,4 +5,4 @@ from django import forms
 class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
-        fields = ['title','cover_image']
+        fields = ['title','cover_image','description']
