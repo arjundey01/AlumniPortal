@@ -32,7 +32,8 @@ urlpatterns = [
   path('account/contact/update/',views.update_contact, name="update-contact"),
 
   path('search-sugg/',views.search_sugg, name="search-sugg"),
-  path('search/',views.search_res,name="search"),
+  path('search/',views.new_search,name="search"),
+  # path('search/',views.filter_list,name="filter"),
 
   path('get-suggestions/',views.suggestions, name = 'suggestions')
 

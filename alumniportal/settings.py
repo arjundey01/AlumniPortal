@@ -44,8 +44,9 @@ INSTALLED_APPS = [
     'chat',
     'faq',
     'groups',
+    'events',
+    'django_filters'
     'adminPortal',
-    'events'
 ]
 
 MIDDLEWARE = [
