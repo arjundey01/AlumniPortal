@@ -1,3 +1,4 @@
+from django.http import HttpResponseBadRequest, HttpResponseNotAllowed
 from groups.models import Group
 from post.views import comment
 from django.http.response import HttpResponse
@@ -238,6 +239,7 @@ def downvote(request):
     else:
         return HttpResponse("unsuccessful", status=500)
 
+
 def accept_answer(request):
     if request.method == "GET":
         ans_id = request.GET['answer_id']
@@ -254,3 +256,26 @@ def accept_answer(request):
             return HttpResponse("accepted_answer",status=200)
         return HttpResponse("Not Logged in!", status=500)
     return HttpResponse("unsuccessful", status=500)
+
+
+def delete_faq(request, id):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            question = get_object_or_404(Question, id=id)
+            if question.author == request.user.account or request.user.is_staff:
+                question.delete()
+                return HttpResponse("success")
+        return HttpResponseNotAllowed("Unauthorized")
+    return HttpResponseBadRequest("Use GET Method")
+
+
+def report_faq(request, id):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            question = get_object_or_404(Question, id=id)
+            question.reports.add(request.user.account)
+            question.save()
+            return HttpResponse("success")
+        return HttpResponseNotAllowed("Unauthorized")
+    return HttpResponseBadRequest("Use GET Method")
+

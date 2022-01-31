@@ -5,12 +5,12 @@
             <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>   
     </div>
-    <div class="flex justify-between items-center mt-8">
+    <div class="flex items-center mt-8">
         <div class="flex items-center">
             <img src="{{user.account.profile_img_url}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
             <p class="text-md sm:text-xl ml-3">{{user.account.name}}</p>
         </div>
-        <div class="bg-accent-mid rounded px-3 py-0.5 flex items-center">
+        <!-- <div class="bg-accent-mid rounded px-3 py-0.5 flex items-center">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M14.75 8C14.75 11.7279 11.7279 14.75 8 14.75M14.75 8C14.75 4.27208 11.7279 1.25 8 1.25M14.75 8H1.25M8 14.75C4.27208 14.75 1.25 11.7279 1.25 8M8 14.75C9.24264 14.75 10.25 11.7279 10.25 8C10.25 4.27208 9.24264 1.25 8 1.25M8 14.75C6.75736 14.75 5.75 11.7279 5.75 8C5.75 4.27208 6.75736 1.25 8 1.25M1.25 8C1.25 4.27208 4.27208 1.25 8 1.25" stroke="#111827" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -18,7 +18,7 @@
             <svg width="8" height="4" viewBox="0 0 8 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M4 4L0.535898 0.25L7.4641 0.25L4 4Z" fill="black"/>
             </svg>
-        </div>
+        </div> -->
     </div>
     <div class="flex-grow mt-7 flex flex-col overflow-y-scroll">
         <form method="POST" action="{% url 'post:create_post' %}" id="post-form" class="hidden">

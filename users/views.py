@@ -390,9 +390,33 @@ def delete_item(request, type):
     return HttpResponseBadRequest()
 
 
+def check_account_filter_conditions(acc, filters):
+    accept = True
+    if filters.get('organization', None):
+        score = fuzz.partial_ratio(filters.get('organization').lower(), acc.organisation.name.lower())
+        accept = accept and (score>90)
 
-def search(query, user):
+    if filters.get('designation', None):
+        score = fuzz.partial_ratio(filters.get('designation').lower(), acc.designation.title.lower())
+        accept = accept and (score>90)
+
+    if filters.get('branch', None):
+        score = fuzz.partial_ratio(filters.get('branch').lower(), acc.branch.name.lower())
+        print(score)
+        accept = accept and (score>90)
+    
+    if filters.get('start_year', None):
+        accept = accept and (acc.start_year == int(filters.get('start_year')))
+    
+    if filters.get('graduation_year', None):
+        accept = accept and (acc.graduation_year == int(filters.get('graduation_year')))
+
+    return accept
+
+
+def search(query, user, filters={}):
     res = {'group':[],'alumni':[],'student':[]}
+
     for group in Group.objects.all():
         score = fuzz.partial_ratio(query, group.title.lower())
         if score>50:
@@ -400,49 +424,27 @@ def search(query, user):
             'img':group.cover_image.url,'url':reverse('groups:group',args=[group.id]),'id':group.id,'match':score}
             ele['joined']=user.account in group.members.all()
             res['group'].append(ele)
+
     for acc in Account.objects.all():
         if acc == user.account:
             continue
-        score = fuzz.partial_ratio(query, acc.name.lower())
+        tot_score = fuzz.partial_ratio(query, acc.name.lower())
+        accept = (tot_score>50)
         cat = 'alumni' if acc.is_alumni else 'student'
-        if score>50:
+
+        accept = accept and check_account_filter_conditions(acc, filters)       
+
+        if accept:
             ele ={'title':acc.name,'subtitle':acc.designation.title,'img':acc.profile_img_url,
             'url':reverse('account',args=[acc.user.username]),'username':acc.user.username,'match':score,'gradyear':acc.graduation_year}
             ele['followed']=user.account in acc.followers.all()
             res[cat].append(ele)
+
     res['group'].sort(key=lambda x:x.get('match'))
     res['alumni'].sort(key=lambda x:x.get('match'))
     res['student'].sort(key=lambda x:x.get('match'))
     return res
 
-def searchgroup(query,user):
-    res = {'group':[]}
-    for group in Group.objects.all():
-        score = fuzz.partial_ratio(query, group.title.lower())
-        if score>50:
-            ele={'title':group.title,'subtitle':str(group.member_count)+' members',
-            'img':group.cover_image.url,'url':reverse('groups:group',args=[group.id]),'id':group.id,'match':score}
-            ele['joined']=user.account in group.members.all()
-            res['group'].append(ele)
-    return res
-
-def searchAccount(query,user):
-    list_of_accounts = []
-    for acc in Account.objects.all():
-        if acc == user.account:
-            continue
-        score = fuzz.partial_ratio(query, acc.name.lower())
-        if score>50:
-            list_of_accounts.append(acc.id)
-    qs = Account.objects.filter(id__in=list_of_accounts)
-    return qs
-
-def new_search(request):
-    query = request.GET.get('query')
-    res = searchgroup(query.lower(), request.user)
-    qs = searchAccount(query.lower(), request.user)
-    account_filter = AccountFilter(request.GET,queryset=qs)
-    return render(request,"search_results.html",{"filter":account_filter,'results':res})
 
 def search_sugg(request):
     query = request.GET.get('query')
@@ -452,21 +454,50 @@ def search_sugg(request):
 
 def search_res(request):
     query = request.GET.get('query')
-    res = search(query.lower(), request.user)
+    res = search(query.lower(), request.user, request.GET)
     return render(request, "search_results.html",{"results":res})
+
+# def searchgroup(query,user):
+#     res = {'group':[]}
+#     for group in Group.objects.all():
+#         score = fuzz.partial_ratio(query, group.title.lower())
+#         if score>50:
+#             ele={'title':group.title,'subtitle':str(group.member_count)+' members',
+#             'img':group.cover_image.url,'url':reverse('groups:group',args=[group.id]),'id':group.id,'match':score}
+#             ele['joined']=user.account in group.members.all()
+#             res['group'].append(ele)
+#     return res
+
+# def searchAccount(query,user):
+#     list_of_accounts = []
+#     for acc in Account.objects.all():
+#         if acc == user.account:
+#             continue
+#         score = fuzz.partial_ratio(query, acc.name.lower())
+#         if score>50:
+#             list_of_accounts.append(acc.id)
+#     qs = Account.objects.filter(id__in=list_of_accounts)
+#     return qs
+
+# def new_search(request):
+#     query = request.GET.get('query')
+#     res = searchgroup(query.lower(), request.user)
+#     qs = searchAccount(query.lower(), request.user)
+#     account_filter = AccountFilter(request.GET,queryset=qs)
+#     return render(request,"search_results.html",{"filter":account_filter,'results':res})
 
 
 # def filter_list(request):
 #     f = BranchFilter(request.GET, queryset = Branch.objects.all())
 #     return render(request, 'search_results.html', {'filter': f})
 
-def filter_list(request):
-    res = Account.objects.all()
-    f = AccountFilter(request.GET, queryset = res)
-    res = f.qs
-    print(res, "abcd")
-    context = {'filterData': res, 'filter': f}
-    return render(request, 'search_results.html', context)
+# def filter_list(request):
+#     res = Account.objects.all()
+#     f = AccountFilter(request.GET, queryset = res)
+#     res = f.qs
+#     print(res, "abcd")
+#     context = {'filterData': res, 'filter': f}
+#     return render(request, 'search_results.html', context)
 
 
 @login_required

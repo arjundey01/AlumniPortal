@@ -18,14 +18,13 @@
 
 
 <div id="search-alumni" class="search-tab-content rounded w-full bg-white py-4 px-8 shadow-lg my-10">
-    {% for res in filter.qs %}
-    {% if res.is_alumni %}
-    <div class="flex justify-between items-center py-3" data-gradyear="{{res.gradyear}}">
+    {% for res in results.alumni %}
+    <div class="flex justify-between items-center py-3">
         <a href="{{ res.url }}" class="flex items-center justify-start">
-            <img src="{{res.profile_img_url}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
+            <img src="{{res.img}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
             <div class="mx-3">
-                <p class="mt-1 leading-3">{{res.name}}</p>
-                <p class="text-xs mt-1">{{res.designation.title}}</p>
+                <p class="mt-1 leading-3">{{res.title}}</p>
+                <p class="text-xs mt-1">{{res.subtitle}}</p>
             </div>
         </a>
         <div>
@@ -36,7 +35,6 @@
             {% endif %}
         </div>
     </div>
-    {% endif %}
     {% empty %}
     <div class="flex text-lg text-gray-500 justify-center my-10">
         No Results 
@@ -46,14 +44,13 @@
 
 
 <div id="search-students" class="search-tab-content rounded w-full bg-white py-4 px-8 shadow-lg my-10 hidden">
-    {% for res in filter.qs %}
-    {% if not res.is_alumni %}
+    {% for res in results.student %}
     <div class="flex justify-between items-center py-3" data-gradyear="{{res.gradyear}}">
         <a href="{{res.url}}" class="flex items-center justify-start">
-            <img src="{{res.profile_img_url}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
+            <img src="{{res.img}}" class= "rounded-full h-12 w-12 object-cover flex-shrink-0" alt="">
             <div class="mx-3">
-                <p class="mt-1 leading-3">{{res.name}}</p>
-                <p class="text-xs mt-1">{{res.designation.title}}</p>
+                <p class="mt-1 leading-3">{{res.title}}</p>
+                <p class="text-xs mt-1">{{res.subtitle}}</p>
             </div>
         </a>
         <div>
@@ -64,7 +61,6 @@
             {% endif %}
         </div>
     </div>
-    {% endif %}
     {% empty %}
     <div class="flex text-lg text-gray-500 justify-center my-10">
         No Results 
@@ -99,6 +95,29 @@
 </div>
 {% endblock %}
 
+{% block right-pane %}
+    <div class="filter-box rounded w-full bg-white py-4 px-5 shadow-lg mt-5">
+        <div class="flex justify-between mb-5">
+            <p class="text-lg">Filters</p>
+            <div class='apply-filters-btn bg-accent text-white rounded px-3 cursor-pointer text-sm flex items-center'>Apply</div>
+        </div>
+        <input type="text" hidden name="pk">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2 w-full"  name="branch" placeholder="Branch">
+        <div class="flex justify-around flex-wrap">
+            <div>
+                <p class="text-gray-500">Start Year:</p>
+                <input type="number" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2 w-32"  name="start_year">
+            </div>
+            <div>
+                <p class="text-gray-500">Graduation Year:</p>
+                <input type="number" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2 w-32"  name="graduation_year">
+            </div>
+        </div>
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2 w-full"  name="designation" placeholder="Designation">
+        <input type="text" class="profile-form-input bg-gray-100 rounded px-2 py-2 my-2 w-full"  name="organization" placeholder="Organization">
+    </div>
+{% endblock %}
+
 {% block scripts %}
 <script>
     $('.search-tab').on('click', function(e){
@@ -107,11 +126,26 @@
         $('.search-tab-content').addClass('hidden');
         $(`#search-${$(this).attr('data-id')}`).removeClass('hidden');
     })
-    $('#filter-submit').on('click',function(e){
-        e.preventDefault();
-        $('#filter-query').val(sessionStorage.getItem('query'))
-        console.log($('#filter-query').val())
-        $('#filter-form').submit()
+    $('.apply-filters-btn').on('click',function(e){
+        const urlParams = new URLSearchParams(window.location.search);
+        let query = urlParams.get('query');
+        let queryString = `?query=${query}`;
+        $('input',$('.filter-box')[0]).each((ind,ele)=>{
+            if($(ele).val().length){
+                queryString += `&${$(ele).attr('name')}=${$(ele).val()}`;
+            }
+        });
+        window.open('/search/'+queryString,'_self');
+    })
+    $(document).ready(function(){
+        const urlParams = new URLSearchParams(window.location.search);
+        let query = urlParams.get('query');
+        urlParams.forEach((val,key)=>{
+            if($(`input[name=${key}]`,$('.filter-box')[0]).length){
+                $(`input[name=${key}]`,$('.filter-box')[0]).val(val);
+            }
+        })
+        $('#search-input').val(query);
     })
 </script>
 {% endblock %}

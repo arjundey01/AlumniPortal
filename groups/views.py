@@ -15,7 +15,7 @@ def group(request,id):
     group = get_object_or_404(Group,id=id)
     return render(request,'group.html',{'group':group,'postform': PostForm })
     
-def create_group(request):
+def create_edit_group(request):
     if not request.user.is_authenticated:
         return HttpResponse('Unauthorized', status=401)
     if request.method == 'POST':

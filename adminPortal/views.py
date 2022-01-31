@@ -34,7 +34,7 @@ def events(request):
         res = []
         for event in Event.objects.all():
             res.append(event)
-            res.sort(key=lambda x: x.event_date, reverse=True)
+            res.sort(key=lambda x: x.event_time, reverse=True)
         context = {
             'active_tab':'events',
             'events':res,

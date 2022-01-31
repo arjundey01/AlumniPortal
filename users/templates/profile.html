@@ -96,47 +96,6 @@
     </div>
 </div>
 <div  class="container">
-  {% if curr_user.user == user or contact %}
-  <div class="w-full rounded bg-white  my-5 py-8 px-4">
-    <div class="flex items-center mb-3">
-      <h2 class="text-xl mx-4 font-medium">Contact</h2>
-      {% if curr_user.user == user%}
-        <button class="update-entry" data-id="{{ contact.id }}" data-type="contact">
-          <i style="font-size:18px" class="fa fa-pencil"></i>
-        </button>
-      {% endif %}
-    </div>
-    <div>
-        <ul>
-        {% if contact.mobile %}
-          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
-            <div class="text- font-medium">Mobile No.</div>
-            <div id="contact-{{contact.id}}-mobile" class="text-">{{contact.mobile}}</div>
-          </li>
-          {% endif %}
-          {% if contact.gmail %}
-          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
-            <div class="text- font-medium">Gmail</div>
-            <div id="contact-{{contact.id}}-gmail" class="text-">{{contact.gmail}}</div>
-          </li>
-          {% if contact.outlook %}
-          {% endif %}
-          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
-            <div class="text- font-medium">Outlook</div>
-            <div id="contact-{{contact.id}}-outlook" class="text-">{{contact.outlook}}</div>
-          </li>
-          {% if contact.linkedin %}
-          {% endif %}
-          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1">
-            <div class="text- font-medium">Linkedin</div>
-            <p id="contact-{{contact.id}}-linkedin" class="hidden">{{contact.linkedin}}</p>
-            <a target="_blank" href="{{contact.linkedin}}"><div class="text-">{{username}}</div></a>
-          </li>
-          {% endif %}
-        </ul>
-    </div> 
-  </div>
-  {% endif %}
 
   {% if curr_user.user == user or experiences|length %}
   <div class="w-full rounded bg-white  my-5 py-8 px-4">
@@ -278,6 +237,49 @@
       </div>
     </div>
     {% endfor %}
+  </div>
+  {% endif %}
+
+
+  {% if curr_user.user == user or contact %}
+  <div class="w-full rounded bg-white  my-5 py-8 px-4">
+    <div class="flex items-center mb-3">
+      <h2 class="text-xl mx-4 font-medium">Contact</h2>
+      {% if curr_user.user == user%}
+        <button class="update-entry" data-id="{{ contact.id }}" data-type="contact">
+          <i style="font-size:18px" class="fa fa-pencil"></i>
+        </button>
+      {% endif %}
+    </div>
+    <div>
+        <ul>
+        {% if contact.mobile %}
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
+            <div class="text- font-medium">Mobile No.</div>
+            <div id="contact-{{contact.id}}-mobile" class="text-">{{contact.mobile}}</div>
+          </li>
+          {% endif %}
+          {% if contact.gmail %}
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
+            <div class="text- font-medium">Gmail</div>
+            <div id="contact-{{contact.id}}-gmail" class="text-">{{contact.gmail}}</div>
+          </li>
+          {% if contact.outlook %}
+          {% endif %}
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1.5">
+            <div class="text- font-medium">Outlook</div>
+            <div id="contact-{{contact.id}}-outlook" class="text-">{{contact.outlook}}</div>
+          </li>
+          {% if contact.linkedin %}
+          {% endif %}
+          <li class="user-jobs flex flex-row justify-between mr-8 ml-12 mb-1">
+            <div class="text- font-medium">Linkedin</div>
+            <p id="contact-{{contact.id}}-linkedin" class="hidden">{{contact.linkedin}}</p>
+            <a target="_blank" href="{{contact.linkedin}}"><div class="text-">{{username}}</div></a>
+          </li>
+          {% endif %}
+        </ul>
+    </div> 
   </div>
   {% endif %}
   

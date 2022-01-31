@@ -13,4 +13,6 @@ urlpatterns = [
     path('upvote/', views.upvote, name='upvote'),
     path('downvote/', views.downvote, name='downvote'),
     path('accept-answer/', views.accept_answer, name='accept-answer'),
+    path('delete/<id>/', views.delete_faq, name='delete-faq'),
+    path('report/<id>/', views.report_faq, name='report-faq'),
 ]

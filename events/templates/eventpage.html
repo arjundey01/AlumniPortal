@@ -1,41 +1,51 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>Alumni Talk</title>
 <link rel="stylesheet" href="/static/stylesheets/style-eventpage.css">
+<title>{{event.title}} | Alumni Portal</title>
 {% endblock %}
 
 {% block content %}
 <div class="flex flex-col">
     <div class="h-52 w-full bg-bluegray mt-5 relative">
-        <img src="../static/images/yellow.png" class="w-full h-full object-cover" alt="">
-        <a href="/groups/" class="bg-white rounded absolute top-6 left-6 h-9 w-9 flex items-center justify-center hover:opacity-90"><img src="/static/img/arrow-left.svg" alt="" class="w-9 h-5"></a>
-        <button class="bg-white rounded absolute top-6 right-6 h-9 w-9 flex items-center justify-center"><img src="../static/images/star.png" alt="" class="w5 h-5"></button>
-        <button class="bg-white rounded absolute top-6 right-20 h-9 w-9 flex items-center justify-center"><img src="../static/images/save.png" alt="" class="w-5 h-5"></button>
+        <img src="{{event.cover_image_url}}" class="w-full h-full object-cover" alt="">
+        <a href="/events/" class="bg-white rounded absolute top-6 left-6 h-9 w-9 flex items-center justify-center hover:opacity-90"><img src="/static/img/arrow-left.svg" alt="" class="w-9 h-5"></a>
+        <button class="save-btn bg-white rounded absolute top-6 right-6 h-9 w-9 flex items-center justify-center" data-event-id="{{event.id}}">
+            <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg" class="{% if user.account in event.saved_by.all %} svg-accent {% endif %}">
+                <path d="M10.5863 10.8208C10.5807 11.5238 9.9737 12.089 9.23051 12.0831L2.50218 12.0296C1.75899 12.0237 1.16104 11.449 1.16663 10.7459L1.24754 0.562232L5.93967 2.82734L10.6672 0.637073L10.5863 10.8208Z" stroke-width="1.5" stroke="#888" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>      
+        </button>
+        <button class="interested-btn bg-white rounded absolute top-6 right-20 h-9 w-9 flex items-center justify-center" data-event-id="{{event.id}}">
+            <svg width="17" height="16" style="margin-top: -1px;" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="{%if user.account in event.interested_users.all %} svg-accent {%endif%}">
+                <path d="M5.83802 1.92664C6.13739 1.00537 7.44073 1.00538 7.74011 1.92664L8.47308 4.1822C8.60696 4.59419 8.99089 4.87313 9.42409 4.87315L11.7958 4.87324C12.7644 4.87328 13.1672 6.11283 12.3835 6.68223L10.4649 8.07634C10.1144 8.33098 9.96776 8.78231 10.1016 9.19431L10.8344 11.4499C11.1337 12.3712 10.0793 13.1373 9.29559 12.568L7.37682 11.174C7.02634 10.9194 6.55178 10.9194 6.20131 11.174L4.28253 12.568C3.49883 13.1373 2.44441 12.3712 2.74371 11.4499L3.47651 9.19431C3.61036 8.78231 3.46371 8.33098 3.11326 8.07634L1.19459 6.68223C0.41093 6.11283 0.813684 4.87328 1.78237 4.87324L4.15404 4.87315C4.58724 4.87313 4.97116 4.59419 5.10505 4.1822L5.83802 1.92664Z" stroke="#888" stroke-width="1.5"/>
+            </svg>      
+        </button>
     </div>
     <div class="w-full bg-white px-4 sm:px-9 pt-5 pb-5 flex flex-col" style="min-height: 210px;">
         <div class="flex flex-row justify-left">
             <div class="flex flex-row">
                     <div class="flex flex-col mb-3 m-2 items-start">             
-                        <div class="text-2xl font-bold mb-1 m-1">Alumni Talk</div>
-                        <div id="count" class="flex text-xs mt-2"> <img class="eyepic m-0.5 h-3 m-1" src="../static/images/Icon.png"> 23 people are interested</div>
+                        <div class="text-2xl font-bold mb-1 m-1">{{event.title}}</div>
+                        <div id="count" class="flex text-xs mt-2 items-center"> 
+                            <img class="eyepic mr-1" src="/static/img/interested.png" style="height: 14px;"> 
+                            {% if event.interested_users.all|length <= 1 %} 
+                            {{event.interested_users.all.count}} people is interested
+                            {% else %}
+                            {{event.interested_users.all.count}} people is interested
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="flex flex-col justify-between ml-4 m-2">    
-                        <div id="date" class="rounded text-center text-white font-medium h-6 p-1 px-5 m-2 text-xs">  23/04/2022  </div>
-                        <div id="time" class="rounded text-center text-white font-medium h-6 p-1 px-5 m-2 mb-2 text-xs">8:30 PM IST </div>     
+                        <div id="date" class="rounded text-center text-white font-medium h-6 p-1 px-5 m-2 text-xs">{{event.event_time|date:"d/m/Y"}}</div>
+                        <div id="time" class="rounded text-center text-white font-medium h-6 p-1 px-5 m-2 mb-2 text-xs">{{event.event_time|date:"h:i A T"}}</div>     
                     </div>       
             </div>
-         
-
-        </div>
-            
-        
+        </div>        
         <div class="text-sm mt-4 md:mt-0">
-        ligna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        ojects, such as landing pages or unusual corporate websites.
+        {{event.description}}
         </div>
     </div>
-    <div class="w-full bg-white px-4 sm:px-9 pt-5 mt-4 pb-5 flex flex-col justify-between" style="min-height: 210px;">
+    <!-- <div class="w-full bg-white px-4 sm:px-9 pt-5 mt-4 pb-5 flex flex-col justify-between" style="min-height: 210px;">
         <div class="mb-4 font-bold"> Speakers </div>
         <div class="flex flex-row flex-wrap justify-left">
             <div class="flex flex-col mx-3 text-center">
@@ -62,26 +72,7 @@
     </div>
     <div class="w-full bg-white px-4 sm:px-9 pt-5 mt-4 pb-5 flex flex-col justify-between" style="min-height: 210px;">
         <div class="mb-6 font-bold"> Snippets from past </div>
-        <!-- <div class="flex flex-row">
-            <div class="flex flex-col w-20 mx-3 text-center">
-                <div class="bg-blue-200">xyz</div>
-                <div class="text-sm font-semibold">“698695683043098” 
-            </div>
-            <div class="flex flex-col w-20 mx-3 text-center">
-                <div class="bg-blue-200"></div>
-                <div class="text-sm font-semibold">“698695683043098” 
-            </div>
-            <div class="flex flex-col w-20 mx-3 text-center">
-                <div class="bg-blue-200"></div>
-                <div class="text-sm font-semibold">“The story of life is quicker than the wink of an eye, the story of love is hello and goodbye until we meet again.” 
-            </div>
-            <div class="flex flex-col w-20 mx-3 text-center">
-                <div class="bg-blue-200"></div>
-                <div class="text-sm font-semibold">“The story of life is quicker than the wink of an eye, the story of love is hello and goodbye until we meet again.” 
-            </div> -->
-            <div class="flex flex-row flex-wrap justify-center md:justify-left">
-                
-                
+            <div class="flex flex-row flex-wrap justify-center md:justify-left">               
                 <div class="mx-2 w-48 mb-3">
                     <div class=" h-26">
                         <div class="relative" style="padding-top: 56.25%">
@@ -108,7 +99,58 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script id='csrf_token' type='text'>{{csrf_token}}</script>
+<script>
+    $('.save-btn').on('click', function(e){
+        id = $(this).attr("data-event-id");
+        $.ajax({
+            type: "POST",
+            url: '/events/save/',
+            data: {
+                id: id,
+                csrfmiddlewaretoken: $('#csrf_token').text()
+            },
+            success: (data)=>{
+                console.log(data);
+                if (data == 'added') {
+                    $('svg',this).addClass('svg-accent');
+                } else if(data== 'removed'){
+                    $('svg',this).removeClass('svg-accent');
+                } 
+            },
+            error: function(data) {
+                alert('Some Error Occurred :(')
+            }
+        })
+    });
+
+    $('.interested-btn').on('click', function(e){
+        id = $(this).attr("data-event-id");
+        $.ajax({
+            type: "POST",
+            url: '/events/interested/',
+            data: {
+                id: id,
+                csrfmiddlewaretoken: $('#csrf_token').text()
+            },
+            success: (data)=>{
+                console.log(data);
+                if (data == 'added') {
+                    $('svg',this).addClass('svg-accent');
+                } else if(data== 'removed'){
+                    $('svg',this).removeClass('svg-accent');
+                } 
+            },
+            error: function(data) {
+                alert('Some Error Occurred :(')
+            }
+        })
+    });
+</script>
 {% endblock %}

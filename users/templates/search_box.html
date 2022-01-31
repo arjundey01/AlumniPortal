@@ -3,72 +3,6 @@
     <button class="p-0" id="search-submit"><img src="/static/img/search.svg" alt="" class="h-10 w-10 px-2 bg-accent rounded-sm"></button>
     <div id="search-sugg-wrp" class="absolute w-screen -ml-4 sm:w-full sm:ml-0 bg-white shadow-lg top-10 pb-2 hidden"></div>
 </form>
-<!-- <img class="new-entry h-6 ml-6 w-10 bg-white cursor-pointer relative right-48" src="/static/img/add.svg" alt="+" data-type="filter"> -->
-<style> 
-#advFil{
-    display: none;
-   
-    background-color: white;
-    position: absolute;
-    left: 25%;
-    top: 300%;
-    height: 45vh;
-    width: 30vw;;
-}
-@media screen and (max-width: 992px){
-    #advFil{
-    display: none;
-   
-    background-color: white;
-    position: absolute;
-    left: 15%;
-    top: 300%;
-    height: 30vh;
-    width: 50vw;;
-}
-}
-@media screen and (max-width: 600px){
-    #advFil{
-    display: none;
-   
-    background-color: white;
-    position: absolute;
-    left: 15%;
-    top: 300%;
-    height: 42vh;
-    width: 70vw;;
-}
-}
-/* #filtrButton{
-
-} */
-</style>
-<!-- <div onclick="showfilter()" id="filtrButton" class="new-entry bg-accent px-7 py-1 text-white rounded cursor-pointer absolute left-96 lg:left-1/2 " >Filters</div> -->
-<img onclick="showfilter()" class="new-entry h-6 ml-3 relative lg:right-28 xl:right-40 cursor-pointer" src="/static/img/add.svg" alt="+">
-
-
-
-<div id="advFil" class="shadow-lg flex flex-col bg-black p-6 w-full md:w-3/5 lg:w-2/5 ">
-    <div class="flex flex-row  justify-between">
-        <div>Filters</div>
-        <svg onclick="hidefilter()" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-8 close-overlay cursor-pointer">
-            <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>  
-    </div>
-    <div class="pl-24 lg:pl-24 pr-36">
-        {{filter.form}}<br>
-        <button id="filter-submit" class="bg-blue-600 text-white text-sm rounded px-2 mt-4 mt-1 pb-1">
-        Search
-        </button>
-    </div>
-</div>
-
-
-
-
-
-
-
 
 <template id="search-sugg-cat-tmp">
     <div class="border-t-2 border-gray-200 border-solid pl-8 pr-5 pt-4 pb-6">
@@ -91,7 +25,7 @@
     </div>
 </template>
 
-
+{% block scripts %}
 <script>
     $(document).ready(function(){
         $('#search-submit').on('click',function(e){
@@ -145,10 +79,5 @@
             $('#search-sugg-wrp').addClass('hidden');
         })
     });
-    function showfilter(){
-        document.getElementById("advFil").style.display = "block";
-    }
-    function hidefilter(){
-        document.getElementById("advFil").style.display = "none";
-    }
 </script>
+{% endblock %}

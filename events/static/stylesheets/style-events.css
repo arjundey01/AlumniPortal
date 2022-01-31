@@ -1,111 +1,61 @@
-/* #container{
-position: absolute;
-width: 80%;
-height: 80%;
-display:flex;
-flex-direction: row;
-flex-wrap: wrap;
-order: 1;
-justify-content: center;
 
-} */
 
-#inner-container{
-/* display:flex;
-flex-direction: column;
-background-color: white; */
-width: 297px;
-height: 312px;
-/* border-radius: 5px; */
-/* align-items: center;
-margin: 20px; */
-
+.event{
+    width: 297px;
+    height: 312px;
 }
 
-#upperflex{
+.upperflex{
     background: rgba(196, 196, 196, 0.5);
     border-radius: 4px 4px 0px 0px;
-    /* width: 100%;
-    height: 40%; */
 }
 
-#middleflex{
-    /* height: 50%; */
-    /* padding: 7px; */
-    border: solid 2px #C4C4C480;
-    /* width: 100%; */
+.middleflex{
+    border-bottom: solid 1px #C4C4C480;
 }
 
-#bottomflex{
-    /* display: flex; */
+.bottomflex{
     height: 10%;
-    /* flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    width: 100%; */
     color: #00000080;
-
 }
 
-#date{
-
-/* font-weight: 500; */
-/* font-size: 11px;
-line-height: 17px; */
-background: #4150D7;
-/* color: white; */
-width: 30%;
-/* margin-top: 25px;
-margin-bottom: 12px;
-padding: 2px; */
-
+.event-date{
+    background: #4150D7;
+    width: 32%;
 }
 
-#time{
-/* font-size: 11px;
-font-weight: 500;
-line-height: 17px; */
-/* letter-spacing: 0em;
-text-align: left; */
-background: #FF87A4;
-/* color: white; */
-width: 30%;
-/* padding: 2px; */
-
+.event-time{
+    background: #FF87A4;
+    width: 32%;
 }
 
-#count{
-    /* display: flex; */
-    color: #00000080;
-    /* font-size: 12px; */
-      
-}
-
-/* .eyepic{
-    
-    margin: 2px;
-    
-} */
-
-/* #title{
-    font-size: 18px;
-    font-weight: 500;
-} */
-
-/* #description{
-     font-size: 12px;
-     text-align: justify;
-} */
 
 .btmicon{
     height: 70%;
 }
 
-#options{
-    color: rgba(0, 0, 0, 0.5);
-    font-size: small;
+#navbar{
+    width: 100%;
 }
 
-#navbar{
-    width: 64%;
+#options{
+    color: rgba(0, 0, 0, 0.5);
+}
+
+#right-pane{
+    width: 10%;
+    padding: 8px 1.5%;
+}
+
+@media (min-width: 992px){
+    #content{
+        width: 90%;
+    }
+}
+
+@media (min-width: 1336px){
+    #right-pane{
+        width: calc(0.10 * (100% - 325px));
+        padding-left: 0;
+    }
 }

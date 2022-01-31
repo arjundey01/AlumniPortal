@@ -89,14 +89,34 @@ for (var i = 0; i < delete_btns3.length; i++){
 $('.delete-faq-btn').on('click', function(e){
   let id = $(this).attr('data-faq-id');
   if (confirm('Are you sure you want to delete the question?')) {
-      window.open(`/admin/faqs/delete/${id}/`,"_self");
+    $.ajax({
+      type: "POST",
+      url: `/faq/delete/${id}/`,
+      data: {'csrfmiddlewaretoken':csrf_token},
+      success: function (data) {
+        window.location.reload();
+      },
+      error: function (data) {
+        alert(data);
+      },
+    });
   }
 });
 
 $('.delete-event-btn').on('click', function(e){
   let id = $(this).attr('data-event-id');
-  if (confirm('Are you sure you want to delete the question?')) {
-      window.open(`/admin/events/delete/${id}/`,"_self");
+  if (confirm('Are you sure you want to delete the event?')) {
+    $.ajax({
+      type: "POST",
+      url: `/events/delete/${id}/`,
+      data: {'csrfmiddlewaretoken':csrf_token},
+      success: function (data) {
+        window.location.reload();
+      },
+      error: function (data) {
+        alert(data);
+      },
+    });
   }
 });
 
@@ -242,6 +262,75 @@ $('#create-group-img').on('change',function(e){
   previewImage(this, img[0]);
 })
 
+
+//============================EVENTS=========================
+
+$('.create-event').click(function(e){
+  $('#overlay').css('display','flex');
+
+  let eventForm = $('#create-event-form')[0];
+  let url = $(eventForm).attr('action');
+  $(eventForm).attr('action',url.split("?")[0]);
+
+  $('.form-title', eventForm).text("Create an Event");
+  $('input[type=submit]', eventForm).val("Create");
+
+  $('input[name=title]', eventForm).val("");
+  $('textarea[name=description]', eventForm).val("");
+  $('input[name=event_time]', eventForm).val("");
+
+  $('input[name=cover_image]', eventForm).attr('src',"");
+  $('input[name=cover_image]', eventForm).attr('value',"");
+  let img = $('#create-event-prev img');
+  img.parent().find('p').show();
+  img.attr('src', '/static/img/add.svg');
+  img.addClass(['h-16', 'w-16']);
+  img.removeClass(['h-full', 'w-full']);
+});
+
+$('.edit-event-btn').click(function(e){
+  $('#overlay').css('display','flex');
+  let eventRow = $(this).parent().parent()[0];
+  let id = $(this).attr('data-event-id');
+
+  let eventForm = $('#create-event-form')[0];
+  let url = $(eventForm).attr('action');
+  $(eventForm).attr('action',url+`?id=${id}`);
+
+  $('.form-title', eventForm).text("Edit Event");
+  $('input[type=submit]', eventForm).val("Submit");
+
+  $('input[name=title]', eventForm).val($('.event-title',eventRow).text());
+  let isoTime = $('.event-time',eventRow).attr('data-iso').split(":");
+  isoTime.pop();
+  isoTime = isoTime.join(':');
+  console.log(isoTime)
+  $('input[name=event_time]', eventForm).val(isoTime);
+  $('textarea[name=description]', eventForm).val($('.event-desc',eventRow).text());
+  
+  let imgSrc = $('.event-image',eventRow).attr('src');
+  if($('.event-image',eventRow).attr('data-set')=='true')
+    $('input[name=cover_image]', eventForm).attr('src',imgSrc);
+  let img = $('#create-event-prev img');
+  img.parent().find('p').hide();
+  img.attr('src', imgSrc);
+  img.removeClass(['h-16', 'w-16']);
+  img.addClass(['h-full', 'w-full']);
+});
+
+
+$('#create-event-prev').on('click',function(e){
+  $('#create-event-img').trigger('click');
+})
+
+$('#create-event-img').on('change',function(e){
+  let img = $('#create-event-prev img');
+  img.removeClass(['h-16', 'w-16']);
+  img.addClass(['h-full', 'w-full']);
+  img.parent().find('p').hide();
+  previewImage(this, img[0]);
+})
+
 var previewImage= function(inputImg, prevImg){
   var reader = new FileReader();
   reader.onload = function(e) {
@@ -249,3 +338,7 @@ var previewImage= function(inputImg, prevImg){
   }
   reader.readAsDataURL(inputImg.files[0]);
 }
+
+$('#admin-sidebar-btn').click(function(e){
+  $('.admin-sidebar').toggleClass('admin-sidebar-active');
+})

@@ -75,10 +75,5 @@
 {% block scripts %}
 <script id='csrf_token' type='text'>{{csrf_token}}</script>
 <script type="text" id="data-username">{{user.username}}</script>
-{% if id %}
-<script id='post-id' type='text' data-id={{id}}></script>
-<script src="/static/scripts/individual_post.js"></script>
-{% else %}
 <script src="/static/scripts/post.js?version=1"></script>
-{% endif %}
 {% endblock %}

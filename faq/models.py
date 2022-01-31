@@ -11,6 +11,7 @@ class Question(models.Model):
     posted_on = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Group, related_name='questions')
     views = models.IntegerField(default=0)
+    reports = models.ManyToManyField(Account, related_name='reported_faqs', blank=True)
 
     def __str__(self):
         return self.author.name + "_" + str(self.id)

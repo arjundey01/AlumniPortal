@@ -4,7 +4,13 @@
 
 {% block body %}
 <main class="w-full flex-grow p-6">
-    <h1 class="text-2xl text-black mt-10">Events</h1>
+    <div class="mt-10 flex justify-between">
+        <p class="text-2xl">Events</p>
+        <div class="create-event text-white text-lg bg-green-500 rounded-md px-4 py-1 cursor-pointer">
+          <i class="fas fa-plus mr-1"></i>
+          <span>Create</span>
+        </div>
+      </div>
 
     <div class="w-full mt-6">
         <div class="bg-white overflow-auto">
@@ -24,13 +30,22 @@
                         {% else %}
                         <tr class="bg-gray-200">
                         {% endif %}
-                            <td class="w-1/4 text-left py-3 px-4">{{event.title}}</td>
-                            <td class="w-1/4 text-left py-3 px-4">{{event.event_time}}, {{event.event_date}}</td>
-                            <td class="w-1/4 text-left py-3 px-4">0</td>
+                            <td class="w-1/4 text-left py-3 px-4 align-middle">
+                                <div class="flex items-center">
+                                    <img src="{{event.cover_image_url}}" data-set="{%if event.cover_image%}true{%else%}false{%endif%}" alt="" class="event-image w-10 h-10 rounded-full object-cover" />
+                                    <p class="event-title mx-4">{{event.title}}</p>
+                                    <p class="event-desc hidden">{{event.description}}</p>
+                                </div>
+                            </td>
+                            <td class="event-time w-1/4 text-left py-3 px-4" data-iso="{{event.event_time|date:'c'}}">{{event.event_time}}</td>
+                            <td class="w-1/4 text-left py-3 px-4">{{event.interested_users.all.count}}</td>
                             <td class="w-1/4 text-left py-3 px-4 flex flex-row gap-4">
-                                <p class="cursor-pointer w-20 h-8 rounded-md bg-blue-500 text-lg text-white self-center px-4" href='/event/{{event.id}}/'>View</p>
+                                <a class="cursor-pointer w-20 h-8 rounded-md bg-blue-500 text-lg text-white self-center px-4" href='/events/event/{{event.id}}/'>View</a>
+                                <div data-event-id="{{event.id}}"
+                                    class="edit-event-btn w-20 h-8 rounded-md bg-yellow-400 text-lg text-white self-center px-4 cursor-pointer"
+                                    >Edit</div>
                                 <div
-                                data-faq-id="{{event.id}}"
+                                data-event-id="{{event.id}}"
                                 class="delete-event-btn w-20 h-8 rounded-md bg-red-500 text-lg text-white self-center px-4 cursor-pointer">Delete</div
                             >
                             </td>
@@ -44,7 +59,32 @@
 
 {% endblock %}
 
-
+{% block overlay %}
+<form action="/events/create-edit/" method="POST" enctype="multipart/form-data" id="create-event-form" class="bg-white rounded p-5 w-full md:w-3/5 lg:w-2/5 h-screen md:h-auto flex-col" >
+  {% csrf_token %}
+  <div class="flex justify-between items-center m-2">
+      <p class="form-title text-xl">Create an Event</p>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="close-overlay cursor-pointer">
+          <path opacity="0.8" d="M1 13L13 1M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>   
+  </div>
+  <input type="file" name="cover_image" accept="image/png, image/jpeg" id="create-event-img" class="hidden">
+  <div id="create-event-prev" class="bg-gray-200 rounded h-60 mx-auto w-full flex flex-col cursor-pointer items-center justify-center mt-3 overflow-hidden">
+      <img src="/static/img/add.svg" alt="" class="h-16 w-16 object-cover rounded" >
+      <p class="text-gray-400">Cover Image</p>
+  </div>
+  <div class="bg-gray-200 py-2 px-3 rounded mt-4">
+      <input type="text" name="title" placeholder="Title" class="bg-transparent w-full">
+  </div>
+  <div class="bg-gray-200 py-2 px-3 rounded mt-4">
+      <input type="datetime-local" name="event_time" placeholder="Date & Time" class="bg-transparent w-full">
+  </div>
+  <div class="bg-gray-200 py-2 px-3 rounded mt-4">
+      <textarea name="description" placeholder="Description" style="resize: none;" class="bg-transparent w-full h-24"></textarea>
+  </div>
+  <input type="submit" value="Create" class="self-center bg-accent text-white py-2 px-10 rounded mt-4 cursor-pointer">
+</form>
+{% endblock %}
 
 {% block scripts %}
 <script src="/static/scripts/account.js"></script>

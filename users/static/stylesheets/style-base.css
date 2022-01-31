@@ -73,7 +73,7 @@ body{
     background: #FC4444;
 }
 
-#header-profile img{
+#header-profile .user-profile-img{
     border: 2px solid #4150D7;
     height: 12vw;
     width: 12vw;

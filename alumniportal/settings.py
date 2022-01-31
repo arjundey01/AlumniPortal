@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'faq',
     'groups',
     'events',
-    'django_filters'
+    'django_filters',
     'adminPortal',
 ]
 

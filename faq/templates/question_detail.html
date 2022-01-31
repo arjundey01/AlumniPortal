@@ -14,8 +14,23 @@
         </div>
       </div>
       <div class="flex flex-col items-end">
+          <div class="relative overflow-visible ">
+            <img src="/static/img/more.svg" alt="" class="faq-options-button cursor-pointer h-5 w-5">
+            <div class="faq-options bg-white absolute top-6 right-0 shadow-lg w-32 right-0 px-1 py-1 border-2 border-gray-100 border-solid hidden">
+                {% if question.author == user.account %}
+                <div class="faq-delete text-sm text-gray-500 hover:bg-gray-100 py-2 px-1 flex items-center cursor-pointer" href="#" data-faq-id="{{question.id}}">
+                    <img src="/static/img/delete.svg" class="h-4 -mt-0.5">
+                    <p class="ml-2">Delete</p>
+                </div>
+				{% endif %}
+                <div class="faq-report block text-sm text-gray-500 hover:bg-gray-100 py-2 px-1 flex items-center cursor-pointer" href="#" data-faq-id="{{question.id}}">
+                    <img src="/static/img/innfo.svg" class="h-4 -mt-0.5">
+                    <p class="ml-2">Report</p>
+                </div>
+            </div>
+        </div>
         <p class="text-xs font-light text-gray-500 ">{{question.posted_on}}</p>
-        <p id="answer-focus" class="text-sm mt-1 text-accent cursor-pointer">Answer</p>
+		<p id="answer-focus" class="text-sm mt-1 text-accent cursor-pointer">Answer</p>
       </div>
     </div>
   </div>
@@ -100,6 +115,7 @@
     <textarea class="w-full py-4 px-6 h-52 bg-gray-100 rounded-lg font-light" name="content" placeholder="Write something here..."></textarea>
     <button type="submit" id="ans-submit" class="bg-accent py-0.5 px-7 text-white mt-4 mb-2 rounded self-end">Post</button>
   </form>
+  <input type="text" readonly hidden id="csrf-token" value="{{csrf_token}}">
 </div>
 
 {% endblock content %}
@@ -111,21 +127,62 @@
 {% block scripts %}
   <script>
     $(document).ready(function () {
-      $("#ans-submit").click((e) => {
-        e.preventDefault();
-        if($("textarea", $("#ans-form")).val().length === 0) alert("Sorry, empty answer isn't accepted!");
-        else {
-          $("#ans-form").submit();
-        }
-      });
-      $('#answer-focus').on('click', function(e){
-        $('html, body').animate({
-          scrollTop: $('#ans-form textarea').offset().top - 200
-        }, 1000);
-        setTimeout(()=>{
-          $('#ans-form textarea')[0].focus();
-        },1000);
-      })
+		let csrf_token = $('#csrf-token').val();
+		$("#ans-submit").click((e) => {
+			e.preventDefault();
+			if($("textarea", $("#ans-form")).val().length === 0) alert("Sorry, empty answer isn't accepted!");
+			else {
+			$("#ans-form").submit();
+			}
+		});
+
+		$('#answer-focus').on('click', function(e){
+			$('html, body').animate({
+			scrollTop: $('#ans-form textarea').offset().top - 200
+			}, 1000);
+			setTimeout(()=>{
+			$('#ans-form textarea')[0].focus();
+			},1000);
+		})
+
+		$('.faq-options-button').on('click', function(){
+			$('.faq-options',this.parentElement).toggleClass('hidden');
+		} );
+
+		$('.faq-delete').on('click', function(){
+			let id = $(this).attr('data-faq-id');
+			if (confirm('Are you sure you want to delete the question?')) {
+				$.ajax({
+					type: "POST",
+					url: `/faq/delete/${id}/`,
+					data: {'csrfmiddlewaretoken':csrf_token},
+					success: function (data) {
+						window.open(`/faq/`,"_self");
+					},
+					error: function (data) {
+						alert(data);
+					},
+				});
+			}
+		});
+
+		$('.faq-report').on('click', function(){
+			let id = $(this).attr('data-faq-id');
+			if (confirm('Are you sure you want to report the question?')) {
+				$.ajax({
+					type: "POST",
+					url: `/faq/report/${id}/`,
+					data: {'csrfmiddlewaretoken':csrf_token},
+					success: function (data) {
+						alert('Reported!')
+					},
+					error: function (data) {
+						alert(data);
+					},
+				});
+			}
+		});
+		
 
     });
   </script>
