@@ -151,10 +151,10 @@ def sign_out(request):
 #     else:
 #       return HttpResponse('exists')
 
-def test_signin(request, name):
-    user = Account.objects.get(name=name).user
-    login(request, user)
-    return HttpResponseRedirect(reverse('home'))
+# def test_signin(request, name):
+#     user = Account.objects.get(name=name).user
+#     login(request, user)
+#     return HttpResponseRedirect(reverse('home'))
 
 def follow(request):
     if request.user.is_authenticated:

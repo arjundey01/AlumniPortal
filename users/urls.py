@@ -12,7 +12,7 @@ urlpatterns = [
   path('callback', views.callback, name='callback'),
   #path('test',views.test),
   #path('test-signup/<name>/<email>',views.test_signup),
-  path('test-signin/<name>/',views.test_signin),
+  # path('test-signin/<name>/',views.test_signin),
   path('follow/',views.follow),
   path('unfollow/',views.unfollow),
   path('followers/',views.followers),
